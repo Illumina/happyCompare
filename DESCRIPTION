@@ -1,0 +1,12 @@
+Package: happyCompare
+Type: Package
+Title: Generate reports from happy output
+Version: 0.1.0
+Author: Mar Gonzalez-Porta
+Maintainer: Mar Gonzalez-Porta <mgonzalez@illumina.com>
+Description: A toolbox to generate pre-defined plots and tables from happy output, for easy reporting.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
+Imports: ggplot2, data.table, gridExtra, plyr, reshape2
