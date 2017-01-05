@@ -15,7 +15,9 @@
 /*.Rcheck/
 
 # RStudio files
+*.Rproj
 .Rproj.user/
+.Rbuildignore
 
 # produced vignettes
 vignettes/*.html
@@ -31,3 +33,4 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+.Rproj.user
