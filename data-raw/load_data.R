@@ -1,11 +1,16 @@
 ## demo datasets
 
+library("happyCompare")
 library("dplyr")
-
 setwd(path.package('happyCompare'))
+
 config_path = "data-raw/config.happy_summary.csv"
 demo_happy_summary = load_data(config_path = config_path)
 devtools::use_data(demo_happy_summary, overwrite = TRUE)
+
+config_path = "data-raw/config.happy_extended.csv"
+demo_happy_extended = load_data(config_path = config_path)
+devtools::use_data(demo_happy_extended, overwrite = TRUE)
 
 ## data can be accessed using one of the following
 ##

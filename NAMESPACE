@@ -2,9 +2,13 @@
 
 S3method(plot,happy_summary)
 S3method(print,happy_compare)
+S3method(print,happy_extended)
 S3method(print,happy_summary)
+S3method(summary,happy_summary)
+S3method(tidy,happy_extended)
 S3method(tidy,happy_summary)
 export(is_happy_compare)
+export(is_happy_extended)
 export(is_happy_summary)
 export(load_data)
 export(tidy)

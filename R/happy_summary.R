@@ -20,8 +20,7 @@ print.happy_summary = function(obj) {
 #' @param obj A `happy_summary` object.
 #' @export
 tidy.happy_summary = function(obj) {
-    df = plyr::ldply(obj, data.frame) %>%
-        select(-.id)
+    df = plyr::ldply(obj, data.frame)
     return(df)
 }
 
