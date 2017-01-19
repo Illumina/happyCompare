@@ -1,3 +1,5 @@
+## documentation for demo datasets
+
 #' demo_happy_summary
 #' 
 #' Demo data for the happy summary class
