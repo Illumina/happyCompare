@@ -1,3 +1,5 @@
+## data input
+
 #' load_data
 #'
 #' Load csv inputs.
@@ -18,7 +20,7 @@ load_data = function(config_path) {
     
     config = data.table::fread(config_path)
     
-    required_cols = c('group_id', 'sample_id', 'happy_summary', 'happy_extended')
+    required_cols = c('group_id', 'sample_id', 'replicate_id', 'happy_summary', 'happy_extended')
     if (!all(required_cols %in% colnames(config))) {
         stop("Missing required columns in input config, see docs.")
     }
@@ -32,7 +34,7 @@ load_data = function(config_path) {
             stop("happy summary file does not match the expected *.summary.csv")
         } else {
             message("Loading summary.csv metrics...")
-            sconfig = config %>% select(group_id, sample_id, happy_summary)
+            sconfig = config %>% select(group_id, sample_id, replicate_id, happy_summary)
             happy_summary = .load_happy_summary(config = sconfig)
         }
     }
@@ -58,7 +60,7 @@ load_data = function(config_path) {
 .load_happy_summary = function(config) {
     
     ## validate input
-    required_cols = c('group_id', 'sample_id', 'happy_summary')
+    required_cols = c('group_id', 'sample_id', 'replicate_id', 'happy_summary')
     if (!all(required_cols %in% colnames(config))) {
         stop("Missing required columns in input config, see docs.")
     }
@@ -69,10 +71,11 @@ load_data = function(config_path) {
         message(sprintf('Reading %s', this_path))
         this_metrics = data.table::fread(this_path)
         this_metrics$Group = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
-        this_metrics$Id = rep(as.character(config$sample_id[i]), dim(this_metrics)[1])
+        this_metrics$Sample.Id = rep(as.character(config$sample_id[i]), dim(this_metrics)[1])
+        this_metrics$Replicate.Id = rep(as.character(config$replicate_id[i]), dim(this_metrics)[1])
         return(this_metrics)
     })
-    names(data) = paste0(config$group_id, '-', config$sample_id)
+    names(data) = paste(config$group_id, config$sample_id, config$replicate_id, collapse = '-')
     class(data) = append(class(data), "happy_summary", after = 0)
     return(data)
     

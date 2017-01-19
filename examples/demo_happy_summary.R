@@ -1,4 +1,6 @@
 library("happyCompare")
+library("ggplot2")
+library("dplyr")
 
 # inspect the pre-loaded demo_happy_summary dataset
 class(demo_happy_summary)

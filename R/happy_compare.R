@@ -1,4 +1,4 @@
-## happy_compare generics and methods
+## happy_compare methods
 
 #' @export
 is_happy_compare = function(obj) {

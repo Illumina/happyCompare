@@ -1,4 +1,4 @@
-## happy_summary generics and methods
+## happy_summary methods
 
 #' @export
 is_happy_summary = function(obj) {
@@ -8,11 +8,6 @@ is_happy_summary = function(obj) {
 #' @export
 print.happy_summary = function(obj) {
     print(lapply(obj, function(x) dplyr::trunc_mat(x)))
-}
-
-#' @export
-tidy = function(obj) {
-    UseMethod("tidy", obj)
 }
 
 #' tidy
@@ -50,13 +45,11 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
     }
     
     ## plot
-    library("ggplot2")
-    
     data = tidy(obj) %>%
         filter(Type == type, Filter == filter)
     
     p1 = ggplot(data, aes(x = METRIC.Recall, y = METRIC.Precision)) +
-        geom_point(aes(color = Group, shape = Id), size = point.size) +
+        geom_point(aes(color = Group, shape = Sample.Id), size = point.size) +
         xlim(xlim.low, xlim.high) +
         ylim(ylim.low, ylim.high) +
         theme(text = element_text(size = font.size)) +
