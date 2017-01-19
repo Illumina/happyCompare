@@ -1,5 +1,8 @@
 ## happy_summary methods
 
+library(ggplot2)
+library(dplyr)
+
 #' @export
 is_happy_summary = function(obj) {
     inherits(obj, "happy_summary")
@@ -17,7 +20,8 @@ print.happy_summary = function(obj) {
 #' @param obj A `happy_summary` object.
 #' @export
 tidy.happy_summary = function(obj) {
-    df = plyr::ldply(obj, data.frame)
+    df = plyr::ldply(obj, data.frame) %>%
+        select(-.id)
     return(df)
 }
 

@@ -1,5 +1,7 @@
 ## data input
 
+library(dplyr)
+
 #' load_data
 #'
 #' Load csv inputs.
