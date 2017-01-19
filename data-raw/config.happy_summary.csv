@@ -1,5 +1,5 @@
 group_id,sample_id,replicate_id,happy_summary,happy_extended
-A,NA12877,replicate_1,./data-raw/NA12877_groupA.summary.csv,NA
-A,NA12878,replicate_1,./data-raw/NA12878_groupA.summary.csv,NA
-B,NA12877,replicate_1,./data-raw/NA12877_groupB.summary.csv,NA
-B,NA12878,replicate_1,./data-raw/NA12878_groupB.summary.csv,NA
+A,NA12877,replicate_1,data-raw/NA12877_groupA.summary.csv,NA
+A,NA12878,replicate_1,data-raw/NA12878_groupA.summary.csv,NA
+B,NA12877,replicate_1,data-raw/NA12877_groupB.summary.csv,NA
+B,NA12878,replicate_1,data-raw/NA12878_groupB.summary.csv,NA
