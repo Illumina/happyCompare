@@ -89,3 +89,46 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
                             )
     
 }
+
+#' summary.happy_summary
+#'
+#' Summarise happy summary results into tabular format.
+#' 
+#' @param obj A `happy_summary` object.
+#' @param type Variant type. One of: SNP, INDEL.
+#' @param filter Variant filter. One of: PASS (default), ALL.
+#' @param digits Number of significant digits in summary statistics. Default: 4.
+#' @param kable_format a character string to pass to knitr::kable(). Default: markdown.
+#' @export
+summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
+                                 kable_format = 'markdown', ...) {
+    
+    ## validate input
+    if (missing(type)) {
+        stop("Must specify a variant type.")
+    }
+    
+    ## plot
+    caption = paste(filter, type, collapse = '-')
+    data = tidy(obj) %>%
+        filter(Type == type, Filter == filter) %>%
+        group_by(Group) %>%
+        summarise(
+            N = n(),
+            METRIC.Precision.mean = round(mean(METRIC.Precision), digits = digits),
+            METRIC.Precision.sd = round(sd(METRIC.Precision), digits = digits),
+            METRIC.Recall.mean = round(mean(METRIC.Recall),digits = digits),
+            METRIC.Recall.sd = round(sd(METRIC.Recall), digits = digits),
+            METRIC.Frac_NA.mean = round(mean(METRIC.Frac_NA), digits = digits),
+            METRIC.Frac_NA.sd = round(sd(METRIC.Frac_NA), digits = digits)
+        ) %>%
+        mutate(
+            METRIC.Precision = paste(METRIC.Precision.mean, '&plusmn;', METRIC.Precision.sd),
+            METRIC.Recall = paste(METRIC.Recall.mean, '&plusmn;', METRIC.Recall.sd),
+            METRIC.Frac_NA = paste(METRIC.Frac_NA.mean, '&plusmn;', METRIC.Frac_NA.sd)
+        ) %>%
+        select(Group, N, METRIC.Precision, METRIC.Recall, METRIC.Frac_NA) %>%
+        knitr::kable(format = kable_format, caption = caption)
+    return(data)
+    
+}

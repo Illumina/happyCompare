@@ -22,9 +22,14 @@ test_that("tidy.happy_summary works", {
     expect_equal(dim(ths)[2], 19)
 })
 
-
-test_that("tidy.plot works", {
+test_that("plot.happy_summary works", {
     hs = demo_happy_summary$happy_summary
     p = plot(hs, type = 'SNP')
     expect_is(p, "gtable")
+})
+
+test_that("summary.happy_summary works", {
+    hs = demo_happy_summary$happy_summary
+    s = summary(hs, type = 'SNP')
+    expect_is(s, "knitr_kable")
 })
