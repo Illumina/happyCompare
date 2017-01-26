@@ -28,7 +28,7 @@ test_that("add_credible_intervals.happy_extended works", {
     he = demo_happy_extended$happy_extended
     he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e4)
     
-    expect_is(he_ci, "data.table")
+    expect_true(is_happy_extended_ci(he_ci))
     
     expect_equal(dim(he_ci)[1], 6126)
     expect_equal(dim(he_ci)[2], 15)

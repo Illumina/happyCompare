@@ -30,7 +30,7 @@ tidy.happy_extended = function(obj) {
 #' (e.g. `TRUTH.TOTAL`) and the variability across replicates.
 #' 
 #' @param obj A `happy_extended` object.
-#' @return A `data.table` object.
+#' @return A `happy_extended_ci` object.
 #' @export
 add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, samplesize = 1e6) {
     ## validate input
@@ -66,6 +66,7 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
             data.table::data.table()
     }
     
+    class(credible_intervals) = append(class(credible_intervals), "happy_extended_ci", after = 0)
     return(credible_intervals)
 }
 
@@ -120,7 +121,7 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
         beta0 = NA,
         alpha1 = NA,
         beta1 = NA,
-        replicate = 'combined',
+        replicate = '.combined',
         low = min(credible_intervals$low),
         theta1 = mean(credible_intervals$theta1),
         high = max(credible_intervals$high)

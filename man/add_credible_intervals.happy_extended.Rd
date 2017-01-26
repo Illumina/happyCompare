@@ -11,7 +11,7 @@
 \item{obj}{A `happy_extended` object.}
 }
 \value{
-A `data.table` object.
+A `happy_extended_ci` object.
 }
 \description{
 Add credible intervals to the observed performance estimates using a 
