@@ -1,8 +1,5 @@
 ## happy_summary methods
 
-library(ggplot2)
-library(dplyr)
-
 #' @export
 is_happy_summary = function(obj) {
     inherits(obj, "happy_summary")
@@ -20,8 +17,7 @@ print.happy_summary = function(obj) {
 #' @param obj A `happy_summary` object.
 #' @export
 tidy.happy_summary = function(obj) {
-    df = plyr::ldply(obj, data.frame) %>%
-        select(-.id)
+    df = plyr::ldply(obj, data.frame)
     return(df)
 }
 
@@ -53,28 +49,28 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
         filter(Type == type, Filter == filter)
     
     p1 = ggplot(data, aes(x = METRIC.Recall, y = METRIC.Precision)) +
-        geom_point(aes(color = Group, shape = Sample.Id), size = point.size) +
+        geom_point(aes(color = Group.Id, shape = Sample.Id), size = point.size) +
         xlim(xlim.low, xlim.high) +
         ylim(ylim.low, ylim.high) +
         theme(text = element_text(size = font.size)) +
         theme(legend.position = "left")
         
-    p2 = ggplot(data, aes(x = Group, y = METRIC.Precision)) +
-        geom_boxplot(aes(fill = Group)) +
+    p2 = ggplot(data, aes(x = Group.Id, y = METRIC.Precision)) +
+        geom_boxplot(aes(fill = Group.Id)) +
         geom_jitter() +
         ylim(ylim.low, ylim.high) +
         theme(text = element_text(size = font.size)) +
         theme(legend.position = "none")
         
-    p3 = ggplot(data, aes(x = Group, y = METRIC.Recall)) +
-        geom_boxplot(aes(fill = Group)) +
+    p3 = ggplot(data, aes(x = Group.Id, y = METRIC.Recall)) +
+        geom_boxplot(aes(fill = Group.Id)) +
         geom_jitter() +
         ylim(ylim.low, ylim.high) +
         theme(text = element_text(size = font.size)) +
         theme(legend.position = "none")
         
-    p4 = ggplot(data, aes(x = Group, y = METRIC.Frac_NA)) +
-        geom_boxplot(aes(fill = Group)) +
+    p4 = ggplot(data, aes(x = Group.Id, y = METRIC.Frac_NA)) +
+        geom_boxplot(aes(fill = Group.Id)) +
         geom_jitter() +
         ylim(0, NA) +
         theme(text = element_text(size = font.size)) +
@@ -112,7 +108,7 @@ summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
     caption = paste(filter, type, collapse = '-')
     data = tidy(obj) %>%
         filter(Type == type, Filter == filter) %>%
-        group_by(Group) %>%
+        group_by(Group.Id) %>%
         summarise(
             N = n(),
             METRIC.Precision.mean = round(mean(METRIC.Precision), digits = digits),
@@ -127,7 +123,7 @@ summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
             METRIC.Recall = paste(METRIC.Recall.mean, '&plusmn;', METRIC.Recall.sd),
             METRIC.Frac_NA = paste(METRIC.Frac_NA.mean, '&plusmn;', METRIC.Frac_NA.sd)
         ) %>%
-        select(Group, N, METRIC.Precision, METRIC.Recall, METRIC.Frac_NA) %>%
+        select(Group.Id, N, METRIC.Precision, METRIC.Recall, METRIC.Frac_NA) %>%
         knitr::kable(format = kable_format, caption = caption)
     return(data)
     

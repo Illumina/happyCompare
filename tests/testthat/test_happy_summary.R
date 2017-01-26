@@ -19,7 +19,7 @@ test_that("tidy.happy_summary works", {
     ths = tidy(hs)
     expect_is(ths, "data.frame")
     expect_equal(dim(ths)[1], 16)
-    expect_equal(dim(ths)[2], 19)
+    expect_equal(dim(ths)[2], 20)
 })
 
 test_that("plot.happy_summary works", {
