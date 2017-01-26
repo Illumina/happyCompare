@@ -1,12 +1,17 @@
 Package: happyCompare
 Type: Package
-Title: Generate reports from happy output
-Version: 0.1.0
+Title: Reporting toolbox for happy output
+Version: 0.0.0.9000
 Author: Mar Gonzalez-Porta
 Maintainer: Mar Gonzalez-Porta <mgonzalez@illumina.com>
-Description: A toolbox to generate pre-defined plots and tables from happy output, for easy reporting.
+BugReports: https://git.illumina.com/mgonzalez/happyCompare/issues
+Description: Adds reporting functionality to hap.py, either by 
+    simple parsing and visualisation of its csv outputs (e.g. precision 
+    vs. recall scatterplots, ROC curves), or through more sophisticated 
+    data analysis (e.g. performance in stratification regions).
 License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
-Imports: ggplot2, data.table, gridExtra, plyr, reshape2
+Imports: dplyr, ggplot2, data.table, gridExtra, reshape2
+Suggests: testthat
