@@ -1,7 +1,5 @@
 ## data input
 
-library(dplyr)
-
 #' load_data
 #'
 #' Load csv inputs.
@@ -82,7 +80,7 @@ load_data = function(config_path) {
         this_path = config$happy_summary[i]
         message(sprintf('Reading %s', this_path))
         this_metrics = data.table::fread(this_path)
-        this_metrics$Group = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
+        this_metrics$Group.Id = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
         this_metrics$Sample.Id = rep(as.character(config$sample_id[i]), dim(this_metrics)[1])
         this_metrics$Replicate.Id = rep(as.character(config$replicate_id[i]), dim(this_metrics)[1])
         return(this_metrics)
@@ -112,7 +110,7 @@ load_data = function(config_path) {
         this_path = config$happy_extended[i]
         message(sprintf('Reading %s', this_path))
         this_metrics = data.table::fread(this_path)
-        this_metrics$Group = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
+        this_metrics$Group.Id = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
         this_metrics$Sample.Id = rep(as.character(config$sample_id[i]), dim(this_metrics)[1])
         this_metrics$Replicate.Id = rep(as.character(config$replicate_id[i]), dim(this_metrics)[1])
         

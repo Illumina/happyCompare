@@ -9,6 +9,9 @@
 \arguments{
 \item{obj}{A `happy_extended` object.}
 }
+\value{
+A `data.table` object.
+}
 \description{
 Tidy a `happy_extended` object by converting into a single `data.table`.
 }

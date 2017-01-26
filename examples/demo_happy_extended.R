@@ -13,3 +13,4 @@ head(he, n = 2)
 
 # apply happy_extended methods
 head(tidy(he))
+he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e5)

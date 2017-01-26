@@ -17,7 +17,19 @@ test_that("demo data are loaded in the expected format", {
 test_that("tidy.happy_extended works", {
     he = demo_happy_extended$happy_extended
     the = tidy(he)
+    
     expect_is(the, "data.frame")
+    
     expect_equal(dim(the)[1], 3996)
     expect_equal(dim(the)[2], 74)
+})
+
+test_that("add_credible_intervals.happy_extended works", {
+    he = demo_happy_extended$happy_extended
+    he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e4)
+    
+    expect_is(he_ci, "data.table")
+    
+    expect_equal(dim(he_ci)[1], 6126)
+    expect_equal(dim(he_ci)[2], 15)
 })
