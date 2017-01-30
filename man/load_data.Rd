@@ -11,7 +11,7 @@ load_data(config_path)
 group_id, sample_id, happy_summary, happy_extended.}
 }
 \value{
-A `happy_compare` object.
+A `haplocompare` object.
 }
 \description{
 Load csv inputs.

@@ -2,12 +2,12 @@ context("happy summary")
 
 test_that("demo data are loaded in the expected format", {
     setwd(path.package('happyCompare'))
-    
+
     config_path = "data-raw/config.happy_summary.csv"
     demo_happy_summary = load_data(config_path = config_path)
     hs = demo_happy_summary$happy_summary
     
-    expect_true(is_happy_compare(demo_happy_summary))
+    expect_true(is_haplocompare(demo_happy_summary))
     expect_true(is_happy_summary(hs))
     
     expect_equal(dim(hs[[1]])[1], 4)

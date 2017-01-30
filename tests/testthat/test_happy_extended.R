@@ -7,7 +7,7 @@ test_that("demo data are loaded in the expected format", {
     demo_happy_extended = load_data(config_path = config_path)
     he = demo_happy_extended$happy_extended
     
-    expect_true(is_happy_compare(demo_happy_extended))
+    expect_true(is_haplocompare(demo_happy_extended))
     expect_true(is_happy_extended(he))
     
     expect_equal(dim(he[[1]])[1], 999)
@@ -26,7 +26,7 @@ test_that("tidy.happy_extended works", {
 
 test_that("add_credible_intervals.happy_extended works", {
     he = demo_happy_extended$happy_extended
-    he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e4)
+    he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e3)
     
     expect_true(is_happy_extended_ci(he_ci))
     
