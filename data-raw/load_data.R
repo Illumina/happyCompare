@@ -16,6 +16,11 @@ he = demo_happy_extended$happy_extended
 demo_happy_extended_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e5)
 devtools::use_data(demo_happy_extended_ci, overwrite = TRUE)
 
+config_path = "data-raw/config.happy_compare.csv"
+demo_happy_compare = load_data(config_path = config_path)
+devtools::use_data(demo_happy_compare, overwrite = TRUE)
+
+
 ## data can be accessed using one of the following
 ##
 ## option 1:

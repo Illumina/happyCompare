@@ -4,7 +4,7 @@
 \alias{tidy.happy_summary}
 \title{tidy}
 \usage{
-\method{tidy}{happy_summary}(obj)
+\method{tidy}{happy_summary}(obj, ...)
 }
 \arguments{
 \item{obj}{A `happy_summary` object.}

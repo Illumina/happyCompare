@@ -4,7 +4,7 @@
 \alias{tidy.happy_extended}
 \title{tidy}
 \usage{
-\method{tidy}{happy_extended}(obj)
+\method{tidy}{happy_extended}(obj, ...)
 }
 \arguments{
 \item{obj}{A `happy_extended` object.}
