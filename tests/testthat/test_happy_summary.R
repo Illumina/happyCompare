@@ -3,7 +3,7 @@ context("happy summary")
 test_that("demo data are loaded in the expected format", {
     setwd(path.package('happyCompare'))
 
-    config_path = system.file("data-raw", "config.happy_summary.csv", package = "happyCompare")
+    config_path = "data-raw/config.happy_summary.csv"
     demo_happy_summary = load_data(config_path = config_path)
     hs = demo_happy_summary$happy_summary
     
