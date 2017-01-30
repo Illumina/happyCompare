@@ -4,7 +4,7 @@
 #' 
 #' Demo data for the happy summary class
 #'
-#' @format A `happy_compare` object (i.e. a `list`) with the following elements:
+#' @format A `haplocompare` object (i.e. a `list`) with the following elements:
 #' \describe{
 #'   \item{config}{Original config (a `data.table`).}
 #'   \item{happy_summary}{Happy summary metrics (a `happy_summary` object, i.e. a `list` of `data.tables`.)}

@@ -3,11 +3,11 @@ library("ggplot2")
 theme_set(theme_bw())
 library("dplyr")
 
-# inspect the pre-loaded demo_happy_compare dataset
-class(demo_happy_compare)
+# inspect the pre-loaded demo_haplocompare dataset
+class(demo_haplocompare)
 
 # we can see that the config contains custom metadata fields
-config = demo_happy_compare$config
+config = demo_haplocompare$config
 config
 
 # let's use the information from these fields to answer a few questions about our experimental design
@@ -19,7 +19,7 @@ config %>%
     knitr::kable()
 
 # Q: how are replicates distributed within the 96-well plate?
-pdf(file = 'inst/extdata/demo_happy_compare.plate_layout.pdf', width = 10, height = 4)
+pdf(file = 'inst/extdata/demo_haplocompare.plate_layout.pdf', width = 10, height = 4)
 config %>%
     mutate(platebarcode = gsub('_.*', '', replicate_id),
            column = factor(substrRight(replicate_id, 2), levels = rev(sort(c("01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -52,7 +52,7 @@ expanded_lanes = lapply(seq_along(config$lanes), function(i) {
     dplyr::bind_rows() %>%
     unique()
 
-pdf(file = 'inst/extdata/demo_happy_compare.flowcell_layout.pdf', width = 10, height = 4)
+pdf(file = 'inst/extdata/demo_haplocompare.flowcell_layout.pdf', width = 10, height = 4)
 expanded_lanes %>%
     ggplot(aes(lane, flowcell)) +
     geom_tile(color = 'white') +

@@ -7,7 +7,7 @@
 #' @param config_path Path to configuration file. Required columns:
 #' group_id, sample_id, happy_summary, happy_extended.
 #' 
-#' @return A `happy_compare` object.
+#' @return A `haplocompare` object.
 #' @examples
 #' \dontrun{load_data(config_path = config_path)}
 #' @export
@@ -59,7 +59,7 @@ load_data = function(config_path) {
         happy_summary = happy_summary,
         happy_extended = happy_extended
     )
-    class(data) = append(class(data), "happy_compare", after = 0)
+    class(data) = append(class(data), "haplocompare", after = 0)
     return(data)
     
 }
