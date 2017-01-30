@@ -13,5 +13,6 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
-Imports: dplyr, ggplot2, data.table, gridExtra, reshape2
+Depends: dplyr, ggplot2, R (>= 2.10)
+Imports: data.table, gridExtra, reshape2, knitr, plyr
 Suggests: testthat

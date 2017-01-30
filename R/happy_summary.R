@@ -6,7 +6,7 @@ is_happy_summary = function(obj) {
 }
 
 #' @export
-print.happy_summary = function(obj) {
+print.happy_summary = function(obj, ...) {
     print(lapply(obj, function(x) dplyr::trunc_mat(x)))
 }
 
@@ -16,7 +16,7 @@ print.happy_summary = function(obj) {
 #' 
 #' @param obj A `happy_summary` object.
 #' @export
-tidy.happy_summary = function(obj) {
+tidy.happy_summary = function(obj, ...) {
     df = plyr::ldply(obj, data.frame)
     return(df)
 }
@@ -35,6 +35,7 @@ tidy.happy_summary = function(obj) {
 #' @param point.size Point size in scatterplot. Default: 3.
 #' @param font.size Font size. Default: 12.
 #' @export
+#' @import dplyr ggplot2
 plot.happy_summary = function(obj, type, filter = 'PASS', 
                               xlim.low = NA, xlim.high = 1, ylim.low = NA, ylim.high = 1,
                               point.size = 3, font.size = 12, ...) {
@@ -96,6 +97,7 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
 #' @param digits Number of significant digits in summary statistics. Default: 4.
 #' @param kable_format a character string to pass to knitr::kable(). Default: markdown.
 #' @export
+#' @import dplyr
 summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
                                  kable_format = 'markdown', ...) {
     

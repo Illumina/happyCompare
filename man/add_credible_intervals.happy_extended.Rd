@@ -5,7 +5,7 @@
 \title{add_credible_intervals}
 \usage{
 \method{add_credible_intervals}{happy_extended}(obj, metric, sig = 0.05,
-  samplesize = 1e+06)
+  samplesize = 1e+06, ...)
 }
 \arguments{
 \item{obj}{A `happy_extended` object.}

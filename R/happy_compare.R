@@ -6,6 +6,6 @@ is_happy_compare = function(obj) {
 }
 
 #' @export
-print.happy_compare = function(obj) {
+print.happy_compare = function(obj, ...) {
     print(sapply(obj, class))
 }

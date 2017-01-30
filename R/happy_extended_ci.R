@@ -16,6 +16,7 @@ is_happy_extended_ci = function(obj) {
 #' @param xlim.low Lower bound for x axis. Default: NA.
 #' @param xlim.high Upper bound for x axis. Default: 1.
 #' @export
+#' @import dplyr ggplot2
 plot_subset.happy_extended_ci = function(obj, type, filter = 'PASS', subset, metric,
                                   xlim.low = 0, xlim.high = 1, ...) {
     ## validate input

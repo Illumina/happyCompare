@@ -6,7 +6,7 @@ is_happy_extended = function(obj) {
 }
 
 #' @export
-print.happy_extended = function(obj) {
+print.happy_extended = function(obj, ...) {
     print(lapply(obj, function(x) dplyr::trunc_mat(x)))
 }
 
@@ -17,7 +17,7 @@ print.happy_extended = function(obj) {
 #' @param obj A `happy_extended` object.
 #' @return A `data.table` object.
 #' @export
-tidy.happy_extended = function(obj) {
+tidy.happy_extended = function(obj, ...) {
     df = plyr::ldply(obj, data.frame)
     dt = data.table::data.table(df)
     return(dt)
@@ -32,7 +32,8 @@ tidy.happy_extended = function(obj) {
 #' @param obj A `happy_extended` object.
 #' @return A `happy_extended_ci` object.
 #' @export
-add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, samplesize = 1e6) {
+#' @import dplyr
+add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, samplesize = 1e6, ...) {
     ## validate input
     supported_metrics = c('METRIC.Recall')
     if (!metric %in% supported_metrics) {
@@ -79,6 +80,7 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
     return(ci)
 }
 
+#' @import dplyr
 .add_ci = function(successes, totals, sig, samplesize) {
     
     ## validate input
