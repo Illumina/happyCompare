@@ -1,31 +1,42 @@
 ## happy_summary methods
 
+#' is_happy_summary
+#' 
+#' Check if the class of the provided object matches the expected one.
+#' 
+#' @param x An object to inspect.
 #' @export
-is_happy_summary = function(obj) {
-    inherits(obj, "happy_summary")
+is_happy_summary = function(x) {
+    inherits(x, "happy_summary")
 }
 
+#' print.happy_summary
+#' 
+#' Print a happy_summary object.
+#' 
+#' @param x A `happy_summary` object.
+#' @param ... Extra arguments.
 #' @export
-print.happy_summary = function(obj, ...) {
-    print(lapply(obj, function(x) dplyr::trunc_mat(x)))
+print.happy_summary = function(x, ...) {
+    print(lapply(x, function(x) dplyr::trunc_mat(x)))
 }
 
 #' tidy
 #'
 #' Tidy a `happy_summary` object by converting into a single `data.table`.
 #' 
-#' @param obj A `happy_summary` object.
+#' @param x A `happy_summary` object.
+#' @param ... Extra arguments.
 #' @export
-tidy.happy_summary = function(obj, ...) {
-    df = plyr::ldply(obj, data.frame)
-    return(df)
+tidy.happy_summary = function(x, ...) {
+    x %>% dplyr::bind_rows()
 }
 
 #' plot.happy_summary
 #'
 #' Plot happy summary results.
 #' 
-#' @param obj A `happy_summary` object.
+#' @param x A `happy_summary` object.
 #' @param type Variant type. One of: SNP, INDEL.
 #' @param filter Variant filter. One of: PASS (default), ALL.
 #' @param xlim.low Lower bound for x axis. Default: NA.
@@ -34,9 +45,9 @@ tidy.happy_summary = function(obj, ...) {
 #' @param ylim.high Upper bound for y axis. Default: 1.
 #' @param point.size Point size in scatterplot. Default: 3.
 #' @param font.size Font size. Default: 12.
+#' @param ... Extra arguments.
 #' @export
-#' @import dplyr ggplot2
-plot.happy_summary = function(obj, type, filter = 'PASS', 
+plot.happy_summary = function(x, type, filter = 'PASS', 
                               xlim.low = NA, xlim.high = 1, ylim.low = NA, ylim.high = 1,
                               point.size = 3, font.size = 12, ...) {
     
@@ -46,7 +57,7 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
     }
     
     ## plot
-    data = tidy(obj) %>%
+    data = tidy(x) %>%
         filter(Type == type, Filter == filter)
     
     p1 = ggplot(data, aes(x = METRIC.Recall, y = METRIC.Precision)) +
@@ -91,14 +102,14 @@ plot.happy_summary = function(obj, type, filter = 'PASS',
 #'
 #' Summarise happy summary results into tabular format.
 #' 
-#' @param obj A `happy_summary` object.
+#' @param object A `happy_summary` object.
 #' @param type Variant type. One of: SNP, INDEL.
 #' @param filter Variant filter. One of: PASS (default), ALL.
 #' @param digits Number of significant digits in summary statistics. Default: 4.
-#' @param kable_format a character string to pass to knitr::kable(). Default: markdown.
+#' @param kable_format a character string to pass to `knitr::kable()`. Default: markdown.
+#' @param ... Extra arguments.
 #' @export
-#' @import dplyr
-summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
+summary.happy_summary = function(object, type, filter = 'PASS', digits = 4,
                                  kable_format = 'markdown', ...) {
     
     ## validate input
@@ -108,7 +119,7 @@ summary.happy_summary = function(obj, type, filter = 'PASS', digits = 4,
     
     ## plot
     caption = paste(filter, type, collapse = '-')
-    data = tidy(obj) %>%
+    data = tidy(object) %>%
         filter(Type == type, Filter == filter) %>%
         group_by(Group.Id) %>%
         summarise(

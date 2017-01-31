@@ -8,15 +8,12 @@ load_data(config_path)
 }
 \arguments{
 \item{config_path}{Path to configuration file. Required columns:
-group_id, sample_id, happy_summary, happy_extended.}
+group_id, sample_id, replicate_id.}
 }
 \value{
 A `haplocompare` object.
 }
 \description{
 Load csv inputs.
-}
-\examples{
-\dontrun{load_data(config_path = config_path)}
 }
 
