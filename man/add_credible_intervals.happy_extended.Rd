@@ -4,18 +4,27 @@
 \alias{add_credible_intervals.happy_extended}
 \title{add_credible_intervals}
 \usage{
-\method{add_credible_intervals}{happy_extended}(obj, metric, sig = 0.05,
+\method{add_credible_intervals}{happy_extended}(x, metric, sig = 0.05,
   samplesize = 1e+06, ...)
 }
 \arguments{
-\item{obj}{A `happy_extended` object.}
+\item{x}{A `happy_extended` object.}
+
+\item{metric}{The performance metric to evaluate. One of: METRIC.Recall.}
+
+\item{sig}{Significance value for the credible intervals. Default: 0.05 (95\% credible intervals).}
+
+\item{samplesize}{The number of points to sample from the posterior to estimate the credible intervals. Default: 1e6.}
+
+\item{...}{Extra arguments.}
 }
 \value{
 A `happy_extended_ci` object.
 }
 \description{
 Add credible intervals to the observed performance estimates using a 
-beta-binomial model. The uncertainty measurement takes into account both the total number of events in each subset
-(e.g. `TRUTH.TOTAL`) and the variability across replicates.
+beta-binomial model. The uncertainty measurement takes into account both the
+total number of events in each subset (e.g. `TRUTH.TOTAL`) and the
+variability across replicates.
 }
 

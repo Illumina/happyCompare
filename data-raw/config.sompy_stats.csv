@@ -1,0 +1,7 @@
+group_id,sample_id,replicate_id,sompy_stats
+A,HCC1187,replicate_1,data-raw/HCC1187.rep1.groupA.sompy.SNV.pass.stats.csv
+B,HCC1187,replicate_1,data-raw/HCC1187.rep1.groupB.sompy.SNV.pass.stats.csv
+A,HCC1187,replicate_2,data-raw/HCC1187.rep2.groupA.sompy.SNV.pass.stats.csv
+B,HCC1187,replicate_2,data-raw/HCC1187.rep2.groupB.sompy.SNV.pass.stats.csv
+A,HCC1954,replicate_1,data-raw/HCC1954.groupA.sompy.SNV.pass.stats.csv
+B,HCC1954,replicate_1,data-raw/HCC1954.groupB.sompy.SNV.pass.stats.csv

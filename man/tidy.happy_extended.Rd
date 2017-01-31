@@ -4,10 +4,12 @@
 \alias{tidy.happy_extended}
 \title{tidy}
 \usage{
-\method{tidy}{happy_extended}(obj, ...)
+\method{tidy}{happy_extended}(x, ...)
 }
 \arguments{
-\item{obj}{A `happy_extended` object.}
+\item{x}{A `happy_extended` object.}
+
+\item{...}{Extra arguments.}
 }
 \value{
 A `data.table` object.

@@ -4,12 +4,12 @@
 \alias{plot.happy_summary}
 \title{plot.happy_summary}
 \usage{
-\method{plot}{happy_summary}(obj, type, filter = "PASS", xlim.low = NA,
+\method{plot}{happy_summary}(x, type, filter = "PASS", xlim.low = NA,
   xlim.high = 1, ylim.low = NA, ylim.high = 1, point.size = 3,
   font.size = 12, ...)
 }
 \arguments{
-\item{obj}{A `happy_summary` object.}
+\item{x}{A `happy_summary` object.}
 
 \item{type}{Variant type. One of: SNP, INDEL.}
 
@@ -26,6 +26,8 @@
 \item{point.size}{Point size in scatterplot. Default: 3.}
 
 \item{font.size}{Font size. Default: 12.}
+
+\item{...}{Extra arguments.}
 }
 \description{
 Plot happy summary results.

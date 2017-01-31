@@ -18,15 +18,15 @@ test_that("tidy.happy_extended works", {
     he = demo_happy_extended$happy_extended
     the = tidy(he)
     
-    expect_is(the, "data.frame")
+    expect_is(the, "data.table")
     
     expect_equal(dim(the)[1], 3996)
-    expect_equal(dim(the)[2], 74)
+    expect_equal(dim(the)[2], 73)
 })
 
 test_that("add_credible_intervals.happy_extended works", {
     he = demo_happy_extended$happy_extended
-    he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e3)
+    he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 100)
     
     expect_true(is_happy_extended_ci(he_ci))
     

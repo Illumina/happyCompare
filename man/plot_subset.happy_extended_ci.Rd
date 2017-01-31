@@ -4,11 +4,11 @@
 \alias{plot_subset.happy_extended_ci}
 \title{plot_subset}
 \usage{
-\method{plot_subset}{happy_extended_ci}(obj, type, filter = "PASS", subset,
+\method{plot_subset}{happy_extended_ci}(x, type, filter = "PASS", subset,
   metric, xlim.low = 0, xlim.high = 1, ...)
 }
 \arguments{
-\item{obj}{A `happy_extended_ci` object.}
+\item{x}{A `happy_extended_ci` object.}
 
 \item{type}{Variant type. One of: SNP, INDEL.}
 
@@ -16,11 +16,15 @@
 
 \item{subset}{A subset id.}
 
-\item{xlim.low}{Lower bound for x axis. Default: NA.}
+\item{metric}{The performance metric to evaluate. One of: METRIC.Recall.}
+
+\item{xlim.low}{Lower bound for x axis. Default: 0.}
 
 \item{xlim.high}{Upper bound for x axis. Default: 1.}
+
+\item{...}{Extra arguments.}
 }
 \description{
-Plot performance metrics for the specified subset
+Plot performance metrics for the specified subset.
 }
 

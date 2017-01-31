@@ -17,9 +17,10 @@ test_that("demo data are loaded in the expected format", {
 test_that("tidy.happy_summary works", {
     hs = demo_happy_summary$happy_summary
     ths = tidy(hs)
-    expect_is(ths, "data.frame")
+    
+    expect_is(ths, "data.table")
     expect_equal(dim(ths)[1], 16)
-    expect_equal(dim(ths)[2], 20)
+    expect_equal(dim(ths)[2], 19)
 })
 
 test_that("plot.happy_summary works", {

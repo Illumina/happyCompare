@@ -1,23 +1,29 @@
 ## happy_extended methods
 
+#' is_happy_extended_ci
+#' 
+#' Check if the class of the provided object matches the expected one.
+#' 
+#' @param x An object to inspect.
 #' @export
-is_happy_extended_ci = function(obj) {
-    inherits(obj, "happy_extended_ci")
+is_happy_extended_ci = function(x) {
+    inherits(x, "happy_extended_ci")
 }
 
 #' plot_subset
 #' 
-#' Plot performance metrics for the specified subset
+#' Plot performance metrics for the specified subset.
 #' 
-#' @param obj A `happy_extended_ci` object.
+#' @param x A `happy_extended_ci` object.
 #' @param type Variant type. One of: SNP, INDEL.
 #' @param filter Variant filter. One of: PASS (default), ALL.
 #' @param subset A subset id.
-#' @param xlim.low Lower bound for x axis. Default: NA.
+#' @param metric The performance metric to evaluate. One of: METRIC.Recall.
+#' @param xlim.low Lower bound for x axis. Default: 0.
 #' @param xlim.high Upper bound for x axis. Default: 1.
+#' @param ... Extra arguments.
 #' @export
-#' @import dplyr ggplot2
-plot_subset.happy_extended_ci = function(obj, type, filter = 'PASS', subset, metric,
+plot_subset.happy_extended_ci = function(x, type, filter = 'PASS', subset, metric,
                                   xlim.low = 0, xlim.high = 1, ...) {
     ## validate input
     if (missing(type) || missing(subset) || missing(metric)) {
@@ -25,7 +31,7 @@ plot_subset.happy_extended_ci = function(obj, type, filter = 'PASS', subset, met
     }
     
     ## subset data
-    data = obj %>%
+    data = x %>%
         filter(Type == type, Filter == filter, Subset == subset) %>%
         select_(.dots = c("Type", "Filter", "Subset", "Group.Id", names(.)[grepl(metric, names(.))])) %>%
         rename_(.dots = setNames(names(.), gsub(paste0(metric, '.'), '', names(.))))

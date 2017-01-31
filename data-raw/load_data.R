@@ -19,6 +19,9 @@ config_path = "data-raw/config.haplocompare.csv"
 demo_haplocompare = load_data(config_path = config_path)
 devtools::use_data(demo_haplocompare, overwrite = TRUE)
 
+config_path = "data-raw/config.sompy_stats.csv"
+demo_sompy_stats = load_data(config_path = config_path)
+devtools::use_data(demo_sompy_stats, overwrite = TRUE)
 
 ## data can be accessed using one of the following
 ##

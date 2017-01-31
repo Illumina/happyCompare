@@ -1,39 +1,53 @@
 ## happy_extended methods
 
+#' is_happy_extended
+#' 
+#' Check if the class of the provided object matches the expected one.
+#' 
+#' @param x An object to inspect.
 #' @export
-is_happy_extended = function(obj) {
-    inherits(obj, "happy_extended")
+is_happy_extended = function(x) {
+    inherits(x, "happy_extended")
 }
 
+#' print.happy_extended
+#' 
+#' Print a happy_extended object.
+#' 
+#' @param x A `happy_extended` object.
+#' @param ... Extra arguments.
 #' @export
-print.happy_extended = function(obj, ...) {
-    print(lapply(obj, function(x) dplyr::trunc_mat(x)))
+print.happy_extended = function(x, ...) {
+    print(lapply(x, function(x) dplyr::trunc_mat(x)))
 }
 
 #' tidy
 #'
 #' Tidy a `happy_extended` object by converting into a single `data.table`.
 #' 
-#' @param obj A `happy_extended` object.
+#' @param x A `happy_extended` object.
+#' @param ... Extra arguments.
 #' @return A `data.table` object.
 #' @export
-tidy.happy_extended = function(obj, ...) {
-    df = plyr::ldply(obj, data.frame)
-    dt = data.table::data.table(df)
-    return(dt)
+tidy.happy_extended = function(x, ...) {
+    x %>% dplyr::bind_rows()
 }
 
 #' add_credible_intervals
 #' 
 #' Add credible intervals to the observed performance estimates using a 
-#' beta-binomial model. The uncertainty measurement takes into account both the total number of events in each subset
-#' (e.g. `TRUTH.TOTAL`) and the variability across replicates.
+#' beta-binomial model. The uncertainty measurement takes into account both the
+#' total number of events in each subset (e.g. `TRUTH.TOTAL`) and the
+#' variability across replicates.
 #' 
-#' @param obj A `happy_extended` object.
+#' @param x A `happy_extended` object.
+#' @param metric The performance metric to evaluate. One of: METRIC.Recall.
+#' @param sig Significance value for the credible intervals. Default: 0.05 (95\% credible intervals).
+#' @param samplesize The number of points to sample from the posterior to estimate the credible intervals. Default: 1e6.
+#' @param ... Extra arguments.
 #' @return A `happy_extended_ci` object.
 #' @export
-#' @import dplyr
-add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, samplesize = 1e6, ...) {
+add_credible_intervals.happy_extended = function(x, metric, sig = 0.05, samplesize = 1e6, ...) {
     ## validate input
     supported_metrics = c('METRIC.Recall')
     if (!metric %in% supported_metrics) {
@@ -43,13 +57,13 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
     ## add credible intervals
     if (metric == 'METRIC.Recall') {
         
-        input_data = tidy(obj) %>%
+        input_data = tidy(x) %>%
             filter(Subset.Level == 2) %>%
-            select(Type, Filter, Group.Id, Subset, Sample.Id, Replicate.Id, TRUTH.TP, TRUTH.TOTAL)
+            select_("Type", "Filter", "Group.Id", "Subset", "Sample.Id", "Replicate.Id", "TRUTH.TP", "TRUTH.TOTAL")
         
         n_zeros = input_data %>%
             filter(TRUTH.TOTAL == 0) %>%
-            select(Subset) %>%
+            select_("Subset") %>%
             n_distinct()
         if (n_zeros > 0) {
             warning(sprintf("Discarding %d subsets where TRUTH.TOTAL == 0.", n_zeros))
@@ -60,7 +74,7 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
         credible_intervals = input_data %>%
             group_by(Type, Filter, Group.Id, Subset) %>%
             do(data.frame(.add_ci(successes = .$TRUTH.TP, totals = .$TRUTH.TOTAL, sig = sig, samplesize = samplesize))) %>%
-            rename_(.dots = setNames(names(.), 
+            rename_(.dots = stats::setNames(names(.), 
                                      c(names(.)[1:4],
                                        paste(metric, names(.)[-c(1:4)], sep = '.')))) %>%
             ungroup() %>%
@@ -72,15 +86,14 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
 }
 
 .posterior_ci = function(samplesize, sig, alpha1, beta1) {
-    theta = rbeta(samplesize, alpha1, beta1)
-    ci = quantile(theta, c(sig/2, 0.5, 1 - sig/2), na.rm = T) %>%
+    theta = stats::rbeta(samplesize, alpha1, beta1)
+    ci = stats::quantile(theta, c(sig/2, 0.5, 1 - sig/2), na.rm = T) %>%
         t() %>%
         data.table::data.table()
     colnames(ci) = c('low', 'theta1', 'high')
     return(ci)
 }
 
-#' @import dplyr
 .add_ci = function(successes, totals, sig, samplesize) {
     
     ## validate input
@@ -89,7 +102,7 @@ add_credible_intervals.happy_extended = function(obj, metric, sig = 0.05, sample
     }
     
     ## estimate parameters for beta prior
-    v = var(successes / totals)
+    v = stats::var(successes / totals)
     mu = mean(successes / totals)
     if (!is.na(v) && v < mu * (1 - mu)) {
         kappa = (mu * (1 - mu) / v - 1 )
