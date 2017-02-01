@@ -49,7 +49,7 @@ tidy.build_metrics = function(x, metrics, ...) {
     
 }
 
-#' rename
+#' rename_metrics
 #' 
 #' Rename metric names in a `build_metrics` object.
 #' 
@@ -58,7 +58,7 @@ tidy.build_metrics = function(x, metrics, ...) {
 #'   between metric names. Required columns: old_name, new_name.
 #' @param ... Extra arguments.
 #' @export
-rename.build_metrics = function(x, metrics_map, ...) {
+rename_metrics.build_metrics = function(x, metrics_map, ...) {
     
     ## validate input
     required_cols = c('old_name', 'new_name')
@@ -69,10 +69,10 @@ rename.build_metrics = function(x, metrics_map, ...) {
     ## rename
     mm = c(metrics_map$new_name)
     names(mm) = metrics_map$old_name
-    renamed_x = lapply(x, function(y) {
+    renamed_data = lapply(x, function(y) {
         plyr::rename(y, replace = mm)
     })
-    class(renamed_x) = append(class(renamed_x), "build_metrics", after = 0)
-    return(renamed_x)
+    class(renamed_data) = append(class(renamed_data), "build_metrics", after = 0)
+    return(renamed_data)
     
 }

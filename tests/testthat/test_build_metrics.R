@@ -27,8 +27,19 @@ test_that("tidy.build_metrics works", {
 
 test_that("rename.build_metrics works", {
     bm = demo_build_metrics$build_metrics
+    metrics_map = list(
+        data.table(
+            old_name = 'MetricsVersion',
+            new_name = 'metrics_version'
+        ),
+        data.table(
+            old_name = 'percent_q30_bases',
+            new_name = '% Q30 bases'
+        )
+    ) %>% 
+        bind_rows()
     
-    renamed_bm = rename(bm, metrics_map = metrics_map)    
+    renamed_bm = rename_metrics(x = bm, metrics_map = metrics_map)    
     tbm = tidy(renamed_bm, metrics = c('metrics_version', '% Q30 bases'))
     expect_is(tbm, "data.table")
     expect_equal(dim(tbm)[1], 4)

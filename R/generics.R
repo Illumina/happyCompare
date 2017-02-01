@@ -43,3 +43,24 @@ plot_subset = function(x, ...) {
 plot_af = function(x, ...) {
     UseMethod("plot_af", x)
 }
+
+#' merge
+#' 
+#' Generic for merge().
+#' 
+#' @param x Input object.
+#' @param ... Extra arguments.
+#' @export
+merge_nested = function(obj, ...) {
+    UseMethod("merge_nested", obj)
+}
+
+#' rename_metrics
+#' 
+#' Generic for rename_metrics().
+#' 
+#' @param x Input object.
+#' @param ... Extra arguments.
+rename_metrics = function(x, ...) {
+    UseMethod("rename_metrics", x)
+}

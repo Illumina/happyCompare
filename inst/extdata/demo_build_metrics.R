@@ -33,5 +33,5 @@ metrics_map = list(
 ) %>% 
     bind_rows()
 
-renamed_bm = rename(bm, metrics_map = metrics_map)
+renamed_bm = rename_metrics(x = bm, metrics_map = metrics_map)
 tidy(renamed_bm, metrics = c('metrics_version', '% Q30 bases'))
