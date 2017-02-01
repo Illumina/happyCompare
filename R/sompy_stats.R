@@ -145,7 +145,7 @@ plot_af.sompy_stats = function(x, type, filter = 'PASS',
         mutate(AF_bin = gsub(pattern = paste0(type_opt, '.'), replacement = '', x = type)) %>%
         select(Group.Id, Sample.Id, AF_bin, recall, fp.rate, ambiguous) %>% 
         data.table::data.table() %>% 
-        reshape2::melt() %>% 
+        reshape2::melt(id.vars = c('Group.Id', 'Sample.Id', 'AF_bin')) %>% 
         ggplot(aes(x = value, y = AF_bin)) +
         geom_point(aes(color = Group.Id, shape = Sample.Id), size = point.size) +
         xlim(0, NA) +

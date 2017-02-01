@@ -1,0 +1,5 @@
+group_id,sample_id,replicate_id,build_metrics
+A,NA12877,LP1100076-DNA_A01,data-raw/groupA.LP1100076-DNA_A01.build_metrics.csv
+A,NA12878,LP1100076-DNA_A02,data-raw/groupA.LP1100076-DNA_A02.build_metrics.csv
+B,NA12877,LP1100076-DNA_A01,data-raw/groupB.LP1100076-DNA_A01.build_metrics.csv
+B,NA12878,LP1100076-DNA_A02,data-raw/groupB.LP1100076-DNA_A02.build_metrics.csv

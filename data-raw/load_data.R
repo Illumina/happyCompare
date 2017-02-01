@@ -23,6 +23,10 @@ config_path = "data-raw/config.sompy_stats.csv"
 demo_sompy_stats = load_data(config_path = config_path)
 devtools::use_data(demo_sompy_stats, overwrite = TRUE)
 
+config_path = "data-raw/config.build_metrics.csv"
+demo_build_metrics = load_data(config_path = config_path)
+devtools::use_data(demo_build_metrics, overwrite = TRUE)
+
 ## data can be accessed using one of the following
 ##
 ## option 1:

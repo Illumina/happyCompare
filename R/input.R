@@ -70,12 +70,30 @@ load_data = function(config_path) {
             }
         }
     }
+    
+    ## build_metrics
+    build_metrics = NULL
+    if ('build_metrics' %in% colnames(config)) {
+        if (any(is.na(config$build_metrics))) {
+            warning("NAs found among happy summary paths, will not load any data.")
+        } else {
+            if (!all(grepl('csv', config$build_metrics))) {
+                stop("build metrics file does not match the expected *.csv")
+            } else {
+                message("Loading build metrics...")
+                sconfig = config %>% select(group_id, sample_id, replicate_id, build_metrics)
+                build_metrics = .load_build_metrics(config = sconfig)
+            }
+        }
+    }
+    
     ## return
     data = list(
         config = config,
         happy_summary = happy_summary,
         happy_extended = happy_extended,
-        sompy_stats = sompy_stats
+        sompy_stats = sompy_stats,
+        build_metrics = build_metrics
     )
     class(data) = append(class(data), "haplocompare", after = 0)
     return(data)
@@ -107,7 +125,6 @@ load_data = function(config_path) {
     return(data)
     
 }
-
 
 .load_happy_extended = function(config) {
     
@@ -144,7 +161,6 @@ load_data = function(config_path) {
     
 }
 
-
 .load_sompy_stats = function(config) {
     
     ## validate input
@@ -168,6 +184,32 @@ load_data = function(config_path) {
         paste(config$group_id[i], config$sample_id[i], config$replicate_id[i], sep = '-')
     })
     class(data) = append(class(data), "sompy_stats", after = 0)
+    return(data)
+    
+}
+
+.load_build_metrics = function(config) {
+    
+    ## validate input
+    required_cols = c('group_id', 'sample_id', 'replicate_id', 'build_metrics')
+    if (!all(required_cols %in% colnames(config))) {
+        stop("Missing required columns in input config, see docs.")
+    }
+    
+    ## load data
+    data = lapply(seq_along(config$build_metrics), function(i) {
+        this_path = config$build_metrics[i]
+        message(sprintf('Reading %s', this_path))
+        this_metrics = data.table::fread(this_path)
+        this_metrics$Group.Id = rep(as.character(config$group_id[i]), dim(this_metrics)[1])
+        this_metrics$Sample.Id = rep(as.character(config$sample_id[i]), dim(this_metrics)[1])
+        this_metrics$Replicate.Id = rep(as.character(config$replicate_id[i]), dim(this_metrics)[1])
+        return(this_metrics)
+    })
+    names(data) = sapply(seq_along(config$build_metrics), function(i) {
+        paste(config$group_id[i], config$sample_id[i], config$replicate_id[i], sep = '-')
+    })
+    class(data) = append(class(data), "build_metrics", after = 0)
     return(data)
     
 }
