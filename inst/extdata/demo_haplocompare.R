@@ -5,6 +5,7 @@ library("dplyr")
 
 # inspect the pre-loaded demo_haplocompare dataset
 class(demo_haplocompare)
+!sapply(demo_haplocompare, is.null)
 
 # we can see that the config contains custom metadata fields
 config = demo_haplocompare$config
@@ -58,4 +59,18 @@ expanded_lanes %>%
     geom_tile(color = 'white') +
     scale_x_discrete(drop = FALSE) +
     facet_grid(replicate_id ~ machine, scales = "free_y", space = "free")
+dev.off()
+
+# we have happy_summary and build_metrics available; let's explore the merge_nested() method
+merged_dt = merge_nested(obj = demo_haplocompare, x = 'happy_summary', y = 'build_metrics', 
+                         select = c('Type', 'Filter', 'METRIC.Recall', 'autosome_mean_coverage'))
+head(merged_dt)
+
+pdf(file = 'inst/extdata/demo_haplocompare.merge_nested.pdf', width = 8, height = 4)
+merged_dt %>% 
+    filter(Filter == 'PASS') %>% 
+    ggplot(aes(x = METRIC.Recall, y = autosome_mean_coverage)) +
+    geom_point(aes(color = Group.Id), size = 3) +
+    facet_grid(. ~ Type) +
+    ggtitle('PASS variants')
 dev.off()

@@ -118,7 +118,7 @@ load_data = function(config_path) {
         this_metrics$Replicate.Id = rep(as.character(config$replicate_id[i]), dim(this_metrics)[1])
         return(this_metrics)
     })
-    names(data) = sapply(seq_along(config$happy_extended), function(i) {
+    names(data) = sapply(seq_along(config$happy_summary), function(i) {
         paste(config$group_id[i], config$sample_id[i], config$replicate_id[i], sep = '-')
     })
     class(data) = append(class(data), "happy_summary", after = 0)
