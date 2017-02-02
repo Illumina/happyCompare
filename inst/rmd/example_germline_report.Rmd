@@ -1,0 +1,51 @@
+---
+title: "Example germline report"
+output: 
+    html_document:
+        toc: false
+        number_sections: false
+        self_contained: true
+params:
+    config: NA
+---
+
+```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_knit$set(root.dir = path.package('happyCompare'))
+knitr::opts_chunk$set(fig.width = 12, echo = FALSE)
+
+devtools::load_all() ## change with library(happyCompare)
+library("ggplot2")
+library("dplyr")
+```
+
+```{r message = FALSE, warning = FALSE}
+# load data
+# param validation handled by load_data()
+data = load_data(config_path = params$config)
+hs = data$happy_summary
+```
+
+## Variant calling performance
+
+### SNPs
+
+```{r}
+plot(hs, type = 'SNP', filter = 'PASS')
+```
+
+```{r}
+summary(hs, type = 'SNP', filter = 'PASS')
+```
+
+
+### INDELs
+
+```{r}
+plot(hs, type = 'INDEL', filter = 'PASS')
+summary(hs, type = 'INDEL', filter = 'PASS')
+```
+
+## Session info
+```{r}
+devtools::session_info()
+```
