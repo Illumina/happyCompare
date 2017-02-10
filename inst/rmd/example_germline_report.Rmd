@@ -1,21 +1,19 @@
 ---
 title: "Example germline report"
-output: 
-    html_document:
-        toc: false
-        number_sections: false
-        self_contained: true
+output:
+  github_document:
+    toc: true
 params:
     config: NA
 ---
 
 ```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_knit$set(root.dir = path.package('happyCompare'))
-knitr::opts_chunk$set(fig.width = 12, echo = FALSE)
-
 devtools::load_all() ## change with library(happyCompare)
 library("ggplot2")
 library("dplyr")
+
+knitr::opts_knit$set(root.dir = path.package('happyCompare'))
+knitr::opts_chunk$set(fig.width = 12, echo = FALSE)
 ```
 
 ```{r message = FALSE, warning = FALSE}
