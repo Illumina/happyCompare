@@ -1,10 +1,7 @@
 context("build metrics")
 
 test_that("demo data are loaded in the expected format", {
-    setwd(path.package('happyCompare'))
-    
-    config_path = "data-raw/config.build_metrics.csv"
-    demo_build_metrics = load_data(config_path = config_path)
+    demo_build_metrics = happyCompare::demo_haplocompare_germline
     bm = demo_build_metrics$build_metrics
     
     expect_true(is_haplocompare(demo_build_metrics))
@@ -15,6 +12,7 @@ test_that("demo data are loaded in the expected format", {
 })
 
 test_that("tidy.build_metrics works", {
+    demo_build_metrics = happyCompare::demo_haplocompare_germline
     bm = demo_build_metrics$build_metrics
     
     tbm = tidy(bm, metrics = c('autosome_mean_coverage', 'percent_q30_bases'))
@@ -26,13 +24,14 @@ test_that("tidy.build_metrics works", {
 })
 
 test_that("rename.build_metrics works", {
+    demo_build_metrics = happyCompare::demo_haplocompare_germline
     bm = demo_build_metrics$build_metrics
     metrics_map = list(
-        data.table(
+        data.table::data.table(
             old_name = 'MetricsVersion',
             new_name = 'metrics_version'
         ),
-        data.table(
+        data.table::data.table(
             old_name = 'percent_q30_bases',
             new_name = '% Q30 bases'
         )

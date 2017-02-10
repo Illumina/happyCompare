@@ -1,0 +1,200 @@
+---
+title: "haploCompare examples"
+output:
+  github_document:
+    toc: true
+---
+
+## Set up
+```{r message=FALSE}
+library("happyCompare")
+library("ggplot2")
+theme_set(theme_bw())
+library("dplyr")
+library("data.table")
+source("../../R/util.R")
+```
+
+## Germline workflow
+
+**Inspect the pre-loaded dataset**
+```{r}
+class(demo_haplocompare_germline)
+!sapply(demo_haplocompare_germline, is.null)
+print(demo_haplocompare_germline)
+```
+
+### `happy_summary`
+
+**Inspect `happy_summary` results**
+```{r}
+hs = demo_haplocompare_germline$happy_summary
+class(hs)
+head(hs)
+```
+
+**Apply `happy_summary` methods**
+```{r fig.width=12, fig.height=5}
+head(tidy(hs))
+plot(hs, type = 'SNP')
+summary(hs, type = 'SNP')
+```
+
+### `happy_extended`
+
+**Inspect `happy_extended` results**
+```{r}
+he = demo_haplocompare_germline$happy_extended
+class(he)
+head(he, n = 2)
+```
+
+**Apply `happy_extended` methods**
+```{r}
+head(tidy(he))
+```
+```{r eval=FALSE}
+# takes a while, speed up execution by reducing sample size
+he_ci = add_credible_intervals(he, metric = 'METRIC.Recall', samplesize = 1e3)
+```
+
+### `build_metrics`
+
+**Inspect `buid_metrics` results
+```{r}
+bm = demo_haplocompare_germline$build_metrics
+class(bm)
+head(bm)
+```
+
+We can extract selected metrics using `tidy()`, then use as needed:
+```{r}
+tidy(bm, metrics = c('autosome_mean_coverage', 'percent_q30_bases'))
+# ...
+```
+
+If there are conflicts in the metric names, we can fix them with `rename_metrics()`:
+```{r }
+# tidy(bm, metrics = c('metrics_version', 'percent_q30_bases'))
+# will throw an error because 'metrics_version' does not exist in all datasets
+
+bm[['B-NA12877-LP1100076-DNA_A01']]
+
+metrics_map = list(
+    data.table(
+        old_name = 'MetricsVersion',
+        new_name = 'metrics_version'
+    ),
+    data.table(
+        old_name = 'percent_q30_bases',
+        new_name = '% Q30 bases'
+    )
+) %>% 
+    bind_rows()
+
+renamed_bm = rename_metrics(x = bm, metrics_map = metrics_map)
+tidy(renamed_bm, metrics = c('metrics_version', '% Q30 bases'))
+```
+
+### Metadata
+
+The config contains custom metadata fields:
+```{r}
+config = demo_haplocompare_germline$config
+config
+```
+
+Let's use the information from these fields to answer a few questions about our experimental design.
+
+**Q: how many replicates do we have per sample?**
+```{r}
+config %>%
+    select(sample_id) %>%
+    table() %>%
+    data.table::data.table() %>%
+    knitr::kable()
+```
+
+**Q: how are replicates distributed within the 96-well plate?**
+```{r fig.width=10, fig.height=4}
+config %>%
+    mutate(platebarcode = gsub('_.*', '', replicate_id),
+           column = factor(substrRight(replicate_id, 2), levels = rev(sort(c("01", "02", "03", "04", "05", "06", "07", "08", "09",
+                                                                             "10", "11", "12")))),
+           row = factor(substr(substrRight(replicate_id, 3), 1, 1), levels = LETTERS[1:8])) %>%
+    ggplot(aes(x = row, y = column)) +
+    geom_tile(aes(fill = sample_id), color = 'white') +
+    theme(legend.title = element_blank(), legend.position = "bottom") + 
+    scale_x_discrete(drop = FALSE) +
+    scale_y_discrete(drop = FALSE) +
+    xlab('') +
+    ylab('') +
+    facet_grid(platebarcode ~ group_id)
+```
+
+**Q: how many lanes have been used in each build?**
+```{r}
+config %>%
+    mutate(n_lanes = sapply(lanes, function(x) length(unlist(strsplit(x, split = '\\+'))))) %>%
+    select(replicate_id, n_lanes) %>%
+    table() %>%
+    data.table::data.table() %>%
+    knitr::kable()
+```
+
+**Q: what is the flowcell layout for each replicate?**
+```{r fig.width=10, fig.height=4}
+expanded_lanes = lapply(seq_along(config$lanes), function(i) {
+        replicate_id = config$replicate_id[i]
+        lanes_str = config$lanes[i]
+        expand_lanes(replicate_id = replicate_id, lanes_str = lanes_str)
+    }) %>%
+    dplyr::bind_rows() %>%
+    unique()
+
+expanded_lanes %>%
+    ggplot(aes(lane, flowcell)) +
+    geom_tile(color = 'white') +
+    scale_x_discrete(drop = FALSE) +
+    facet_grid(replicate_id ~ machine, scales = "free_y", space = "free")
+```
+
+**Q: How do coverage and recall correlate with each other?**
+Since we have happy_summary and build_metrics available, let's explore the `merge_nested()` method:
+```{r fig.width=8, fig.height=4}
+merged_dt = merge_nested(obj = demo_haplocompare_germline, x = 'happy_summary', y = 'build_metrics', 
+                         select = c('Type', 'Filter', 'METRIC.Recall', 'autosome_mean_coverage'))
+head(merged_dt)
+
+merged_dt %>% 
+    filter(Filter == 'PASS') %>% 
+    ggplot(aes(x = METRIC.Recall, y = autosome_mean_coverage)) +
+    geom_point(aes(color = Group.Id), size = 3) +
+    facet_grid(. ~ Type) +
+    ggtitle('PASS variants')
+```
+
+## Somatic workflow
+
+**Inspect the pre-loaded dataset**
+```{r}
+class(demo_haplocompare_somatic)
+print(demo_haplocompare_somatic)
+```
+
+### `sompy_stats`
+
+**Inspect `sompy_stats` results**
+```{r}
+dst = demo_haplocompare_somatic$sompy_stats
+class(dst)
+dst
+```
+
+**Apply `sompy_stats` methods**
+```{r fig.width=12, fig.height=5}
+head(tidy(dst))
+plot(dst, type = 'SNVs')
+plot_af(dst, type = 'SNVs')
+summary(dst, type = 'SNVs')
+```

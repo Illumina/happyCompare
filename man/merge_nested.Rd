@@ -2,16 +2,16 @@
 % Please edit documentation in R/generics.R
 \name{merge_nested}
 \alias{merge_nested}
-\title{merge}
+\title{merge_nested}
 \usage{
 merge_nested(obj, ...)
 }
 \arguments{
-\item{...}{Extra arguments.}
+\item{obj}{Input object.}
 
-\item{x}{Input object.}
+\item{...}{Extra arguments.}
 }
 \description{
-Generic for merge().
+Generic for merge_nested().
 }
 
