@@ -2,4 +2,4 @@
 Reporting toolbox for happy output
 
 ## Design
-![happyCompare design.](inst/extdata/happyCompare_design.png)
+![happyCompare design.](inst/doc/happyCompare_design.png)

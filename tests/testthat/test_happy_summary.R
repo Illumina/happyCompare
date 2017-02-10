@@ -1,10 +1,7 @@
 context("happy summary")
 
 test_that("demo data are loaded in the expected format", {
-    setwd(path.package('happyCompare'))
-
-    config_path = "data-raw/config.happy_summary.csv"
-    demo_happy_summary = load_data(config_path = config_path)
+    demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
     
     expect_true(is_haplocompare(demo_happy_summary))
@@ -15,6 +12,7 @@ test_that("demo data are loaded in the expected format", {
 })
 
 test_that("tidy.happy_summary works", {
+    demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
     ths = tidy(hs)
     
@@ -24,12 +22,14 @@ test_that("tidy.happy_summary works", {
 })
 
 test_that("plot.happy_summary works", {
+    demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
     p = plot(hs, type = 'SNP')
     expect_is(p, "gtable")
 })
 
 test_that("summary.happy_summary works", {
+    demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
     s = summary(hs, type = 'SNP')
     expect_is(s, "knitr_kable")

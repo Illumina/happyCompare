@@ -44,11 +44,11 @@ plot_af = function(x, ...) {
     UseMethod("plot_af", x)
 }
 
-#' merge
+#' merge_nested
 #' 
-#' Generic for merge().
+#' Generic for merge_nested().
 #' 
-#' @param x Input object.
+#' @param obj Input object.
 #' @param ... Extra arguments.
 #' @export
 merge_nested = function(obj, ...) {
@@ -61,6 +61,7 @@ merge_nested = function(obj, ...) {
 #' 
 #' @param x Input object.
 #' @param ... Extra arguments.
+#' @export
 rename_metrics = function(x, ...) {
     UseMethod("rename_metrics", x)
 }
