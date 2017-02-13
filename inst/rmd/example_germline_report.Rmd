@@ -1,8 +1,9 @@
 ---
 title: "Example germline report"
 output:
-  github_document:
+  html_document:
     toc: true
+    self_contained: true
 params:
     config: NA
 ---

@@ -7,7 +7,7 @@ All of the demo code relies on pre-saved data, which have been created from two 
 
 
 ## Static reports
-An example static report can be generated using the code below. Its output will be saved as [example_germline_report.md](example_germline_report.md).
+An example static report can be generated using the code below. Its output will be saved as [example_germline_report.html](example_germline_report.html).
 ```
 # run from repo root
 Rscript --vanilla exec/happyCompare.R --input_template inst/rmd/example_germline_report.Rmd --output_dir inst/examples --config inst/examples/config.haplocompare_germline.csv
