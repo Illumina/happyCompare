@@ -4,13 +4,13 @@ Title: Reporting toolbox for hap.py output
 Version: 0.1.0
 Authors@R: as.person(c(
     "Mar Gonzalez-Porta <mgonzalez@illumina.com> [aut, cre]", 
-    "Ben Moore <bmoore@illumina.com> [aut, cre]"
+    "Ben Moore <bmoore@illumina.com> [aut]"
   ))
 Description: Generate modular reports from hap.py output files.
 License: BSD
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
-Depends: dplyr, ggplot2, bit64, R (>= 2.10), happyR
+Depends: dplyr, ggplot2, bit64, R (>= 2.10)
 Imports: data.table, gridExtra, reshape2, knitr, plyr
 Suggests: testthat

@@ -1,0 +1,43 @@
+---
+title: "Germline Benchmarking Report"
+output:
+  html_document:
+    toc: false
+    self_contained: true
+params:
+    config: NA
+---
+
+```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
+devtools::load_all() ## change with library(happyCompare)
+#library("happyR")
+library("ggplot2")
+library("dplyr")
+
+knitr::opts_knit$set(root.dir = path.package('happyCompare'))
+knitr::opts_chunk$set(fig.width = 12, echo = FALSE)
+```
+
+```{r message = FALSE, warning = FALSE}
+# load data
+# TODO: update with happyR
+demo_happy_summary = happyCompare::demo_haplocompare_germline
+hs = demo_happy_summary$happy_summary
+```
+
+## Summary statistics
+
+```{r}
+colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
+summary(hs, type = 'SNP', filter = 'PASS', aggregate = FALSE, digits = 2, colnames = colnames)
+```
+
+
+```{r}
+colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
+summary(hs, type = 'INDEL', filter = 'PASS', aggregate = FALSE, digits = 2, colnames = colnames)
+```
+
+## Precision/recall curves
+
+> Pending

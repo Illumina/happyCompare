@@ -1,16 +1,5 @@
 context("happy summary")
 
-test_that("demo data are loaded in the expected format", {
-    demo_happy_summary = happyCompare::demo_haplocompare_germline
-    hs = demo_happy_summary$happy_summary
-    
-    expect_true(is_haplocompare(demo_happy_summary))
-    expect_true(is_happy_summary(hs))
-    
-    expect_equal(dim(hs[[1]])[1], 4)
-    expect_equal(dim(hs[[1]])[2], 19)
-})
-
 test_that("tidy.happy_summary works", {
     demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
@@ -21,16 +10,16 @@ test_that("tidy.happy_summary works", {
     expect_equal(dim(ths)[2], 19)
 })
 
-test_that("plot.happy_summary works", {
-    demo_happy_summary = happyCompare::demo_haplocompare_germline
-    hs = demo_happy_summary$happy_summary
-    p = plot(hs, type = 'SNP')
-    expect_is(p, "gtable")
-})
-
 test_that("summary.happy_summary works", {
     demo_happy_summary = happyCompare::demo_haplocompare_germline
     hs = demo_happy_summary$happy_summary
-    s = summary(hs, type = 'SNP')
+    
+    s = summary(hs, type = 'SNP', aggregate = TRUE)
     expect_is(s, "knitr_kable")
+    expect_equal(length(s), 4) ## expect 4 rows
+    
+    colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
+    s = summary(hs, type = 'SNP', aggregate = FALSE, colnames = colnames)
+    expect_equal(length(s), 6) ## expect 6 rows
+    
 })
