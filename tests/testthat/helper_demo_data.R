@@ -1,13 +1,16 @@
-load(system.file("data", "freebayes.RData", package = "happyCompare"))
-load(system.file("data", "gatk.RData", package = "happyCompare"))
-load(system.file("data", "platypus.RData", package = "happyCompare"))
+# library(happyR)
+# 
+# happy_prefix = "C:/Users/mgonzalez/SublimeProjects/hap.py/example/happy/expected-stratified"
+# happyr_stratified = read_happy(happy_prefix)
+# happyr_stratified$summary = happyr_stratified$summary %>% 
+#   mutate(Group.Id = "A", Replicate.Id = "expected-stratified")
+# 
+# happy_prefix = "C:/Users/mgonzalez/SublimeProjects/hap.py/example/happy/expected-qfy"
+# happyr_qfy = read_happy(happy_prefix)
+# happyr_qfy$summary = happyr_qfy$summary %>% 
+#   mutate(Group.Id = "B", Replicate.Id = "expected-qfy")
+# 
+# happy_result_list = c(happyr_stratified, happyr_qfy)
+# devtools::use_data(happy_result_list, overwrite = TRUE)
 
-# add metadata - temporary
-happyr_freebayes$summary = happyr_freebayes$summary %>% 
-  mutate(Group.Id = "freebayes", Replicate.Id = "freebayes 1")
-happyr_gatk$summary = happyr_gatk$summary %>% 
-  mutate(Group.Id = "gatk", Replicate.Id = "gatk 1")
-happyr_platypus$summary = happyr_platypus$summary %>% 
-  mutate(Group.Id = "platypus", Replicate.Id = "platypus 1")
-
-happy_result_list = c(happyr_freebayes, happyr_gatk, happyr_platypus)
+load(system.file("data/happy_result_list.rda", package = "happyCompare"))
