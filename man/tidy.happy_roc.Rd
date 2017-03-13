@@ -4,7 +4,7 @@
 \alias{tidy.happy_roc}
 \title{tidy}
 \usage{
-\method{tidy}{happy_roc}(x, ...)
+tidy.happy_roc(x, ...)
 }
 \arguments{
 \item{x}{A `happy_roc` object.}

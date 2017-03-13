@@ -1,9 +1,10 @@
 ## documentation for demo datasets
 
-#' demo_haplocompare_germline
+#' happy_result_list
 #' 
-#' Demo dataset for a germline hap.py run
+#' Demo `happy_result_list` including 2 `happy_result` objects.
+#' Generated from hap.py demo data (see `helper_demo_data.R`.
 #' 
 #' @docType data
-#' @name demo_haplocompare_germline
+#' @name happy_result_list
 NULL

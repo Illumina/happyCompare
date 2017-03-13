@@ -1,42 +1,10 @@
 ## happy_summary methods
 
-#' is_happy_summary
-#' 
-#' Check if the class of the provided object matches the expected one.
-#' 
-#' @param x An object to inspect.
-#' @export
-is_happy_summary = function(x) {
-    inherits(x, "happy_summary")
-}
-
-#' print.happy_summary
-#' 
-#' Print a happy_summary object.
-#' 
-#' @param x A `happy_summary` object.
-#' @param ... Extra arguments.
-#' @export
-print.happy_summary = function(x, ...) {
-    print(lapply(x, function(x) dplyr::trunc_mat(x)))
-}
-
-#' tidy
-#'
-#' Tidy a `happy_summary` object by converting into a single `data.table`.
-#' 
-#' @param x A `happy_summary` object.
-#' @param ... Extra arguments.
-#' @export
-tidy.happy_summary = function(x, ...) {
-    x %>% dplyr::bind_rows()
-}
-
 #' summary.happy_summary
 #'
 #' Summarise happy summary results into tabular format.
 #' 
-#' @param object A `happy_summary` object.
+#' @param happy_summary A `happy_summary` happy_summary.
 #' @param type Variant type. One of: SNP, INDEL.
 #' @param filter Variant filter. One of: PASS (default), ALL.
 #' @param digits Number of significant digits in summary statistics. Default: 4.
@@ -44,11 +12,15 @@ tidy.happy_summary = function(x, ...) {
 #' @param aggregate Summarise performance across groups. Default: TRUE.
 #' @param colnames Column names for output table. Default: happy_summary headers.
 #' @param ... Extra arguments.
+#' 
 #' @export
-summary.happy_summary = function(object, type, filter = 'PASS', digits = 4,
+summary.happy_summary = function(happy_summary, type, filter = 'PASS', digits = 4,
                                  kable_format = 'markdown', aggregate = TRUE, colnames = NULL, ...) {
     
     ## validate input
+    if (class(happy_summary)[1] != "happy_summary") {
+        stop("Must provide a happy_summary object.")
+    }
     if (missing(type)) {
         stop("Must specify a variant type.")
     }
@@ -57,7 +29,7 @@ summary.happy_summary = function(object, type, filter = 'PASS', digits = 4,
     caption = paste(filter, type, collapse = '-')
     
     if (aggregate) {
-        data = tidy(object) %>%
+        data = happy_summary %>% 
             filter(Type == type, Filter == filter) %>%
             group_by(Group.Id) %>%
             summarise(
@@ -67,23 +39,26 @@ summary.happy_summary = function(object, type, filter = 'PASS', digits = 4,
                 METRIC.Recall.mean = round(mean(METRIC.Recall),digits = digits),
                 METRIC.Recall.sd = round(sd(METRIC.Recall), digits = digits),
                 METRIC.Frac_NA.mean = round(mean(METRIC.Frac_NA), digits = digits),
-                METRIC.Frac_NA.sd = round(sd(METRIC.Frac_NA), digits = digits)
+                METRIC.Frac_NA.sd = round(sd(METRIC.Frac_NA), digits = digits),
+                METRIC.F1_Score.mean = round(mean(METRIC.F1_Score), digits = digits),
+                METRIC.F1_Score.sd = round(sd(METRIC.F1_Score), digits = digits)
             ) %>%
             mutate(
                 METRIC.Precision = paste(METRIC.Precision.mean, '&plusmn;', METRIC.Precision.sd),
                 METRIC.Recall = paste(METRIC.Recall.mean, '&plusmn;', METRIC.Recall.sd),
-                METRIC.Frac_NA = paste(METRIC.Frac_NA.mean, '&plusmn;', METRIC.Frac_NA.sd)
+                METRIC.Frac_NA = paste(METRIC.Frac_NA.mean, '&plusmn;', METRIC.Frac_NA.sd),
+                METRIC.F1_Score = paste(METRIC.F1_Score.mean, '&plusmn;', METRIC.F1_Score.sd)
             ) %>%
-            select(Group.Id, N, METRIC.Precision, METRIC.Recall, METRIC.Frac_NA)
+            select(Group.Id, N, METRIC.Recall, METRIC.Precision, METRIC.Frac_NA, METRIC.F1_Score)
     } else {
-        data = tidy(object) %>% 
+        data = happy_summary %>% 
             filter(Type == type, Filter == filter) %>% 
-            select(Replicate.Id, METRIC.Recall, METRIC.Precision, METRIC.Frac_NA,
+            select(Replicate.Id, METRIC.Recall, METRIC.Precision, METRIC.Frac_NA, METRIC.F1_Score,
                    QUERY.TOTAL, TRUTH.TP, TRUTH.FN, QUERY.FP, QUERY.UNK) %>% 
             mutate(METRIC.Recall = round(METRIC.Recall, digits = digits),
                    METRIC.Precision = round(METRIC.Precision, digits = digits),
-                   METRIC.Frac_NA = round(METRIC.Frac_NA, digits = digits))
-            
+                   METRIC.Frac_NA = round(METRIC.Frac_NA, digits = digits),
+                   METRIC.F1_Score = round(METRIC.F1_Score, digits = digits))
     }
     
     # rename columns
