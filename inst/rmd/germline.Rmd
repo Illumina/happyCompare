@@ -5,39 +5,54 @@ output:
     toc: false
     self_contained: true
 params:
-    config: NA
+    happy_prefix: NA
 ---
 
 ```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
-devtools::load_all() ## change with library(happyCompare)
-#library("happyR")
+library("happyCompare")
 library("ggplot2")
 library("dplyr")
+library("gridExtra")
+theme_set(theme_bw())
 
 knitr::opts_knit$set(root.dir = path.package('happyCompare'))
-knitr::opts_chunk$set(fig.width = 12, echo = FALSE)
+knitr::opts_chunk$set(fig.width = 12, echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-```{r message = FALSE, warning = FALSE}
+```{r}
 # load data
-# TODO: update with happyR
-demo_happy_summary = happyCompare::demo_haplocompare_germline
-hs = demo_happy_summary$happy_summary
+hapdata = read_happy(happy_prefix = params$happy_prefix)
+
+# TODO: remove
+hapdata$summary = hapdata$summary %>% 
+  mutate(METRIC.F1_Score = 1, Group.Id = "A", Replicate.Id = "Test")
+class(hapdata$summary) = c("happy_summary", class(hapdata$summary))
+
+hapdata$pr_curve$all = hapdata$pr_curve$all %>%
+  mutate(Group.Id = "A")
+class(hapdata$pr_curve$all) = c("happy_roc", class(hapdata$pr_curve$all))
 ```
 
 ## Summary statistics
 
+### PASS SNP
 ```{r}
-colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
-summary(hs, type = 'SNP', filter = 'PASS', aggregate = FALSE, digits = 2, colnames = colnames)
+colnames = c("Sample", "Recall", "Precision", "Frac.NA", "F1.Score", "#QUERY", "TP", "FN", "FP", "UNK")
+summary(hapdata$summary, type = 'SNP', filter = 'PASS', 
+        aggregate = FALSE, digits = 2, colnames = colnames)
 ```
 
-
+### PASS INDEL
 ```{r}
-colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
-summary(hs, type = 'INDEL', filter = 'PASS', aggregate = FALSE, digits = 2, colnames = colnames)
+summary(hapdata$summary, type = 'INDEL', filter = 'PASS', 
+        aggregate = FALSE, digits = 2, colnames = colnames)
 ```
 
 ## Precision/recall curves
 
-> Pending
+```{r}
+roc = hapdata$pr_curve$all
+p1 = plot(roc, type = "SNP", filter = "PASS")  
+p2 = plot(roc, type = "INDEL", filter = "PASS")
+grid.arrange(p1, p2, nrow = 1)
+```

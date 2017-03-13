@@ -4,8 +4,8 @@
 option_list = list(
     optparse::make_option(c("-i", "--input_template"), type = "character", default = NULL, 
                 help = "Path to input template Rmd."),
-    optparse::make_option(c("-c", "--config"), type = "character", default = NULL,
-                help = "Path to a happyCompare config."),
+    optparse::make_option(c("-p", "--happy_prefix"), type = "character", default = NULL,
+                help = "Path to happy prefix"),
     optparse::make_option(c("-o", "--output_dir"), type = "character", default = NULL, 
                 help = "Path to output directory.")
 )
@@ -19,5 +19,5 @@ if (any(sapply(opt, is.null))) {
 ## generate report
 rmarkdown::render(input = opt$input_template, 
                   output_dir = opt$output_dir, 
-                  params = list(config = opt$config))
+                  params = list(happy_prefix = opt$happy_prefix))
 message(sprintf("\n[DONE] Output: %s", opt$output_dir))
