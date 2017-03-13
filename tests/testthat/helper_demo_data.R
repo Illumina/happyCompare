@@ -14,3 +14,13 @@
 # devtools::use_data(happy_result_list, overwrite = TRUE)
 
 load(system.file("data/happy_result_list.rda", package = "happyCompare"))
+
+# happy_input = system.file("extdata", "happy_demo.summary.csv", package = "happyR")
+# happy_prefix = sub(".summary.csv", "", happy_input)
+# hapdata = read_happy(happy_prefix)
+# hapdata$pr_curve$all = hapdata$pr_curve$all %>% 
+#   mutate(Group.Id = "A")
+# class(hapdata$pr_curve$all) = c("happy_roc", class(hapdata$pr_curve$all))
+# devtools::use_data(hapdata, overwrite = TRUE)
+
+load(system.file("data/hapdata.rda", package = "happyCompare"))

@@ -4,11 +4,12 @@
 \alias{summary.happy_summary}
 \title{summary.happy_summary}
 \usage{
-\method{summary}{happy_summary}(object, type, filter = "PASS", digits = 4,
-  kable_format = "markdown", aggregate = TRUE, colnames = NULL, ...)
+\method{summary}{happy_summary}(happy_summary, type, filter = "PASS",
+  digits = 4, kable_format = "markdown", aggregate = TRUE,
+  colnames = NULL, ...)
 }
 \arguments{
-\item{object}{A `happy_summary` object.}
+\item{happy_summary}{A `happy_summary` happy_summary.}
 
 \item{type}{Variant type. One of: SNP, INDEL.}
 
