@@ -1,25 +1,20 @@
-context("happy summary")
-
-test_that("tidy.happy_summary works", {
-    demo_happy_summary = happyCompare::demo_haplocompare_germline
-    hs = demo_happy_summary$happy_summary
-    ths = tidy(hs)
-    
-    expect_is(ths, "data.table")
-    expect_equal(dim(ths)[1], 16)
-    expect_equal(dim(ths)[2], 19)
-})
+context("happy_summary")
 
 test_that("summary.happy_summary works", {
-    demo_happy_summary = happyCompare::demo_haplocompare_germline
-    hs = demo_happy_summary$happy_summary
-    
-    s = summary(hs, type = 'SNP', aggregate = TRUE)
-    expect_is(s, "knitr_kable")
-    expect_equal(length(s), 4) ## expect 4 rows
-    
-    colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
-    s = summary(hs, type = 'SNP', aggregate = FALSE, colnames = colnames)
-    expect_equal(length(s), 6) ## expect 6 rows
-    
+  hrl = happy_result_list
+  
+  hs = happyR::extract(happy_result_list = hrl, item = "summary")
+  expect_equal(class(hs)[1], "happy_summary")
+  expect_equal(dim(hs)[1], 12)
+  expect_equal(dim(hs)[2], 18)
+  
+  s = summary(hs, type = 'SNP', aggregate = FALSE)
+  expect_is(s, "knitr_kable")
+  expect_equal(length(s), 5)
+  
+  colnames = c("Sample", "Recall", "Precision", "Frac.NA", "#QUERY", "TP", "FN", "FP", "UNK")
+  s = summary(hs, type = 'SNP', aggregate = FALSE, colnames = colnames)
+  expect_equal(length(s), 5)
+  
+  # TODO: add test for aggregate = TRUE when appropriate data available
 })
