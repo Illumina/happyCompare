@@ -1,21 +1,22 @@
 context("happy roc")
 
-test_that("tidy.happy_roc works", {
-    skip("Awaiting demo data")
-    # demo_happy_roc = happyCompare::demo_haplocompare_germline
-    # hs = demo_happy_roc$happy_roc
-    # ths = tidy(hs)
-    # 
-    # expect_is(ths, "data.table")
-    # expect_equal(dim(ths)[1], 16)
-    # expect_equal(dim(ths)[2], 19)
-})
-
 test_that("plot.happy_roc works", {
-    skip("Awaiting demo data")
-    
-    # demo_happy_roc = happyCompare::demo_haplocompare_germline
-    # hs = demo_happy_roc$happy_roc
-    # p = plot(hs)    
-    # skip("Awaiting demo data")
+  roc = hapdata$pr_curve$all
+
+  p1 = plot(roc, type = "SNP", filter = "ALL")  
+  p2 = plot(roc, type = "SNP", filter = "PASS")
+  p3 = plot(roc, type = "SNP", filter = "SEL")
+
+  p4 = plot(roc, type = "INDEL", filter = "ALL")  
+  p5 = plot(roc, type = "INDEL", filter = "PASS")
+  p6 = plot(roc, type = "INDEL", filter = "SEL")
+  
+  invisible(suppressWarnings(file.remove("test_happy_roc.pdf")))
+  
+  pdf(file = "test_happy_roc.pdf", width = 12, height = 4)
+  gridExtra::grid.arrange(p1, p2, p3, nrow = 1)
+  gridExtra::grid.arrange(p4, p5, p6, nrow = 1)
+  dev.off()
+
+  expect_true(file.exists("test_happy_roc.pdf"))
 })

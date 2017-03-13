@@ -4,10 +4,16 @@
 \alias{plot.happy_roc}
 \title{plot}
 \usage{
-\method{plot}{happy_roc}(x, ...)
+\method{plot}{happy_roc}(x, filter = "PASS", type, subtype = "*", ...)
 }
 \arguments{
 \item{x}{A `happy_roc` object.}
+
+\item{filter}{Variant filter. Default = "PASS".}
+
+\item{type}{Variant type. One of: "SNP", "INDEL".}
+
+\item{subtype}{Variant subtype. Default = "*".}
 
 \item{...}{Extra arguments.}
 }
