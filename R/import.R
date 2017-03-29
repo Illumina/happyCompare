@@ -1,8 +1,9 @@
 #' @importFrom stats sd rbeta setNames
-#' @importFrom utils head
+#' @importFrom utils head read.csv
 #' @import ggplot2
 #' @import dplyr
 #' @import bit64
+#' @import happyR
 NULL
 
 if (getRversion() >= "2.15.1")  utils::globalVariables(c(
@@ -14,7 +15,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(c(
   'Group.Id',
   'Type',
   'N',
-  'Group.Id',
   'METRIC.Precision',
   'METRIC.Recall',
   'METRIC.Frac_NA',
@@ -32,5 +32,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(c(
   'TRUTH.TP',
   'TRUTH.FN',
   'QUERY.FP',
-  'QUERY.UNK'
+  'QUERY.UNK',
+  '.Id',
+  'Sample.Id',
+  'Replicate.Id',
+  'Subset'
 ))
