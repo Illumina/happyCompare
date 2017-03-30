@@ -5,6 +5,10 @@ output:
     toc: true
 ---
 
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = FALSE)
+```
+
 # happyCompare
 
 Reporting toolbox for happy output
@@ -64,15 +68,17 @@ save(happyCompare_list, file = "happyCompare/happyCompare_list.RData")
 
 **Example germline report:** [germline.html](inst/examples/germline.html)
 
-```{bash results='hide', eval=FALSE}
+```{bash, eval=TRUE, error=FALSE, results='hide'}
 DATA="C:/Users/mgonzalez/SublimeProjects/happy-example-data"
 HAPPYCOMPARE="C:/Users/mgonzalez/SublimeProjects/happyCompare"
+RESULTS_ROOT="C:/Users/mgonzalez/SublimeProjects/happy-example-data"
 Rscript --vanilla $HAPPYCOMPARE/exec/happyCompare.R \
         --input_template $HAPPYCOMPARE/inst/rmd/germline.Rmd \
         --output_dir $HAPPYCOMPARE/inst/examples \
-        --samplesheet $DATA/happyCompare/happyCompare_samplesheet.csv
+        --samplesheet $DATA/happyCompare/happyCompare_samplesheet.csv \
+        --root_dir $RESULTS_ROOT
 ```
 
 ```
-## [DONE] Output: C:/Users/mgonzalez/SublimeProjects/happyCompare_master/inst/examples
+## [DONE] Output: C:/Users/mgonzalez/SublimeProjects/happyCompare/inst/examples
 ```

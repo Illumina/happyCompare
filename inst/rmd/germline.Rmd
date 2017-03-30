@@ -6,6 +6,7 @@ output:
     self_contained: true
 params:
     samplesheet: NA
+    root_dir: NA
 ---
 
 ```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
@@ -14,7 +15,7 @@ library("ggplot2")
 library("gridExtra")
 theme_set(theme_bw())
 
-knitr::opts_knit$set(root.dir = path.package('happyCompare'))
+knitr::opts_knit$set(root.dir = params$root_dir)
 knitr::opts_chunk$set(fig.width = 12, echo = FALSE, warning = FALSE, message = FALSE)
 ```
 

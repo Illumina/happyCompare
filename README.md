@@ -66,10 +66,12 @@ Examples
 ``` bash
 DATA="C:/Users/mgonzalez/SublimeProjects/happy-example-data"
 HAPPYCOMPARE="C:/Users/mgonzalez/SublimeProjects/happyCompare"
+RESULTS_ROOT="C:/Users/mgonzalez/SublimeProjects/happy-example-data"
 Rscript --vanilla $HAPPYCOMPARE/exec/happyCompare.R \
         --input_template $HAPPYCOMPARE/inst/rmd/germline.Rmd \
         --output_dir $HAPPYCOMPARE/inst/examples \
-        --samplesheet $DATA/happyCompare/happyCompare_samplesheet.csv
+        --samplesheet $DATA/happyCompare/happyCompare_samplesheet.csv \
+        --root_dir $RESULTS_ROOT
 ```
 
-    ## [DONE] Output: C:/Users/mgonzalez/SublimeProjects/happyCompare_master/inst/examples
+    ## [DONE] Output: C:/Users/mgonzalez/SublimeProjects/happyCompare/inst/examples
