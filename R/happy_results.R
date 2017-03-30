@@ -29,7 +29,10 @@
 #' t = tabulate(happy_summary = happy_summary, cols = cols, colnames = colnames, 
 #'              filter = "PASS", vartype = "SNP", aggregate = FALSE)
 #' }
-#' 
+#' @export
+tabulate = function(happy_summary, ...) {
+  UseMethod("tabulate", happy_summary)
+}
 #' @export
 tabulate.happy_summary = function(happy_summary, type = c("SNP", "INDEL"), 
                                   filter = c("PASS", "ALL"), cols, colnames = cols, caption = NULL,
@@ -116,6 +119,10 @@ tabulate.happy_summary = function(happy_summary, type = c("SNP", "INDEL"),
 #' roc = extract(happyCompare_list, table = "pr_curve.all")
 #' plot(roc, type = "SNP", filter = "ALL")  
 #' }
+#' @export
+plot = function(happy_roc, ...) {
+  UseMethod("plot", happy_roc)
+}
 #' @export
 plot.happy_roc = function(happy_roc, filter = "PASS", type, subtype = "*", 
                           subset = "*", legend_position = "bottom", ...) {

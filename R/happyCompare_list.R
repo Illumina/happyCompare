@@ -89,7 +89,10 @@ read_samplesheet = function(samplesheet_path, lazy = TRUE) {
 #' summary = extract(happyCompare_list, table = "summary")
 #' roc = extract(happyCompare_list, table = "pr_curve.all")
 #' }
-#' 
+#' @export
+extract = function(happyCompare_list, ...) {
+  UseMethod("extract", happyCompare_list)
+}
 #' @export
 extract.happyCompare_list <- function(happyCompare_list, 
                                       table = c("summary", "extended", "pr_curve.all", 
