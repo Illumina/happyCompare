@@ -14,11 +14,11 @@ test_that("tabulate.happy_summary works", {
   
   t = tabulate(happy_summary = s, cols = cols, colnames = colnames, 
                filter = "PASS", vartype = "SNP", aggregate = FALSE)
-  expect_true(class(t) == "knitr_kable")
+  expect_true("data.frame" %in% class(t))
   
   t = tabulate(happy_summary = s, cols = cols, colnames = colnames, 
                filter = "PASS", vartype = "SNP", aggregate = TRUE)
-  expect_true(class(t) == "knitr_kable")  
+  expect_true("data.frame" %in% class(t))
 })
 
 
