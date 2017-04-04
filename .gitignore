@@ -15,7 +15,6 @@
 /*.Rcheck/
 
 # RStudio files
-*.Rproj
 .Rproj.user/
 .Rbuildignore
 

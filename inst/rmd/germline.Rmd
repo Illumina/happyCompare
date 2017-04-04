@@ -1,0 +1,53 @@
+---
+title: "Germline Benchmarking Report"
+output:
+  html_document:
+    toc: false
+    self_contained: true
+params:
+    samplesheet: NA
+    root_dir: NA
+---
+
+```{r set-up, echo = FALSE, message = FALSE, warning = FALSE}
+library("happyCompare")
+library("ggplot2")
+library("gridExtra")
+theme_set(theme_bw())
+
+knitr::opts_knit$set(root.dir = params$root_dir)
+knitr::opts_chunk$set(fig.width = 12, echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+# load data
+hapdata = read_samplesheet(samplesheet_path = params$samplesheet, lazy = FALSE)
+```
+
+## Summary statistics
+
+### PASS SNP
+```{r}
+cols = c("Replicate.Id", "METRIC.Recall", "METRIC.Precision", "METRIC.Frac_NA", "METRIC.F1_Score",
+           "QUERY.TOTAL", "TRUTH.TP", "TRUTH.FN", "QUERY.FP", "QUERY.UNK")
+colnames = c("Sample", "Recall", "Precision", "Frac.NA", "F1.Score", "QUERY.TOTAL", "TP", "FN", "FP", "UNK")
+
+s = extract(happyCompare_list = hapdata, table = "summary")
+tabulate(s, type = "SNP", filter = "PASS", aggregate = FALSE, 
+         cols = cols, colnames = colnames)
+```
+
+### PASS INDEL
+```{r}
+tabulate(s, type = "INDEL", filter = "PASS", aggregate = FALSE, 
+         cols = cols, colnames = colnames)
+```
+
+## Precision/recall curves
+
+```{r}
+roc = extract(hapdata, table = "pr_curve.all")
+p1 = plot(roc, type = "SNP", filter = "PASS")  
+p2 = plot(roc, type = "INDEL", filter = "PASS")
+grid.arrange(p1, p2, nrow = 1)
+```
