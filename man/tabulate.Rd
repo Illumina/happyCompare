@@ -18,18 +18,13 @@ tabulate(happy_summary, ...)
 \item{colnames}{Column names to use in the output table. Defaults to
 \code{cols}.}
 
-\item{caption}{Table caption.}
-
 \item{significant_digits}{Number of significant digits in performance
 metrics. Default: \code{4}.}
-
-\item{kable_format}{A character string to pass to \code{knitr::kable()}.
-Default: \code{markdown}.}
 
 \item{aggregate}{Summarise performance across groups. Default: \code{FALSE}.}
 }
 \value{
-A \code{knitr_kable} object with the selected hap.py performance
+A \code{data.frame} object with the selected hap.py performance
   metrics.
 }
 \description{

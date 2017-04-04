@@ -11,14 +11,11 @@
 #' @param cols Columns to keep.
 #' @param colnames Column names to use in the output table. Defaults to
 #'   \code{cols}.
-#' @param caption Table caption.
 #' @param significant_digits Number of significant digits in performance
 #'   metrics. Default: \code{4}.
-#' @param kable_format A character string to pass to \code{knitr::kable()}.
-#'   Default: \code{markdown}.
 #' @param aggregate Summarise performance across groups. Default: \code{FALSE}.
 #'   
-#' @return A \code{knitr_kable} object with the selected hap.py performance
+#' @return A \code{data.frame} object with the selected hap.py performance
 #'   metrics.
 #'   
 #' @examples
@@ -35,8 +32,8 @@ tabulate = function(happy_summary, ...) {
 }
 #' @export
 tabulate.happy_summary = function(happy_summary, type = c("SNP", "INDEL"), 
-                                  filter = c("PASS", "ALL"), cols, colnames = cols, caption = NULL,
-                                  significant_digits = 4, kable_format = "markdown", aggregate = FALSE, ...) {
+                                  filter = c("PASS", "ALL"), cols, colnames = cols, 
+                                  significant_digits = 4, aggregate = FALSE, ...) {
   
   # validate input
   if (class(happy_summary)[1] != "happy_summary") {
@@ -90,10 +87,6 @@ tabulate.happy_summary = function(happy_summary, type = c("SNP", "INDEL"),
     data = summary
   }
   
-  # fomat table
-  caption = ifelse(!is.null(caption), caption, paste(filter, type, collapse = '-'))
-  data = data %>% 
-    knitr::kable(format = kable_format, caption = caption)
   return(data)
   
 }
