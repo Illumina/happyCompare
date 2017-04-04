@@ -1,10 +1,9 @@
 ## documentation for demo datasets
 
-#' happy_result_list
+#' happyCompare_list
 #' 
-#' Demo `happy_result_list` including 2 `happy_result` objects.
-#' Generated from hap.py demo data (see `helper_demo_data.R`.
+#' Demo `happyCompare_list` object. See `README.md` for details on data generation.
 #' 
 #' @docType data
-#' @name happy_result_list
+#' @name happyCompare_list
 NULL
