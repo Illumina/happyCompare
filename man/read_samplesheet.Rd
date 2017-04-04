@@ -15,10 +15,13 @@ read_samplesheet(samplesheet_path, lazy = TRUE)
 }
 \value{
 A \code{happyCompare_list} object, with the following fields: 
-  \itemize{ \item{\code{samplesheet}: the original samplesheet, stored as a
-  \code{data.frame}}. \item{\code{happy_results}: a \code{happy_results_list}
-  object that contains individual \code{happy_result} objects as defined in
-  \code{happyR}}. }
+\itemize{ 
+  \item{\code{samplesheet}: the original samplesheet, stored as a
+        \code{data.frame}}. 
+  \item{\code{happy_results}: a \code{happy_results_list}
+        object that contains individual \code{happy_result} objects as defined in
+        \code{happyR}}. 
+}
 }
 \description{
 Load hap.py results into a \code{happyCompare_list} object as specified in
