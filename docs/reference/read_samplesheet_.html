@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • happyCompare</title>
+<title>Manually create happyCompare_list objects — read_samplesheet_ • happyCompare</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -36,7 +36,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -66,76 +66,65 @@
       </header>
 
       <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.1.0</small>
-      </h1>
+    <h1>Manually create happyCompare_list objects</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    
+    <p>Create a happyCompare_list object from its individual components.</p>
+    
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <pre class="usage"><span class='fu'>read_samplesheet_</span>(<span class='no'>samplesheet</span>, <span class='no'>happy_results</span>, <span class='no'>ids</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>samplesheet</th>
+      <td><p>A happyCompare samplesheet (<code>data.frame</code>). Required fields:
+<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>,
+<code>happy_prefix</code>.</p></td>
+    </tr>
+    <tr>
+      <th>happy_results</th>
+      <td><p>A <code>happy_results_list</code> object obtained with <code>happyR</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ids</th>
+      <td><p>A <code>vector</code> of unique ids to map samplesheet entries with happy results.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="extract.html">extract</a></code> </p>
-          </td>
-          <td><p>Extract tables from a happyCompare_list object</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="happyCompare_list.html">happyCompare_list</a></code> </p>
-          </td>
-          <td><p>happyCompare_list</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="plot.html">plot</a></code> </p>
-          </td>
-          <td><p>Plot a ROC curve for precision vs recall</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="read_samplesheet_.html">read_samplesheet_</a></code> </p>
-          </td>
-          <td><p>Manually create happyCompare_list objects</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="read_samplesheet.html">read_samplesheet</a></code> </p>
-          </td>
-          <td><p>Load data from happyCompare samplesheets</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tabulate.html">tabulate</a></code> </p>
-          </td>
-          <td><p>Tabulate hap.py summary results</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <p>A <code>happyCompare_list</code> object, with the following fields:</p><ul>
+<li><p><code>samplesheet</code>: the original samplesheet, stored as a
+        <code>data.frame</code>.</p></li>
+<li><p><code>happy_results</code>: a <code>happy_results_list</code>
+        object that contains individual <code>happy_result</code> objects as defined in
+        <code>happyR</code>.</p></li>
+</ul>
+
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>not_run</span>({
+  <span class='no'>happyCompare_list</span> <span class='kw'>=</span> <span class='fu'>read_samplesheet_</span>(<span class='kw'>samplesheet</span> <span class='kw'>=</span> <span class='no'>samplesheet</span>,
+  <span class='kw'>happy_results</span> <span class='kw'>=</span> <span class='no'>happy_results</span>, <span class='kw'>ids</span> <span class='kw'>=</span> <span class='no'>ids</span>)
+})</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 
