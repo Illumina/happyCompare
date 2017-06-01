@@ -34,4 +34,6 @@ happyCompare_list = read_samplesheet(samplesheet_path = "happyCompare_sampleshee
 }
 
 }
-
+\author{
+Mar Gonzalez-Porta
+}

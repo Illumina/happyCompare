@@ -31,4 +31,3 @@ summary = extract(happyCompare_list, table = "summary")
 roc = extract(happyCompare_list, table = "pr_curve.all")
 }
 }
-

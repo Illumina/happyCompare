@@ -26,6 +26,8 @@
 #' happyCompare_list = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
 #' }
 #' 
+#' @author Mar Gonzalez-Porta
+#' 
 #' @export
 read_samplesheet = function(samplesheet_path, lazy = TRUE) {
   

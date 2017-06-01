@@ -39,4 +39,3 @@ t = tabulate(happy_summary = happy_summary, cols = cols, colnames = colnames,
              filter = "PASS", vartype = "SNP", aggregate = FALSE)
 }
 }
-

@@ -7,4 +7,3 @@
 \description{
 Demo `happyCompare_list` object. See `README.md` for details on data generation.
 }
-

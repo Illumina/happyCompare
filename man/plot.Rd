@@ -33,4 +33,3 @@ roc = extract(happyCompare_list, table = "pr_curve.all")
 plot(roc, type = "SNP", filter = "ALL")  
 }
 }
-
