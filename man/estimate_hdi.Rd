@@ -5,7 +5,8 @@
 \title{Estimate HDIs using Beta-Binomial inference}
 \usage{
 estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
-  significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000)
+  aggregate_only = TRUE, significance = 0.05, sample_size = 1e+05,
+  max_alpha1 = 1000)
 }
 \arguments{
 \item{happy_extended}{A \code{happy_extended} object.}
@@ -16,7 +17,9 @@ estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
 
 \item{group_cols}{Vector of columns to group counts by. Observations within the same group will be treated as replicates.}
 
-\item{significance}{Significance for HDI estimation. Default: 0.05 (= 95% HDIs).}
+\item{aggregate_only}{Estimate HDIs for aggregate replicate only speeds up execution. Default: TRUE.}
+
+\item{significance}{Significance for HDI estimation. Default: 0.05 = 95\% HDIs.}
 
 \item{sample_size}{Number of observations to draw from the Beta posterior to estimate HDIs. Default: 1e5.}
 

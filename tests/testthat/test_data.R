@@ -1,4 +1,4 @@
-context("demo data")
+context("data.R")
 
 test_that("demo happyCompare_list is as expected", {
   d = happyCompare_list

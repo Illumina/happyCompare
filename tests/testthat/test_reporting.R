@@ -1,5 +1,4 @@
-context("happy_results")
-
+context("reporting.R")
 
 test_that("tabulate.happy_summary works", {
   s = extract(happyCompare_list, table = "summary")
@@ -20,7 +19,6 @@ test_that("tabulate.happy_summary works", {
                filter = "PASS", vartype = "SNP", aggregate = TRUE)
   expect_true("data.frame" %in% class(t))
 })
-
 
 test_that("plot.happy_roc works", {
   roc = extract(happyCompare_list, table = "pr_curve.all")
