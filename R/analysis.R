@@ -107,6 +107,7 @@ extract.happyCompare_list <- function(happyCompare_list,
 #' @param significance Significance for HDI estimation. Default: 0.05 (= 95% HDIs).
 #' @param sample_size Number of observations to draw from the Beta posterior to estimate HDIs. Default: 1e5.
 #' @param max_alpha1 Upper bound for alpha hyperparameter in the aggregate posterior Beta.
+#' @param aggregate_only Estimate HDIs for aggregate replicate only (speeds up execution). Default: TRUE.
 #'   
 #' @return A \code{data.frame} with combined information from the selected
 #'   \code{happy_result} and its \code{samplesheet}.
@@ -123,7 +124,7 @@ estimate_hdi = function(happy_extended, ...) {
   UseMethod("estimate_hdi", happy_extended)
 }
 #' @export
-estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols,
+estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, aggregate_only = TRUE,
                         significance = 0.05, sample_size = 1e5, max_alpha1 = 1000) {
 
   # validate input
