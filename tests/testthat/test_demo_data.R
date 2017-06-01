@@ -1,9 +1,9 @@
 context("demo data")
 
-test_that("demo data is as expected", {
+test_that("demo happyCompare_list is as expected", {
   d = happyCompare_list
 
-  expect_true(class(d) == "happyCompare_list")
+  expect_true("happyCompare_list" %in% class(d))
   expect_equal(length(d), 2)
   expect_true(all(names(d) %in% c("samplesheet", "happy_results")))
   
@@ -17,4 +17,16 @@ test_that("demo data is as expected", {
   expect_equal(length(h), 3)
   expect_true(all(sapply(h, class) == "happy_result"))
   expect_true(all(sapply(h, function(x) all(names(x) %in% c("summary", "extended", "pr_curve")))))
+})
+
+test_that("demo happy_extended is as expected", {
+  d = happy_extended
+  
+  expect_true("happy_extended" %in% class(d))
+  expect_equal(dim(d)[1], 756)
+  expect_equal(dim(d)[2], 70)
+  
+  required_cols = c("Group.Id", "Sample.Id", "Replicate.Id", "happy_prefix", ".Id", 
+                    "TRUTH.TOTAL", "TRUTH.TP", "Subset", "Type", "Subtype")
+  expect_true(all(required_cols %in% colnames(d)))
 })
