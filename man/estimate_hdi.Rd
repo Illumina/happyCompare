@@ -19,7 +19,7 @@ estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
 within the same group will be treated as replicates.}
 
 \item{aggregate_only}{Estimate HDIs for aggregate replicate only 
-\(speeds up execution\). Default: TRUE.}
+(speeds up execution). Default: TRUE.}
 
 \item{significance}{Significance for HDI estimation. Default: 0.05 (= 95\% HDIs).}
 
