@@ -176,3 +176,238 @@ plot.happy_roc = function(happy_roc, filter = "PASS", type, subtype = "*",
     theme(legend.position = legend_position)
 
 }
+
+
+#' Plot HDI
+#' 
+#' Plot distribution of success rates and HDI estimates for 
+#' a given subset from a \code{data.frame}.
+#' 
+#' @param happy_hdi A \code{data.frame} obtained with \code{estimate_hdi()}.
+#' @param title Title. Default: \code{NULL}.
+#'   
+#' @return A \code{ggplot2} plot.
+#'   
+#' @examples
+#' 
+#' \dontrun{
+#' hdi = estimate_hdi(happy_extended, successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
+#'                    group_cols = c("Group.Id", "Subset", "Type", "Subtype"))
+#' plot(happy_hdi = hdi %>% filter(Subset == "*"))  
+#' }
+#' @export
+plot = function(happy_hdi, ...) {
+  UseMethod("plot", happy_hdi)
+}
+#' @export
+plot.data.frame = function(happy_hdi, title = NULL) {
+  
+  # validate input
+  if (length(unique(happy_hdi$Subset)) > 1) {
+    stop("Must plot one subset at a time")
+  }
+
+  # plot
+  n_groups = length(unique(happy_hdi$Group.Id))
+  if (n_groups == 1) {
+    .plot_hdi_one_group(happy_hdi, title)
+  } else {
+    .plot_hdi_multiple_groups(happy_hdi, title)
+  }
+  
+}
+
+.plot_hdi_one_group = function(happy_hdi, title = NULL) {
+  # validate input
+  if (dim(happy_hdi)[1] != length(unique(happy_hdi$replicate_id))) {
+    stop("Too many data points provided; revise input data.frame")
+  }
+  if (length(unique(happy_hdi$Group.Id))> 1) {
+    stop("More than one group provided")
+  }
+  
+  # plot
+  x = seq(0, 1, length = 100)
+  line_data = lapply(1:dim(happy_hdi)[1], function(i) {
+    replicate_id = happy_hdi$replicate_id[i]
+    d = data.frame(
+      x = x, 
+      density = dbeta(x, happy_hdi$alpha1[i], happy_hdi$beta1[i]), 
+      group = replicate_id,
+      color = ifelse(replicate_id == ".aggregate", "red", "black"),
+      lwd = ifelse(replicate_id == ".aggregate", 1, 0.5)
+    )
+    d$group = as.character(d$group)
+    d$color = as.character(d$color)
+    d
+  }) %>% bind_rows()
+  
+  upper_ylim = max(line_data$density[!is.infinite(line_data$density)])
+  lower_ylim = -max(line_data$density[!is.infinite(line_data$density)]) / 3
+  padding = abs(lower_ylim / (dim(happy_hdi)[1] + 1))
+  
+  segment_data = lapply(1:dim(happy_hdi)[1], function(i) {
+    replicate_id = happy_hdi$replicate_id[i]
+    d = data.frame(
+      x = happy_hdi$lower[i],
+      xend = happy_hdi$upper[i], 
+      y = 0 - i*padding,
+      yend = 0 - i*padding,
+      group = replicate_id,
+      color = ifelse(replicate_id == ".aggregate", "red", "black"),
+      lwd = 1
+    )
+    d$group = as.character(d$group)
+    d$color = as.character(d$color)
+    d
+  }) %>% bind_rows()
+  segment_data$color = factor(segment_data$color)
+  
+  point_data_observed = lapply(1:dim(happy_hdi)[1], function(i) {
+    replicate_id = happy_hdi$replicate_id[i]
+    d = data.frame(
+      x = happy_hdi$observed_p[i],
+      y = 0 - i*padding,
+      group = replicate_id,
+      color = ifelse(replicate_id == ".aggregate", "red", "black")
+    )
+    d$group = as.character(d$group)
+    d$color = as.character(d$color)
+    d
+  }) %>% bind_rows()    
+  
+  point_data_estimated = lapply(1:dim(happy_hdi)[1], function(i) {
+    replicate_id = happy_hdi$replicate_id[i]
+    d = data.frame(
+      x = happy_hdi$estimated_p[i],
+      y = 0 - i*padding,
+      group = replicate_id,
+      color = ifelse(replicate_id == ".aggregate", "red", "black")
+    )
+    d$group = as.character(d$group)
+    d$color = as.character(d$color)
+    d
+  }) %>% bind_rows()   
+  
+  colors = rep("black", dim(happy_hdi)[1])
+  names(colors) = happy_hdi$replicate_id
+  colors[names(colors) == ".aggregate"] = "red"
+  
+  title = title
+  s = happy_hdi[happy_hdi$replicate_id != ".aggregate", ]$successes
+  t = happy_hdi[happy_hdi$replicate_id != ".aggregate", ]$totals
+  subtitle = paste0(
+    "successes: ", paste(s, collapse = ", "), "\n",
+    "totals: ", paste(t, collapse = ", "), "\n",
+    "sigma: ", round(unique(happy_hdi$sigma), 4)
+  )
+  
+  ggplot() +
+    geom_line(data = line_data[line_data$group != ".aggregate", ], 
+              aes(x = x, y = density, group = group, color = group), lwd = 0.5, lty = 2) +
+    geom_line(data = line_data[line_data$group == ".aggregate", ], 
+              aes(x = x, y = density, group = group, color = group), lwd = 1, lty = 1) +
+    geom_segment(data = segment_data, 
+                 aes(x = x, y = y, xend = xend, yend = yend, color = group), lwd = 1) +
+    geom_point(data = point_data_estimated,
+               aes(x = x, y = y, color = group)) +
+    geom_point(data = point_data_observed, pch = 4,
+               aes(x = x, y = y, color = group)) +
+    scale_colour_manual(values = colors) +
+    annotate("rect", xmin = segment_data[segment_data$group == ".aggregate", ]$x, 
+             xmax = segment_data[segment_data$group == ".aggregate", ]$xend, 
+             ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "red") +
+    theme(legend.position = "none") +
+    ylim(NA, upper_ylim) +
+    xlab("p") +
+    ggtitle(label = title, 
+            subtitle = subtitle)
+  
+}
+
+.plot_hdi_multiple_groups = function(happy_hdi, title = NULL) {
+  # subset aggregate replicate
+  sdf = happy_hdi %>% filter(replicate_id == ".aggregate")
+    
+  # validate input
+  if (dim(sdf)[1] != length(unique(happy_hdi$Group.Id))) {
+    stop("Too many data points provided; revise input data.frame")
+  }
+  
+  # plot
+  x = seq(0, 1, length = 100)
+  line_data = lapply(1:dim(sdf)[1], function(i) {
+    d = data.frame(
+      x = x, 
+      density = dbeta(x, sdf$alpha1[i], sdf$beta1[i]), 
+      group = sdf$Group.Id[i]
+    )
+    d$group = as.character(d$group)
+    d
+  }) %>% bind_rows()
+  
+  upper_ylim = max(line_data$density[!is.infinite(line_data$density)])
+  lower_ylim = -max(line_data$density[!is.infinite(line_data$density)]) / 3
+  padding = abs(lower_ylim / (dim(sdf)[1] + 1))
+  
+  segment_data = lapply(1:dim(sdf)[1], function(i) {
+    d = data.frame(
+      x = sdf$lower[i],
+      xend = sdf$upper[i], 
+      y = 0 - i*padding,
+      yend = 0 - i*padding,
+      group = sdf$Group.Id[i]
+    )
+    d$group = as.character(d$group)
+    d
+  }) %>% bind_rows()
+  
+  point_data_observed = lapply(1:dim(sdf)[1], function(i) {
+    d = data.frame(
+      x = sdf$observed_p[i],
+      y = 0 - i*padding,
+      group = sdf$Group.Id[i]
+    )
+    d$group = as.character(d$group)
+    d
+  }) %>% bind_rows()    
+  
+  point_data_estimated = lapply(1:dim(sdf)[1], function(i) {
+    d = data.frame(
+      x = sdf$estimated_p[i],
+      y = 0 - i*padding,
+      group = sdf$Group.Id[i]
+    )
+    d$group = as.character(d$group)
+    d
+  }) %>% bind_rows()   
+  
+  title = title
+  subtitle = happy_hdi %>% 
+    filter(replicate_id != ".aggregate") %>% 
+    group_by(Group.Id) %>% 
+    summarise(
+      n = n(),
+      s = paste(successes, collapse = ","),
+      t = paste(totals, collapse = ",")) %>% 
+    mutate(subtitle = sprintf("%s - n: %d; s: %s; t: %s", Group.Id, n, s, t)) %>% 
+    select(subtitle) %>% 
+    unlist() %>% 
+    paste(., collapse = "\n")
+  
+  ggplot() +
+    geom_line(data = line_data, 
+              aes(x = x, y = density, group = group, color = group), lwd = 1, lty = 1) +
+    geom_segment(data = segment_data, 
+                 aes(x = x, y = y, xend = xend, yend = yend, color = group), lwd = 1) +
+    geom_point(data = point_data_estimated,
+               aes(x = x, y = y, color = group)) +
+    geom_point(data = point_data_observed, pch = 4,
+               aes(x = x, y = y, color = group)) +
+    ylim(NA, upper_ylim) +
+    xlab("p") +
+    ggtitle(label = title, 
+            subtitle = subtitle) +
+    theme(legend.position = "bottom")
+  
+}
