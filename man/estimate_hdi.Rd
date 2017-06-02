@@ -15,22 +15,26 @@ estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
 
 \item{totals_col}{Name of the column that contains total counts.}
 
-\item{group_cols}{Vector of columns to group counts by. Observations within the same group will be treated as replicates.}
+\item{group_cols}{Vector of columns to group counts by. Observations 
+within the same group will be treated as replicates.}
 
-\item{aggregate_only}{Estimate HDIs for aggregate replicate only speeds up execution. Default: TRUE.}
+\item{aggregate_only}{Estimate HDIs for aggregate replicate only 
+\(speeds up execution\). Default: TRUE.}
 
-\item{significance}{Significance for HDI estimation. Default: 0.05 = 95\% HDIs.}
+\item{significance}{Significance for HDI estimation. Default: 0.05 (= 95\% HDIs).}
 
-\item{sample_size}{Number of observations to draw from the Beta posterior to estimate HDIs. Default: 1e5.}
+\item{sample_size}{Number of observations to draw from the Beta posterior 
+to estimate HDIs. Default: 1e5.}
 
-\item{max_alpha1}{Upper bound for alpha hyperparameter in the aggregate posterior Beta.}
+\item{max_alpha1}{Upper bound for alpha hyperparameter in the aggregate Beta posterior.}
 }
 \value{
-A \code{data.frame} with combined information from the selected
-  \code{happy_result} and its \code{samplesheet}.
+A \code{data.frame} with performance counts, model hyperparameters, 
+success rate and HDI estimates.
 }
 \description{
-Estimate HDIs and success rates from hap.py counts using Beta-Binomial inference
+Estimate HDIs and success rates from hap.py counts using a Beta-Binomial 
+model and empirical Bayes
 }
 \examples{
 

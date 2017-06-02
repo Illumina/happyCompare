@@ -99,19 +99,23 @@ extract.happyCompare_list <- function(happyCompare_list,
 
 #' Estimate HDIs using Beta-Binomial inference
 #' 
-#' Estimate HDIs and success rates from hap.py counts using Beta-Binomial inference
+#' Estimate HDIs and success rates from hap.py counts using a Beta-Binomial 
+#' model and empirical Bayes
 #' 
 #' @param happy_extended A \code{happy_extended} object.
 #' @param successes_col Name of the column that contains success counts. 
 #' @param totals_col Name of the column that contains total counts.
-#' @param group_cols Vector of columns to group counts by. Observations within the same group will be treated as replicates.
-#' @param significance Significance for HDI estimation. Default: 0.05 = 95\% HDIs.
-#' @param sample_size Number of observations to draw from the Beta posterior to estimate HDIs. Default: 1e5.
-#' @param max_alpha1 Upper bound for alpha hyperparameter in the aggregate posterior Beta.
-#' @param aggregate_only Estimate HDIs for aggregate replicate only speeds up execution. Default: TRUE.
+#' @param group_cols Vector of columns to group counts by. Observations 
+#' within the same group will be treated as replicates.
+#' @param significance Significance for HDI estimation. Default: 0.05 (= 95\% HDIs).
+#' @param sample_size Number of observations to draw from the Beta posterior 
+#' to estimate HDIs. Default: 1e5.
+#' @param max_alpha1 Upper bound for alpha hyperparameter in the aggregate Beta posterior.
+#' @param aggregate_only Estimate HDIs for aggregate replicate only 
+#' (speeds up execution). Default: TRUE.
 #'   
-#' @return A \code{data.frame} with combined information from the selected
-#'   \code{happy_result} and its \code{samplesheet}.
+#' @return A \code{data.frame} with performance counts, model hyperparameters, 
+#' success rate and HDI estimates.
 #'   
 #' @examples
 #' 
@@ -145,6 +149,7 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
     stop("Could not find all specified group columns in input data.frame")
   }
   
+  # exclude records where totals == 0
   n_exclude = sum(happy_extended[, totals_col] == 0)
   if (n_exclude > 0) {
     warning(sprintf("Excluding %d records where \"%s\" == 0", n_exclude, totals_col))
@@ -184,9 +189,10 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
   }
   
   # internal functions
-  per_replicate_estimates = function(successes, totals, significance = 0.05, sample_size = 1e5, aggregate_only = TRUE) {
+  per_replicate_estimates = function(successes, totals, significance = 0.05, 
+                                     sample_size = 1e5, aggregate_only = TRUE) {
     
-    # estimate parameters for beta prior
+    # estimate parameters for beta prior (subset-specific)
     mu = mean(successes / totals)
     sigma = sd(successes / totals)
     if (!is.na(sigma) && sigma > 0) {
@@ -211,7 +217,8 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
       
       # calculate hdis and estimated success rate
       if (! aggregate_only) {
-        hdi = adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, significance = significance, s = s, t = t) 
+        hdi = adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
+                           significance = significance, s = s, t = t) 
       } else {
         hdi = rep(NA, 3)
         names(hdi) = c("lower", "upper", "estimated_p")
@@ -242,24 +249,34 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
     return(replicate_params)
     
   }
-  aggregate_estimates = function(replicate_params, significance = 0.05, sample_size = 1e5, max_alpha1 = 1000) {
+  
+  aggregate_estimates = function(replicate_params, significance = 0.05, sample_size = 1e5, 
+                                 max_alpha1 = 1000) {
+    
+    # params for beta prior are subset specific and remain constant across replicates
+    alpha0 = unique(replicate_params$alpha0)
+    beta0 = unique(replicate_params$beta0)
+    
+    # mu and sigma are also subset specific
+    mu = unique(replicate_params$mu)
+    sigma = unique(replicate_params$sigma)
     
     # counts for aggregate replicate
     s = mean(replicate_params$successes)
     t = mean(replicate_params$totals)
     
     # average posterior parameters across replicates
-    aggregate_alpha1 = aggregate_hyperparam(x = replicate_params$alpha1)
-    aggregate_beta1 = aggregate_hyperparam(x = replicate_params$beta1)
+    alpha1 = aggregate_hyperparam(x = replicate_params$alpha1)
+    beta1 = aggregate_hyperparam(x = replicate_params$beta1)
     
     # limit alpha1 and scale beta1 accordingly
-    if (aggregate_alpha1 > max_alpha1) {
-      aggregate_beta1 = aggregate_beta1 * max_alpha1 / aggregate_alpha1
-      aggregate_alpha1 = max_alpha1
+    if (alpha1 > max_alpha1) {
+      beta1 = beta1 * max_alpha1 / alpha1
+      alpha1 = max_alpha1
     }
     
     # calculate hdis and estimated success rate
-    aggregate_hdi = adjusted_hdi(alpha = aggregate_alpha1, beta = aggregate_beta1, sample_size = sample_size, 
+    aggregate_hdi = adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
                                   significance = significance, s = s, t = t) 
     
     # format data
@@ -267,12 +284,12 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
       replicate_id = ".aggregate",
       successes = s,
       totals = t,
-      mu = unique(replicate_params$mu),
-      sigma = unique(replicate_params$sigma),
-      alpha0 = unique(replicate_params$alpha0),
-      beta0 = unique(replicate_params$beta0),
-      alpha1 = aggregate_alpha1,
-      beta1 = aggregate_beta1,
+      mu = mu,
+      sigma = sigma,
+      alpha0 = alpha0,
+      beta0 = beta0,
+      alpha1 = alpha1,
+      beta1 = beta1,
       lower = aggregate_hdi["lower"],
       observed_p = s / t,      
       estimated_p = aggregate_hdi["estimated_p"],
@@ -283,6 +300,7 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
     
     return(aggregate_params)
   }
+  
   adjusted_hdi = function(alpha, beta, s, t, sample_size = 1e5, significance = 0.05) {
     
     # calculate hdis by random sampling
@@ -306,9 +324,10 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
     
     return(hdi)
   }
+  
   aggregate_hyperparam = function(x) {
     
-    # weighted mean across replicates
+    # Gamma-weighted mean across replicates
     gamma_probs = dgamma(x, 0.01, 0.01)
     if (all(gamma_probs == 0)) {
       aggregate_hyperparam = mean(x)
@@ -318,7 +337,6 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
         w = dgamma(x, 0.01, 0.01) / max(dgamma(x, 0.01, 0.01))
       )
     }
-    
     return(aggregate_hyperparam)
   }
   
