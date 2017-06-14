@@ -3,7 +3,7 @@
 
 #' Extract tables from a happy_compare object
 #' 
-#' Extract tables from a `happy_compare object` and combine into a single
+#' Extract tables from a `happy_compare` object and combine into a single
 #' \code{data.frame}. Appends samplesheet metadata to the original happy
 #' results.
 #' 

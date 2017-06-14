@@ -16,13 +16,13 @@ read_samplesheet_(samplesheet, happy_results, ids)
 \item{ids}{A \code{vector} of unique ids to map samplesheet entries with happy results.}
 }
 \value{
-A \code{happy_compare} object, with the following fields: 
-\itemize{ 
-  \item{\code{samplesheet}: the original samplesheet, stored as a
-        \code{data.frame}}. 
-  \item{\code{happy_results}: a \code{happy_results_list}
-        object that contains individual \code{happy_result} objects as defined in
-        \code{happyR}}. 
+A \code{happy_compare} object, with the following fields:
+\itemize{
+\item{\code{samplesheet}: the original samplesheet, stored as a
+\code{data.frame}}.
+\item{\code{happy_results}: a \code{happy_results_list}
+object that contains individual \code{happy_result} objects as defined in
+\code{happyR}}.
 }
 }
 \description{

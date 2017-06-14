@@ -5,5 +5,5 @@
 \alias{happy_extended}
 \title{happy_extended}
 \description{
-Demo `happy_extended` object. See `README.md` for details on data generation.
+Demo \code{happy_extended} object. See \code{README.md} for details on data generation.
 }

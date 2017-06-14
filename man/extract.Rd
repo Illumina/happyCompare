@@ -17,10 +17,10 @@ Must be one of: \code{summary}, \code{extended}, \code{pr_curve.all},
 }
 \value{
 A \code{data.frame} with combined information from the selected
-  \code{happy_result} and its \code{samplesheet}.
+\code{happy_result} and its \code{samplesheet}.
 }
 \description{
-Extract tables from a `happy_compare object` and combine into a single
+Extract tables from a \code{happy_compare object} and combine into a single
 \code{data.frame}. Appends samplesheet metadata to the original happy
 results.
 }

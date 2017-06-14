@@ -25,7 +25,7 @@ metrics. Default: \code{4}.}
 }
 \value{
 A \code{data.frame} object with the selected hap.py performance
-  metrics.
+metrics.
 }
 \description{
 Display hap.py summary results into tabular format using \code{knitr}.

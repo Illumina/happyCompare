@@ -5,5 +5,5 @@
 \alias{happy_compare}
 \title{happy_compare}
 \description{
-Demo `happy_compare` object. See `README.md` for details on data generation.
+Demo \code{happy_compare} object. See \code{README.md} for details on data generation.
 }

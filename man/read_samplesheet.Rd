@@ -14,13 +14,13 @@ read_samplesheet(samplesheet_path, lazy = TRUE)
 \item{lazy}{Do not load larger hap.py results until needed. Default: \code{TRUE}.}
 }
 \value{
-A \code{happy_compare} object, with the following fields: 
-\itemize{ 
-  \item{\code{samplesheet}: the original samplesheet, stored as a
-        \code{data.frame}}. 
-  \item{\code{happy_results}: a \code{happy_results_list}
-        object that contains individual \code{happy_result} objects as defined in
-        \code{happyR}}. 
+A \code{happy_compare} object, with the following fields:
+\itemize{
+\item{\code{samplesheet}: the original samplesheet, stored as a
+\code{data.frame}}.
+\item{\code{happy_results}: a \code{happy_results_list}
+object that contains individual \code{happy_result} objects as defined in
+\code{happyR}}.
 }
 }
 \description{

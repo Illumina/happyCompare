@@ -35,7 +35,7 @@ A \code{ggplot2} plot.
 \description{
 Plot precision vs recall ROC curves from the selected filters.
 
-Plot distribution of success rates and HDI estimates for 
+Plot distribution of success rates and HDI estimates for
 a given subset from a \code{data.frame}.
 }
 \examples{
