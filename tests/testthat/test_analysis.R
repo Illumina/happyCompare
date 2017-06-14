@@ -1,11 +1,11 @@
 context("analysis.R")
 
-test_that("extract.happyCompare_list works", {
-  e = extract(happyCompare_list, table = "summary")
+test_that("extract.happy_compare works", {
+  e = extract(happy_compare, table = "summary")
   expect_true("happy_summary" %in% class(e))
   expect_true(all(c(".Id", "Group.Id", "Sample.Id", "Replicate.Id") %in% names(e)))
   
-  e = extract(happyCompare_list, table = "extended")
+  e = extract(happy_compare, table = "extended")
   expect_true("happy_extended" %in% class(e))
   expect_true(all(c(".Id", "Group.Id", "Sample.Id", "Replicate.Id") %in% names(e)))
 })

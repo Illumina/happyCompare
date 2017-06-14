@@ -3,7 +3,7 @@
 
 #' Load data from happyCompare samplesheets
 #' 
-#' Load hap.py results into a \code{happyCompare_list} object as specified in
+#' Load hap.py results into a \code{happy_compare} object as specified in
 #' the \code{happyCompare} samplesheet provided. Depends on \code{happyR}.
 #' 
 #' @param samplesheet_path Path to a happyCompare samplesheet. Required fields:
@@ -11,7 +11,7 @@
 #'   \code{happy_prefix}.
 #' @param lazy Do not load larger hap.py results until needed. Default: \code{TRUE}.
 #'   
-#' @return A \code{happyCompare_list} object, with the following fields: 
+#' @return A \code{happy_compare} object, with the following fields: 
 #' \itemize{ 
 #'   \item{\code{samplesheet}: the original samplesheet, stored as a
 #'         \code{data.frame}}. 
@@ -23,7 +23,7 @@
 #' @examples
 #' 
 #' \dontrun{
-#' happyCompare_list = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
+#' happy_compare = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
 #' }
 #' 
 #' @author Mar Gonzalez-Porta
@@ -59,18 +59,18 @@ read_samplesheet = function(samplesheet_path, lazy = TRUE) {
   names(happy_results) = ids
   happy_results = structure(happy_results, class = "happy_results_list")
   
-  # create happyCompare_list
-  happyCompare_list = read_samplesheet_(samplesheet = samplesheet, 
+  # create happy_compare
+  happy_compare = read_samplesheet_(samplesheet = samplesheet, 
                                         happy_results = happy_results, ids = ids)
   
-  return(happyCompare_list)
+  return(happy_compare)
   
 }
 
 
-#' Manually create happyCompare_list objects
+#' Manually create happy_compare objects
 #' 
-#' Create a happyCompare_list object from its individual components.
+#' Create a happy_compare object from its individual components.
 #' 
 #' @param samplesheet A happyCompare samplesheet (\code{data.frame}). Required fields:
 #'   \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
@@ -78,7 +78,7 @@ read_samplesheet = function(samplesheet_path, lazy = TRUE) {
 #' @param happy_results A \code{happy_results_list} object obtained with \code{happyR}.
 #' @param ids A \code{vector} of unique ids to map samplesheet entries with happy results. 
 #'   
-#' @return A \code{happyCompare_list} object, with the following fields: 
+#' @return A \code{happy_compare} object, with the following fields: 
 #' \itemize{ 
 #'   \item{\code{samplesheet}: the original samplesheet, stored as a
 #'         \code{data.frame}}. 
@@ -90,7 +90,7 @@ read_samplesheet = function(samplesheet_path, lazy = TRUE) {
 #' @examples
 #' 
 #' \dontrun{
-#' happyCompare_list = read_samplesheet_(samplesheet = samplesheet, 
+#' happy_compare = read_samplesheet_(samplesheet = samplesheet, 
 #' happy_results = happy_results, ids = ids)
 #' }
 #' 
@@ -116,13 +116,13 @@ read_samplesheet_ = function(samplesheet, happy_results, ids) {
     mutate(.Id = ids)
   names(happy_results) = ids
   
-  # create happyCompare_list
-  happyCompare_list = list(
+  # create happy_compare
+  happy_compare = list(
     samplesheet = samplesheet,
     happy_results = happy_results
   )
-  happyCompare_list = structure(happyCompare_list, class = "happyCompare_list")
+  happy_compare = structure(happy_compare, class = "happy_compare")
   
-  return(happyCompare_list)
+  return(happy_compare)
   
 }

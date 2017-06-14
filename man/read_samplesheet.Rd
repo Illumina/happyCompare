@@ -14,7 +14,7 @@ read_samplesheet(samplesheet_path, lazy = TRUE)
 \item{lazy}{Do not load larger hap.py results until needed. Default: \code{TRUE}.}
 }
 \value{
-A \code{happyCompare_list} object, with the following fields: 
+A \code{happy_compare} object, with the following fields: 
 \itemize{ 
   \item{\code{samplesheet}: the original samplesheet, stored as a
         \code{data.frame}}. 
@@ -24,13 +24,13 @@ A \code{happyCompare_list} object, with the following fields:
 }
 }
 \description{
-Load hap.py results into a \code{happyCompare_list} object as specified in
+Load hap.py results into a \code{happy_compare} object as specified in
 the \code{happyCompare} samplesheet provided. Depends on \code{happyR}.
 }
 \examples{
 
 \dontrun{
-happyCompare_list = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
+happy_compare = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
 }
 
 }

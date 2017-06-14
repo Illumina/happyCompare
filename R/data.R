@@ -1,11 +1,11 @@
 ## documentation for demo datasets
 
-#' happyCompare_list
+#' happy_compare
 #' 
-#' Demo `happyCompare_list` object. See `README.md` for details on data generation.
+#' Demo `happy_compare` object. See `README.md` for details on data generation.
 #' 
 #' @docType data
-#' @name happyCompare_list
+#' @name happy_compare
 NULL
 
 #' happy_extended

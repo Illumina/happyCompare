@@ -1,9 +1,9 @@
 context("data.R")
 
-test_that("demo happyCompare_list is as expected", {
-  d = happyCompare_list
+test_that("demo happy_compare is as expected", {
+  d = happy_compare
 
-  expect_true("happyCompare_list" %in% class(d))
+  expect_true("happy_compare" %in% class(d))
   expect_equal(length(d), 2)
   expect_true(all(names(d) %in% c("samplesheet", "happy_results")))
   

@@ -41,7 +41,7 @@ a given subset from a \code{data.frame}.
 \examples{
 
 \dontrun{
-roc = extract(happyCompare_list, table = "pr_curve.all")
+roc = extract(happy_compare, table = "pr_curve.all")
 plot(roc, type = "SNP", filter = "ALL")  
 }
 

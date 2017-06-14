@@ -1,7 +1,7 @@
 context("reporting.R")
 
 test_that("tabulate.happy_summary works", {
-  s = extract(happyCompare_list, table = "summary")
+  s = extract(happy_compare, table = "summary")
   expect_true("happy_summary" %in% class(s))
   
   cols = c("Group.Id", "Replicate.Id", 
@@ -21,7 +21,7 @@ test_that("tabulate.happy_summary works", {
 })
 
 test_that("plot.happy_roc works", {
-  roc = extract(happyCompare_list, table = "pr_curve.all")
+  roc = extract(happy_compare, table = "pr_curve.all")
   expect_true("happy_roc" %in% class(roc))
   
   p1 = plot(roc, type = "SNP", filter = "ALL")  

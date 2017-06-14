@@ -109,7 +109,7 @@ tabulate.happy_summary = function(happy_summary, type = c("SNP", "INDEL"),
 #' @examples
 #' 
 #' \dontrun{
-#' roc = extract(happyCompare_list, table = "pr_curve.all")
+#' roc = extract(happy_compare, table = "pr_curve.all")
 #' plot(roc, type = "SNP", filter = "ALL")  
 #' }
 #' @export

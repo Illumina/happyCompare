@@ -2,12 +2,12 @@
 % Please edit documentation in R/analysis.R
 \name{extract}
 \alias{extract}
-\title{Extract tables from a happyCompare_list object}
+\title{Extract tables from a happy_compare object}
 \usage{
-extract(happyCompare_list, ...)
+extract(happy_compare, ...)
 }
 \arguments{
-\item{happyCompare_list}{A \code{happyCompare_list} object.}
+\item{happy_compare}{A \code{happy_compare} object.}
 
 \item{table}{Table of data to extract from each \code{happy_result} object.
 Must be one of: \code{summary}, \code{extended}, \code{pr_curve.all},
@@ -20,15 +20,15 @@ A \code{data.frame} with combined information from the selected
   \code{happy_result} and its \code{samplesheet}.
 }
 \description{
-Extract tables from a `happyCompare_list object` and combine into a single
+Extract tables from a `happy_compare object` and combine into a single
 \code{data.frame}. Appends samplesheet metadata to the original happy
 results.
 }
 \examples{
 
 \dontrun{
-summary = extract(happyCompare_list, table = "summary")
-roc = extract(happyCompare_list, table = "pr_curve.all")
+summary = extract(happy_compare, table = "summary")
+roc = extract(happy_compare, table = "pr_curve.all")
 }
 
 }

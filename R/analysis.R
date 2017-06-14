@@ -1,13 +1,13 @@
 ## extract methods
 
 
-#' Extract tables from a happyCompare_list object
+#' Extract tables from a happy_compare object
 #' 
-#' Extract tables from a `happyCompare_list object` and combine into a single
+#' Extract tables from a `happy_compare object` and combine into a single
 #' \code{data.frame}. Appends samplesheet metadata to the original happy
 #' results.
 #' 
-#' @param happyCompare_list A \code{happyCompare_list} object.
+#' @param happy_compare A \code{happy_compare} object.
 #' @param table Table of data to extract from each \code{happy_result} object.
 #'   Must be one of: \code{summary}, \code{extended}, \code{pr_curve.all},
 #'   \code{pr_curve.SNP},  \code{pr_curve.SNP_PASS}, \code{pr_curve.SNP_SEL},
@@ -20,39 +20,39 @@
 #' @examples
 #' 
 #' \dontrun{
-#' summary = extract(happyCompare_list, table = "summary")
-#' roc = extract(happyCompare_list, table = "pr_curve.all")
+#' summary = extract(happy_compare, table = "summary")
+#' roc = extract(happy_compare, table = "pr_curve.all")
 #' }
 #' 
 #' @export
-extract = function(happyCompare_list, ...) {
-  UseMethod("extract", happyCompare_list)
+extract = function(happy_compare, ...) {
+  UseMethod("extract", happy_compare)
 }
 #' @export
-extract.happyCompare_list <- function(happyCompare_list, 
+extract.happy_compare <- function(happy_compare, 
                                       table = c("summary", "extended", "pr_curve.all", 
                                                 "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL",
                                                 "pr_curve.INDEL", "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
   
   # validate input
-  if (!"happyCompare_list" %in% class(happyCompare_list)) {
-    stop("Must provide a happyCompare_list object")
+  if (!"happy_compare" %in% class(happy_compare)) {
+    stop("Must provide a happy_compare object")
   }
   
   table = match.arg(table)
   
   # extract results into a data.frame
-  ids = happyCompare_list$samplesheet$.Id
+  ids = happy_compare$samplesheet$.Id
   
   if (table %in% c("summary", "extended")) {
     item_list = lapply(ids, function(id) {
-      if (!table %in% names(happyCompare_list$happy_results[[id]])) {
+      if (!table %in% names(happy_compare$happy_results[[id]])) {
         stop(sprintf("Could not find %s for happy_results_list with id %s", table, id))
       }
       table_out = merge(
-        happyCompare_list$samplesheet %>% 
+        happy_compare$samplesheet %>% 
           filter(.Id == id),
-        happyCompare_list$happy_results[[id]][[table]] %>% 
+        happy_compare$happy_results[[id]][[table]] %>% 
           data.frame() %>% 
           mutate(.Id = id),
         by = ".Id"
@@ -65,13 +65,13 @@ extract.happyCompare_list <- function(happyCompare_list,
   if (grepl("pr_curve", table)) {
     item_list = lapply(ids, function(id) {
       table_split = unlist(strsplit(table, "\\."))
-      if (!table_split[1] %in% names(happyCompare_list$happy_results[[id]])) {
+      if (!table_split[1] %in% names(happy_compare$happy_results[[id]])) {
         stop(sprintf("Could not find %s for happy_results_list with id %s", table_split[1], id))
       }
       table_out = merge(
-        happyCompare_list$samplesheet %>% 
+        happy_compare$samplesheet %>% 
           filter(.Id == id),
-        happyCompare_list$happy_results[[id]][[table_split[1]]][[table_split[2]]] %>% 
+        happy_compare$happy_results[[id]][[table_split[1]]][[table_split[2]]] %>% 
           data.frame() %>% 
           mutate(.Id = id),
         by = ".Id"
@@ -148,12 +148,12 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
   if (!all(group_cols %in% colnames(happy_extended))) {
     stop("Could not find all specified group columns in input data.frame")
   }
-  
+
   # exclude records where totals == 0
   n_exclude = sum(happy_extended[, totals_col] == 0)
   if (n_exclude > 0) {
     warning(sprintf("Excluding %d records where \"%s\" == 0", n_exclude, totals_col))
-    happy_extended = happy_extended %>% 
+    happy_extended = happy_extended %>%
       filter_(.dots = lazyeval::interp(~ .$totals_col > 0, .values = list(totals_col = totals_col)))
   }
 
