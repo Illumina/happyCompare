@@ -63,22 +63,22 @@ Alternatively, we can use `read_samplesheet_()` to create a `happy_compare` from
 
 ```{r}
 # re-use from pre-loaded dataset
-happy_results = happy_compare$happy_results
+happy_results <- happy_compare$happy_results
   
 # modify samplesheet
-samplesheet = happy_compare$samplesheet %>% 
+samplesheet <- happy_compare$samplesheet %>% 
   mutate(Group.Id = "Single group") %>% 
   select(Group.Id, Sample.Id, Replicate.Id, happy_prefix)
 samplesheet
 
 # set ids
-ids = samplesheet %>% 
+ids <- samplesheet %>% 
   mutate(.Id = paste(Group.Id, Sample.Id, Replicate.Id, sep = "-")) %>% 
   select(.Id) %>% 
   unlist()
 
 # store as a new happy_compare
-custom_hcl = read_samplesheet_(samplesheet = samplesheet, 
+custom_hcl <- read_samplesheet_(samplesheet = samplesheet, 
                                happy_results = happy_results,
                                ids = ids)
 class(custom_hcl)
@@ -95,11 +95,11 @@ sapply(happy_compare$happy_results[[1]], class)
 names(happy_compare$happy_results[[1]]$pr_curve)
 
 # extract a table with hap.py summary metrics
-summary = extract(happy_compare, table = "summary")
+summary <- extract(happy_compare, table = "summary")
 str(summary)
 
 # extract a table with hap.py roc metrics
-roc = extract(happy_compare, table = "pr_curve.SNP_PASS")
+roc <- extract(happy_compare, table = "pr_curve.SNP_PASS")
 class(roc)
 names(roc) %>% head(n = 12)
 ```
@@ -113,18 +113,18 @@ From here, we can continue the analysis with custom R functions or by using the 
 We can use the method `tabulate()` to display a summary of performance metrics as a formatted table, e.g.:
 
 ```{r}
-cols = c("Group.Id", "Replicate.Id", "METRIC.Recall", "METRIC.Precision", "METRIC.Frac_NA", "METRIC.F1_Score")
-colnames = c("Group.Id", "Sample", "Recall", "Precision", "Frac_NA", "F1_Score")
+cols <- c("Group.Id", "Replicate.Id", "METRIC.Recall", "METRIC.Precision", "METRIC.Frac_NA", "METRIC.F1_Score")
+colnames <- c("Group.Id", "Sample", "Recall", "Precision", "Frac_NA", "F1_Score")
 
 # 1 replicate per group
-s = extract(happy_compare, table = "summary")
-t = tabulate(happy_summary = s, cols = cols, colnames = colnames, 
+s <- extract(happy_compare, table = "summary")
+t <- tabulate(happy_summary = s, cols = cols, colnames = colnames, 
              filter = "PASS", vartype = "SNP", aggregate = FALSE)
 t %>% knitr::kable()
 
 # multiple replicates
-s = extract(custom_hcl, table = "summary")
-t = tabulate(happy_summary = s, cols = cols, colnames = colnames, 
+s <- extract(custom_hcl, table = "summary")
+t <- tabulate(happy_summary = s, cols = cols, colnames = colnames, 
              filter = "PASS", vartype = "SNP", aggregate = TRUE)
 t %>% knitr::kable()
 ```
@@ -135,12 +135,12 @@ t %>% knitr::kable()
 We can visualise precision-recall ROC curves by passing `happy_roc` objects to `plot()`:
 
 ```{r message=FALSE, fig.width=15, fig.height=5}
-roc = extract(happy_compare, table = "pr_curve.all")
+roc <- extract(happy_compare, table = "pr_curve.all")
 class(roc)
 
-p1 = plot(roc, type = "SNP", filter = "ALL")  
-p2 = plot(roc, type = "SNP", filter = "PASS")
-p3 = plot(roc, type = "SNP", filter = "SEL")
+p1 <- plot(roc, type = "SNP", filter = "ALL")  
+p2 <- plot(roc, type = "SNP", filter = "PASS")
+p3 <- plot(roc, type = "SNP", filter = "SEL")
 
 ggplot2::theme_set(theme_bw())
 gridExtra::grid.arrange(p1, p2, p3, nrow = 1)
@@ -212,6 +212,6 @@ platypus,NA12878,NA12878_platypus,output/platypus
 ```{r message=FALSE, eval = FALSE}
 library(happyCompare)
 
-happy_compare = read_samplesheet(samplesheet_path = "happyCompare/happyCompare_samplesheet.csv")
+happy_compare <- read_samplesheet(samplesheet_path = "happyCompare/happyCompare_samplesheet.csv")
 save(happy_compare, file = "happyCompare/happy_compare.RData")
 ```
