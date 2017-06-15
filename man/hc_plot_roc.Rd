@@ -5,7 +5,7 @@
 \title{Plot a ROC curve for precision vs recall}
 \usage{
 hc_plot_roc(happy_roc, filter = "PASS", type, subtype = "*", subset = "*",
-  legend_position = "bottom", ...)
+  legend_position = "bottom")
 }
 \arguments{
 \item{happy_roc}{A \code{happy_roc} object.}

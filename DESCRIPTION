@@ -1,17 +1,16 @@
 Package: happyCompare
 Type: Package
 Title: Reporting toolbox for hap.py output
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: as.person(c(
     "Mar Gonzalez-Porta <mgonzalez@illumina.com> [aut, cre]", 
     "Ben Moore <bmoore@illumina.com> [aut]"
   ))
-Description: Generate modular reports from hap.py output files.
+Description: Tools for aggregation and reporting of variant calling performance outputs from hap.py.
 License: BSD
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
-Depends: dplyr, ggplot2, bit64, R (>= 2.10)
-Imports: data.table, gridExtra, reshape2, knitr, plyr, happyR
+Imports: stats, utils, dplyr, ggplot2, happyR, lazyeval, HDInterval
 Suggests: testthat

@@ -25,7 +25,7 @@
 #' }
 #' 
 #' @export
-extract <- function(happy_compare, ...) {
+extract <- function(happy_compare, table) {
   UseMethod("extract", happy_compare)
 }
 #' @export
@@ -82,7 +82,7 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
 #' }
 #' 
 #' @export
-estimate_hdi <- function(happy_extended, ...) {
+estimate_hdi <- function(happy_extended) {
   UseMethod("estimate_hdi", happy_extended)
 }
 #' @export

@@ -4,7 +4,7 @@
 \alias{extract}
 \title{Extract tables from a happy_compare object}
 \usage{
-extract(happy_compare, ...)
+extract(happy_compare, table)
 }
 \arguments{
 \item{happy_compare}{A \code{happy_compare} object.}

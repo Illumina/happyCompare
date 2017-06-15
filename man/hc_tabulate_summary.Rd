@@ -6,7 +6,7 @@
 \usage{
 hc_tabulate_summary(happy_summary, type = c("SNP", "INDEL"),
   filter = c("PASS", "ALL"), cols, colnames = cols, digits = 4,
-  aggregate = FALSE, ...)
+  aggregate = FALSE)
 }
 \arguments{
 \item{happy_summary}{A \code{happy_summary} object.}
