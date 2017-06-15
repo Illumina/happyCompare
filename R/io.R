@@ -3,99 +3,93 @@
 
 #' Load data from happyCompare samplesheets
 #' 
-#' Load hap.py results into a \code{happyCompare_list} object as specified in
-#' the \code{happyCompare} samplesheet provided. Depends on \code{happyR}.
+#' Load hap.py results into a `happy_compare` object as specified in
+#' the `happyCompare` samplesheet provided. Depends on `happyR`.
 #' 
 #' @param samplesheet_path Path to a happyCompare samplesheet. Required fields:
-#'   \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-#'   \code{happy_prefix}.
-#' @param lazy Do not load larger hap.py results until needed. Default: \code{TRUE}.
+#'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
+#'   `happy_prefix`.
+#' @param lazy Do not load larger hap.py results until needed. Default: `TRUE`.
 #'   
-#' @return A \code{happyCompare_list} object, with the following fields: 
+#' @return A `happy_compare` object, with the following fields: 
 #' \itemize{ 
-#'   \item{\code{samplesheet}: the original samplesheet, stored as a
-#'         \code{data.frame}}. 
-#'   \item{\code{happy_results}: a \code{happy_results_list}
-#'         object that contains individual \code{happy_result} objects as defined in
-#'         \code{happyR}}. 
+#'   \item{`samplesheet`: the original samplesheet, stored as a
+#'         `data.frame`}. 
+#'   \item{`happy_results`: a `happy_results_list`
+#'         object that contains individual `happy_result` objects as defined in
+#'         `happyR`}. 
 #' }
 #'   
 #' @examples
 #' 
 #' \dontrun{
-#' happyCompare_list = read_samplesheet(samplesheet_path = "happyCompare_samplesheet.csv")
+#' happy_compare = read_samplesheet(samplesheet_path = 'happyCompare_samplesheet.csv')
 #' }
 #' 
-#' @author Mar Gonzalez-Porta
-#' 
 #' @export
-read_samplesheet = function(samplesheet_path, lazy = TRUE) {
+read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
   
   # check input
   if (!file.exists(samplesheet_path)) {
     stop("Cannot find samplesheet")
   }
-
+  
   # prepare samplesheet
-  samplesheet = read.csv(samplesheet_path)
+  samplesheet <- read.csv(samplesheet_path)
   
   # prepare ids
-  ids = samplesheet %>% 
-    mutate(.Id = paste(Group.Id, Sample.Id, Replicate.Id, sep = "-")) %>% 
-    select(.Id) %>% 
-    unlist()
+  ids <- samplesheet %>% mutate(.Id = paste(Group.Id, Sample.Id, Replicate.Id, 
+    sep = "-")) %>% select(.Id) %>% unlist()
   
   # load happy results
-  happy_results = lapply(seq_along(ids), function(i) {
+  happy_results <- lapply(seq_along(ids), function(i) {
     message(sprintf("Processing %s", ids[i]))
-    
-    happy_prefix = samplesheet %>% 
-      slice(i) %>% 
-      select(happy_prefix) %>% 
-      unlist() %>% 
-      as.character()
+    happy_prefix <- as.character(samplesheet$happy_prefix[i])
     happyR::read_happy(happy_prefix = happy_prefix, lazy = lazy)
   })
-  names(happy_results) = ids
-  happy_results = structure(happy_results, class = "happy_results_list")
+  names(happy_results) <- ids
+  happy_results <- structure(happy_results, class = "happy_results_list")
   
-  # create happyCompare_list
-  happyCompare_list = read_samplesheet_(samplesheet = samplesheet, 
-                                        happy_results = happy_results, ids = ids)
+  # create happy_compare
+  happy_compare <- read_samplesheet_(samplesheet = samplesheet, happy_results = happy_results, 
+    ids = ids)
   
-  return(happyCompare_list)
+  return(happy_compare)
   
 }
 
 
-#' Manually create happyCompare_list objects
+#' Manually create happy_compare objects
 #' 
-#' Create a happyCompare_list object from its individual components.
+#' Create a `happy_compare` list from existing objects for each of its items.
 #' 
-#' @param samplesheet A happyCompare samplesheet (\code{data.frame}). Required fields:
-#'   \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-#'   \code{happy_prefix}.
-#' @param happy_results A \code{happy_results_list} object obtained with \code{happyR}.
-#' @param ids A \code{vector} of unique ids to map samplesheet entries with happy results. 
+#' @param samplesheet A happyCompare samplesheet (`data.frame`). Required fields:
+#'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
+#'   `happy_prefix`.
+#' @param happy_results A `happy_results_list` object obtained with `happyR`.
+#' @param ids A `vector` of unique ids to map samplesheet entries with happy results. 
 #'   
-#' @return A \code{happyCompare_list} object, with the following fields: 
+#' @return A `happy_compare` object, with the following fields: 
 #' \itemize{ 
-#'   \item{\code{samplesheet}: the original samplesheet, stored as a
-#'         \code{data.frame}}. 
-#'   \item{\code{happy_results}: a \code{happy_results_list}
-#'         object that contains individual \code{happy_result} objects as defined in
-#'         \code{happyR}}. 
+#'   \item{`samplesheet`: the original samplesheet, stored as a
+#'         `data.frame`}. 
+#'   \item{`happy_results`: a `happy_results_list`
+#'         object that contains individual `happy_result` objects as defined in
+#'         `happyR`}. 
 #' }
 #'   
 #' @examples
 #' 
 #' \dontrun{
-#' happyCompare_list = read_samplesheet_(samplesheet = samplesheet, 
-#' happy_results = happy_results, ids = ids)
+#' samplesheet = read.csv(file = "/path/to/samplesheet.csv")
+#' happy_results = happyR::c(happy_result_A, happy_result_B)
+#' ids = c("A", "B")
+#' happy_compare = read_samplesheet_(samplesheet = samplesheet, 
+#'                   happy_results = happy_results, ids = ids)
 #' }
 #' 
 #' @export
-read_samplesheet_ = function(samplesheet, happy_results, ids) {
+read_samplesheet_ <- function(samplesheet, happy_results, ids) {
   
   # validate input
   if (!"happy_results_list" %in% class(happy_results)) {
@@ -106,23 +100,19 @@ read_samplesheet_ = function(samplesheet, happy_results, ids) {
     stop("Must provide a unique id for each result")
   }
   
-  required_cols = c("Group.Id", "Sample.Id", "Replicate.Id", "happy_prefix")
+  required_cols <- c("Group.Id", "Sample.Id", "Replicate.Id", "happy_prefix")
   if (!all(required_cols %in% colnames(samplesheet))) {
     stop("The provided samplesheet is missing required columns, see docs")
-  }  
+  }
   
-  # add id mappings  
-  samplesheet = samplesheet %>% 
-    mutate(.Id = ids)
-  names(happy_results) = ids
+  # add id mappings
+  samplesheet <- samplesheet %>% mutate(.Id = ids)
+  names(happy_results) <- ids
   
-  # create happyCompare_list
-  happyCompare_list = list(
-    samplesheet = samplesheet,
-    happy_results = happy_results
-  )
-  happyCompare_list = structure(happyCompare_list, class = "happyCompare_list")
+  # create happy_compare
+  happy_compare <- list(samplesheet = samplesheet, happy_results = happy_results)
+  happy_compare <- structure(happy_compare, class = "happy_compare")
   
-  return(happyCompare_list)
+  return(happy_compare)
   
 }

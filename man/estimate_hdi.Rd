@@ -2,7 +2,7 @@
 % Please edit documentation in R/analysis.R
 \name{estimate_hdi}
 \alias{estimate_hdi}
-\title{Estimate HDIs using Beta-Binomial inference}
+\title{Estimate high density intervals from performance counts}
 \usage{
 estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
   aggregate_only = TRUE, significance = 0.05, sample_size = 1e+05,
@@ -15,32 +15,33 @@ estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
 
 \item{totals_col}{Name of the column that contains total counts.}
 
-\item{group_cols}{Vector of columns to group counts by. Observations 
+\item{group_cols}{Vector of columns to group counts by. Observations
 within the same group will be treated as replicates.}
 
-\item{aggregate_only}{Estimate HDIs for aggregate replicate only 
+\item{aggregate_only}{Estimate HDIs for aggregate replicate only
 (speeds up execution). Default: TRUE.}
 
 \item{significance}{Significance for HDI estimation. Default: 0.05 (= 95\% HDIs).}
 
-\item{sample_size}{Number of observations to draw from the Beta posterior 
+\item{sample_size}{Number of observations to draw from the Beta posterior
 to estimate HDIs. Default: 1e5.}
 
 \item{max_alpha1}{Upper bound for alpha hyperparameter in the aggregate Beta posterior.}
 }
 \value{
-A \code{data.frame} with performance counts, model hyperparameters, 
+A \code{data.frame} with performance counts, model hyperparameters,
 success rate and HDI estimates.
 }
 \description{
-Estimate HDIs and success rates from hap.py counts using a Beta-Binomial 
-model and empirical Bayes
+Estimate high density intervals and success rates from hap.py counts using a
+Binomial model and empirical Bayes. See package docs for details on method
+implementation.
 }
 \examples{
 
 \dontrun{
-hdi = estimate_hdi(happy_extended, successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
-                   group_cols = c("Group.Id", "Subset", "Type", "Subtype"))
+hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+                   group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 }
 
 }

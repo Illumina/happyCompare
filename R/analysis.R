@@ -1,108 +1,65 @@
 ## extract methods
 
 
-#' Extract tables from a happyCompare_list object
+#' Extract tables from a happy_compare object
 #' 
-#' Extract tables from a `happyCompare_list object` and combine into a single
-#' \code{data.frame}. Appends samplesheet metadata to the original happy
+#' Extract tables from a `happy_compare` object and combine into a single
+#' `data.frame`. Appends samplesheet metadata to the original happy
 #' results.
 #' 
-#' @param happyCompare_list A \code{happyCompare_list} object.
-#' @param table Table of data to extract from each \code{happy_result} object.
-#'   Must be one of: \code{summary}, \code{extended}, \code{pr_curve.all},
-#'   \code{pr_curve.SNP},  \code{pr_curve.SNP_PASS}, \code{pr_curve.SNP_SEL},
-#'   \code{pr_curve.INDEL},  \code{pr_curve.INDEL_PASS},
-#'   \code{pr_curve.INDEL_SEL}.
+#' @param happy_compare A `happy_compare` object.
+#' @param table Table of data to extract from each `happy_result` object.
+#'   Must be one of: `summary`, `extended`, `pr_curve.all`,
+#'   `pr_curve.SNP`,  `pr_curve.SNP_PASS`, `pr_curve.SNP_SEL`,
+#'   `pr_curve.INDEL`,  `pr_curve.INDEL_PASS`,
+#'   `pr_curve.INDEL_SEL`.
 #'   
-#' @return A \code{data.frame} with combined information from the selected
-#'   \code{happy_result} and its \code{samplesheet}.
+#' @return A `data.frame` with combined information from the selected
+#'   `happy_result` and its `samplesheet`.
 #'   
 #' @examples
 #' 
 #' \dontrun{
-#' summary = extract(happyCompare_list, table = "summary")
-#' roc = extract(happyCompare_list, table = "pr_curve.all")
+#' summary = extract(happy_compare, table = 'summary')
+#' roc = extract(happy_compare, table = 'pr_curve.all')
 #' }
 #' 
 #' @export
-extract = function(happyCompare_list, ...) {
-  UseMethod("extract", happyCompare_list)
+extract <- function(happy_compare, ...) {
+  UseMethod("extract", happy_compare)
 }
 #' @export
-extract.happyCompare_list <- function(happyCompare_list, 
-                                      table = c("summary", "extended", "pr_curve.all", 
-                                                "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL",
-                                                "pr_curve.INDEL", "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
+extract.happy_compare <- function(happy_compare, table = c("summary", "extended", 
+  "pr_curve.all", "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL",
+  "pr_curve.INDEL", "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
   
   # validate input
-  if (!"happyCompare_list" %in% class(happyCompare_list)) {
-    stop("Must provide a happyCompare_list object")
+  if (!"happy_compare" %in% class(happy_compare)) {
+    stop("Must provide a happy_compare object")
   }
   
-  table = match.arg(table)
+  table <- match.arg(table)
   
   # extract results into a data.frame
-  ids = happyCompare_list$samplesheet$.Id
-  
-  if (table %in% c("summary", "extended")) {
-    item_list = lapply(ids, function(id) {
-      if (!table %in% names(happyCompare_list$happy_results[[id]])) {
-        stop(sprintf("Could not find %s for happy_results_list with id %s", table, id))
-      }
-      table_out = merge(
-        happyCompare_list$samplesheet %>% 
-          filter(.Id == id),
-        happyCompare_list$happy_results[[id]][[table]] %>% 
-          data.frame() %>% 
-          mutate(.Id = id),
-        by = ".Id"
-      )
-      table_out
-    })
-    df <- dplyr::bind_rows(item_list)
-  }
-  
-  if (grepl("pr_curve", table)) {
-    item_list = lapply(ids, function(id) {
-      table_split = unlist(strsplit(table, "\\."))
-      if (!table_split[1] %in% names(happyCompare_list$happy_results[[id]])) {
-        stop(sprintf("Could not find %s for happy_results_list with id %s", table_split[1], id))
-      }
-      table_out = merge(
-        happyCompare_list$samplesheet %>% 
-          filter(.Id == id),
-        happyCompare_list$happy_results[[id]][[table_split[1]]][[table_split[2]]] %>% 
-          data.frame() %>% 
-          mutate(.Id = id),
-        by = ".Id"
-      )
-      table_out  
-    })
-    df <- dplyr::bind_rows(item_list)
-  }
-  
-  # set class
-  if (table == "summary") {
-    class(df) <- c("happy_summary", class(df))
-  }
-  if (table == "extended") {
-    class(df) <- c("happy_extended", class(df))
-  }
-  if (grepl("pr_curve", table)) {
-    class(df) <- c("happy_roc", class(df))
-  }  
+  # TODO: test me
+  ids <- happy_compare$samplesheet$.Id
+  samplesheet <- happy_compare$samplesheet %>% filter(.Id %in% ids)
+  happy_results <- happyR::extract(happy_compare$happy_results, table)
+  df <- merge(samplesheet, happy_results, by = ".Id")
+  class(df) <- c(class(happy_results), class(df))
   
   return(df)
   
 }
 
 
-#' Estimate HDIs using Beta-Binomial inference
+#' Estimate high density intervals from performance counts
 #' 
-#' Estimate HDIs and success rates from hap.py counts using a Beta-Binomial 
-#' model and empirical Bayes
+#' Estimate high density intervals and success rates from hap.py counts using a
+#' Binomial model and empirical Bayes. See package docs for details on method
+#' implementation.
 #' 
-#' @param happy_extended A \code{happy_extended} object.
+#' @param happy_extended A `happy_extended` object.
 #' @param successes_col Name of the column that contains success counts. 
 #' @param totals_col Name of the column that contains total counts.
 #' @param group_cols Vector of columns to group counts by. Observations 
@@ -114,26 +71,26 @@ extract.happyCompare_list <- function(happyCompare_list,
 #' @param aggregate_only Estimate HDIs for aggregate replicate only 
 #' (speeds up execution). Default: TRUE.
 #'   
-#' @return A \code{data.frame} with performance counts, model hyperparameters, 
+#' @return A `data.frame` with performance counts, model hyperparameters, 
 #' success rate and HDI estimates.
 #'   
 #' @examples
 #' 
 #' \dontrun{
-#' hdi = estimate_hdi(happy_extended, successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
-#'                    group_cols = c("Group.Id", "Subset", "Type", "Subtype"))
+#' hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+#'                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 #' }
 #' 
 #' @export
-estimate_hdi = function(happy_extended, ...) {
+estimate_hdi <- function(happy_extended, ...) {
   UseMethod("estimate_hdi", happy_extended)
 }
 #' @export
-estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, aggregate_only = TRUE,
-                        significance = 0.05, sample_size = 1e5, max_alpha1 = 1000) {
-
+estimate_hdi <- function(happy_extended, successes_col, totals_col, group_cols, aggregate_only = TRUE, 
+  significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000) {
+  
   # validate input
-  if (class(happy_extended)[1] != "happy_extended") {
+  if ("happy_extended" %in% class(happy_extended)) {
     stop("Must provide a happy_extended object")
   }
   if (dim(happy_extended)[1] == 0) {
@@ -150,32 +107,33 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
   }
   
   # exclude records where totals == 0
-  n_exclude = sum(happy_extended[, totals_col] == 0)
+  # TODO: test me
+  nonzero <- happy_extended[totals_col] > 0
+  n_exclude <- sum(!nonzero)
   if (n_exclude > 0) {
     warning(sprintf("Excluding %d records where \"%s\" == 0", n_exclude, totals_col))
-    happy_extended = happy_extended %>% 
-      filter_(.dots = lazyeval::interp(~ .$totals_col > 0, .values = list(totals_col = totals_col)))
+    happy_extended <- happy_extended[nonzero,]
   }
-
-  # add hdi estimates
-  do_dots = lazyeval::interp(~ .estimate_hdi(successes = .$successes_col, totals = .$totals_col, 
-                       significance = significance, sample_size = sample_size, 
-                       max_alpha1 = max_alpha1, aggregate_only = aggregate_only), 
-                   .values = list(successes_col = successes_col, totals_col = totals_col))
   
-  estimates = happy_extended %>% 
-    ungroup() %>% 
+  # add hdi estimates: call .estimate_hdi() for each user-defined group in happy_extended
+  do_dots <- lazyeval::interp(
+    ~.estimate_hdi(successes = .$successes_col, totals = .$totals_col, 
+                   significance = significance, sample_size = sample_size, 
+                   max_alpha1 = max_alpha1, aggregate_only = aggregate_only), 
+    .values = list(successes_col = successes_col, totals_col = totals_col)
+  )
+  
+  estimates <- happy_extended %>% ungroup() %>% 
     group_by_(.dots = lapply(group_cols, as.symbol)) %>% 
-    do_(.dots = do_dots) %>% 
-    ungroup()
+    do_(.dots = do_dots) %>% ungroup()
   
-  class(estimates) = c("happy_hdi", class(estimates))
+  class(estimates) <- c("happy_hdi", class(estimates))
   
   return(estimates)
 }
 
-.estimate_hdi = function(successes, totals, significance = 0.05, sample_size = 1e5, 
-                         max_alpha1 = 1000, aggregate_only = TRUE) {
+.estimate_hdi <- function(successes, totals, significance = 0.05, sample_size = 1e+05, 
+  max_alpha1 = 1000, aggregate_only = TRUE) {
   
   # validate input
   if (any(totals == 0)) {
@@ -189,59 +147,48 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
   }
   
   # internal functions
-  per_replicate_estimates = function(successes, totals, significance = 0.05, 
-                                     sample_size = 1e5, aggregate_only = TRUE) {
+  per_replicate_estimates <- function(successes, totals, significance = 0.05, sample_size = 1e+05, 
+    aggregate_only = TRUE) {
     
     # estimate parameters for beta prior (subset-specific)
-    mu = mean(successes / totals)
-    sigma = sd(successes / totals)
+    mu <- mean(successes/totals)
+    sigma <- sd(successes/totals)
     if (!is.na(sigma) && sigma > 0) {
-      alpha0 = mu / sigma
-      beta0 = (1 - mu) / sigma
+      alpha0 <- mu/sigma
+      beta0 <- (1 - mu)/sigma
     } else {
       # jeffrey's prior
-      alpha0 = 0.5
-      beta0 = 0.5
-    }    
+      alpha0 <- 0.5
+      beta0 <- 0.5
+    }
     
     # estimate parameters for beta posterior for each replicate separately
-    replicate_params = lapply(seq_along(totals), function(i) {
+    replicate_params <- lapply(seq_along(totals), function(i) {
       
       # counts for current replicate
-      s = successes[i]
-      t = totals[i]
+      s <- successes[i]
+      t <- totals[i]
       
       # calculate posterior beta params
-      alpha1 = s + alpha0
-      beta1 = t - s + beta0
+      alpha1 <- s + alpha0
+      beta1 <- t - s + beta0
       
       # calculate hdis and estimated success rate
-      if (! aggregate_only) {
-        hdi = adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
-                           significance = significance, s = s, t = t) 
+      if (!aggregate_only) {
+        hdi <- adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
+          significance = significance, s = s, t = t)
       } else {
-        hdi = rep(NA, 3)
-        names(hdi) = c("lower", "upper", "estimated_p")
+        hdi <- rep(NA, 3)
+        names(hdi) <- c("lower", "upper", "estimated_p")
       }
       
       # format and return
-      r = data.frame(
-        replicate_id = paste0("replicate_", i),
-        successes = s,
-        totals = t,
-        mu = mu,
-        sigma = sigma,
-        alpha0 = alpha0,
-        beta0 = beta0,
-        alpha1 = alpha1,
-        beta1 = beta1,
-        lower = hdi["lower"],
-        observed_p = s / t,      
-        estimated_p = hdi["estimated_p"],
-        upper = hdi["upper"],
-        hdi_range = hdi["upper"] - hdi["lower"]
-      )
-      r$replicate_id = as.character(r$replicate_id)
+      r <- data.frame(replicate_id = paste0("replicate_", i), successes = s, 
+        totals = t, mu = mu, sigma = sigma, alpha0 = alpha0, beta0 = beta0, 
+        alpha1 = alpha1, beta1 = beta1, lower = hdi["lower"], observed_p = s/t, 
+        estimated_p = hdi["estimated_p"], upper = hdi["upper"], hdi_range = hdi["upper"] - 
+          hdi["lower"])
+      r$replicate_id <- as.character(r$replicate_id)
       r
       
     }) %>% dplyr::bind_rows()
@@ -250,101 +197,90 @@ estimate_hdi = function(happy_extended, successes_col, totals_col, group_cols, a
     
   }
   
-  aggregate_estimates = function(replicate_params, significance = 0.05, sample_size = 1e5, 
-                                 max_alpha1 = 1000) {
+  aggregate_estimates <- function(replicate_params, significance = 0.05, sample_size = 1e+05, 
+    max_alpha1 = 1000) {
     
     # params for beta prior are subset specific and remain constant across replicates
-    alpha0 = unique(replicate_params$alpha0)
-    beta0 = unique(replicate_params$beta0)
+    alpha0 <- unique(replicate_params$alpha0)
+    beta0 <- unique(replicate_params$beta0)
     
     # mu and sigma are also subset specific
-    mu = unique(replicate_params$mu)
-    sigma = unique(replicate_params$sigma)
+    mu <- unique(replicate_params$mu)
+    sigma <- unique(replicate_params$sigma)
     
     # counts for aggregate replicate
-    s = mean(replicate_params$successes)
-    t = mean(replicate_params$totals)
+    s <- mean(replicate_params$successes)
+    t <- mean(replicate_params$totals)
     
     # average posterior parameters across replicates
-    alpha1 = aggregate_hyperparam(x = replicate_params$alpha1)
-    beta1 = aggregate_hyperparam(x = replicate_params$beta1)
+    alpha1 <- aggregate_hyperparam(x = replicate_params$alpha1)
+    beta1 <- aggregate_hyperparam(x = replicate_params$beta1)
     
     # limit alpha1 and scale beta1 accordingly
     if (alpha1 > max_alpha1) {
-      beta1 = beta1 * max_alpha1 / alpha1
-      alpha1 = max_alpha1
+      beta1 <- beta1 * max_alpha1/alpha1
+      alpha1 <- max_alpha1
     }
     
     # calculate hdis and estimated success rate
-    aggregate_hdi = adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
-                                  significance = significance, s = s, t = t) 
+    aggregate_hdi <- adjusted_hdi(alpha = alpha1, beta = beta1, sample_size = sample_size, 
+      significance = significance, s = s, t = t)
     
     # format data
-    aggregate_params = data.frame(
-      replicate_id = ".aggregate",
-      successes = s,
-      totals = t,
-      mu = mu,
-      sigma = sigma,
-      alpha0 = alpha0,
-      beta0 = beta0,
-      alpha1 = alpha1,
-      beta1 = beta1,
-      lower = aggregate_hdi["lower"],
-      observed_p = s / t,      
-      estimated_p = aggregate_hdi["estimated_p"],
-      upper = aggregate_hdi["upper"],
-      hdi_range = aggregate_hdi["upper"] - aggregate_hdi["lower"]
-    )
-    aggregate_params$replicate_id = as.character(aggregate_params$replicate_id)
+    aggregate_params <- data.frame(replicate_id = ".aggregate", successes = s, 
+      totals = t, mu = mu, sigma = sigma, alpha0 = alpha0, beta0 = beta0, alpha1 = alpha1, 
+      beta1 = beta1, lower = aggregate_hdi["lower"], observed_p = s/t, estimated_p = aggregate_hdi["estimated_p"], 
+      upper = aggregate_hdi["upper"], hdi_range = aggregate_hdi["upper"] - 
+        aggregate_hdi["lower"])
+    aggregate_params$replicate_id <- as.character(aggregate_params$replicate_id)
     
     return(aggregate_params)
   }
   
-  adjusted_hdi = function(alpha, beta, s, t, sample_size = 1e5, significance = 0.05) {
+  adjusted_hdi <- function(alpha, beta, s, t, sample_size = 1e+05, significance = 0.05) {
     
     # calculate hdis by random sampling
-    sample = rbeta(sample_size, alpha, beta)
-    hdi = HDInterval::hdi(sample, credMass = 1 - significance)
+    sample <- rbeta(sample_size, alpha, beta)
+    hdi <- HDInterval::hdi(sample, credMass = 1 - significance)
     
     # add estimated success rate
-    hdi["estimated_p"] = alpha / (alpha + beta)
+    hdi["estimated_p"] <- alpha/(alpha + beta)
     
     # adjust edge cases
     if (s <= 1) {
-      hdi["lower"] = 0
-      hdi["upper"] = max(hdi["upper"], 1 - (significance/2)^(1/t))
+      hdi["lower"] <- 0
+      hdi["upper"] <- max(hdi["upper"], 1 - (significance/2)^(1/t))
     }
     if (s >= (t - 1)) {
-      hdi["upper"] = 1
-      hdi["lower"] = min(hdi["lower"], (significance/2)^(1/t))
+      hdi["upper"] <- 1
+      hdi["lower"] <- min(hdi["lower"], (significance/2)^(1/t))
     }
-    hdi["lower"] = max(hdi["lower"], 0)
-    hdi["upper"] = min(hdi["upper"], 1)
+    hdi["lower"] <- max(hdi["lower"], 0)
+    hdi["upper"] <- min(hdi["upper"], 1)
     
     return(hdi)
   }
   
-  aggregate_hyperparam = function(x) {
+  aggregate_hyperparam <- function(x) {
     
     # Gamma-weighted mean across replicates
-    gamma_probs = dgamma(x, 0.01, 0.01)
+    gamma_probs <- dgamma(x, 0.01, 0.01)
     if (all(gamma_probs == 0)) {
-      aggregate_hyperparam = mean(x)
+      aggregate_hyperparam <- mean(x)
     } else {
-      aggregate_hyperparam = weighted.mean(
-        x = x,
-        w = dgamma(x, 0.01, 0.01) / max(dgamma(x, 0.01, 0.01))
-      )
+      aggregate_hyperparam <- weighted.mean(x = x, w = dgamma(x, 0.01, 0.01)/max(dgamma(x, 
+        0.01, 0.01)))
     }
     return(aggregate_hyperparam)
   }
   
   # main
-  replicate_params = per_replicate_estimates(successes, totals, significance, sample_size, aggregate_only)
-  aggregate_params = aggregate_estimates(replicate_params, significance, sample_size, max_alpha1)
-  r = rbind(replicate_params, aggregate_params)
-  rownames(r) = NULL
+  replicate_params <- per_replicate_estimates(successes, totals, significance, 
+    sample_size, aggregate_only)
+  aggregate_params <- aggregate_estimates(replicate_params, significance, sample_size, 
+    max_alpha1)
+  r <- rbind(replicate_params, aggregate_params)
+  rownames(r) <- NULL
   return(r)
   
 }

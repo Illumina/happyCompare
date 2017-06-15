@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{read_samplesheet_}
 \alias{read_samplesheet_}
-\title{Manually create happyCompare_list objects}
+\title{Manually create happy_compare objects}
 \usage{
 read_samplesheet_(samplesheet, happy_results, ids)
 }
@@ -16,23 +16,26 @@ read_samplesheet_(samplesheet, happy_results, ids)
 \item{ids}{A \code{vector} of unique ids to map samplesheet entries with happy results.}
 }
 \value{
-A \code{happyCompare_list} object, with the following fields: 
-\itemize{ 
-  \item{\code{samplesheet}: the original samplesheet, stored as a
-        \code{data.frame}}. 
-  \item{\code{happy_results}: a \code{happy_results_list}
-        object that contains individual \code{happy_result} objects as defined in
-        \code{happyR}}. 
+A \code{happy_compare} object, with the following fields:
+\itemize{
+\item{\code{samplesheet}: the original samplesheet, stored as a
+\code{data.frame}}.
+\item{\code{happy_results}: a \code{happy_results_list}
+object that contains individual \code{happy_result} objects as defined in
+\code{happyR}}.
 }
 }
 \description{
-Create a happyCompare_list object from its individual components.
+Create a \code{happy_compare} list from existing objects for each of its items.
 }
 \examples{
 
 \dontrun{
-happyCompare_list = read_samplesheet_(samplesheet = samplesheet, 
-happy_results = happy_results, ids = ids)
+samplesheet = read.csv(file = "/path/to/samplesheet.csv")
+happy_results = happyR::c(happy_result_A, happy_result_B)
+ids = c("A", "B")
+happy_compare = read_samplesheet_(samplesheet = samplesheet, 
+                  happy_results = happy_results, ids = ids)
 }
 
 }

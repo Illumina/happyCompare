@@ -10,6 +10,7 @@ Description: Generate modular reports from hap.py output files.
 License: BSD
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Depends: dplyr, ggplot2, bit64, R (>= 2.10)
 Imports: data.table, gridExtra, reshape2, knitr, plyr, happyR
