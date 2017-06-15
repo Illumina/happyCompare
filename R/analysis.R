@@ -90,7 +90,7 @@ estimate_hdi <- function(happy_extended, successes_col, totals_col, group_cols, 
   significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000) {
   
   # validate input
-  if (class(happy_extended)[1] != "happy_extended") {
+  if ("happy_extended" %in% class(happy_extended)) {
     stop("Must provide a happy_extended object")
   }
   if (dim(happy_extended)[1] == 0) {
