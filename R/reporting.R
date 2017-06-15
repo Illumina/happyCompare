@@ -11,7 +11,7 @@
 #' @param cols Columns to keep.
 #' @param colnames Column names to use in the output table. Defaults to
 #'   `cols`.
-#' @param significant_digits Number of significant digits in performance
+#' @param digits Number of digits to display for performance
 #'   metrics. Default: `4`.
 #' @param aggregate Summarise performance across groups. Default: `FALSE`.
 #'   
@@ -23,19 +23,15 @@
 #' \dontrun{
 #' cols = c('Group.Id', 'Replicate.Id', 'METRIC.Recall', 'METRIC.Precision')
 #' colnames = c('Group.Id', 'Sample', 'Recall', 'Precision')
-#' t = tabulate(happy_summary = happy_summary, cols = cols, colnames = colnames, 
+#' t = hc_tabulate_summary(happy_summary, cols = cols, colnames = colnames, 
 #'              filter = 'PASS', vartype = 'SNP', aggregate = FALSE)
 #' }
 #' @export
-tabulate <- function(happy_summary, ...) {
-  UseMethod("tabulate", happy_summary)
-}
-#' @export
-tabulate.happy_summary <- function(happy_summary, type = c("SNP", "INDEL"), filter = c("PASS", 
-  "ALL"), cols, colnames = cols, significant_digits = 4, aggregate = FALSE, ...) {
+hc_tabulate_summary <- function(happy_summary, type = c("SNP", "INDEL"), filter = c("PASS", 
+  "ALL"), cols, colnames = cols, digits = 4, aggregate = FALSE, ...) {
   
   # validate input
-  if (class(happy_summary)[1] != "happy_summary") {
+  if ("happy_summary" %in% class(happy_summary)) {
     stop("Must provide a happy_summary object")
   }
   if (!all(cols %in% names(happy_summary))) {
@@ -62,14 +58,13 @@ tabulate.happy_summary <- function(happy_summary, type = c("SNP", "INDEL"), filt
   
   # aggregate
   if (aggregate) {
-    numeric_colnames <- suppressWarnings(apply(data[1, ], 2, as.numeric))
-    numeric_colnames <- names(numeric_colnames[!is.na(numeric_colnames)])
-    
+    # TODO: test me
+    numeric_colnames <- names(which(vapply(data, is.numeric, logical(1))))  
     summary <- bind_cols(data %>% group_by(Group.Id) %>% summarise(N = n()), 
       lapply(numeric_colnames, function(m) {
         data %>% group_by(Group.Id) %>% select_(.dots = c("Group.Id", m)) %>% 
           summarise_each(funs(mean, sd)) %>% mutate(formatted_str = sprintf("%s &plusmn; %s", 
-          round(mean, digits = significant_digits), round(sd, digits = significant_digits))) %>% 
+          round(mean, digits = digits), round(sd, digits = digits))) %>% 
           select_(.dots = c("formatted_str")) %>% setNames(m)
       }))
     data <- summary
@@ -92,24 +87,18 @@ tabulate.happy_summary <- function(happy_summary, type = c("SNP", "INDEL"), filt
 #' @param legend_position A character string to pass to `ggplot` to specify
 #'   the legend position. Default: `bottom`.
 #'   
-#' @return A `ggplot2` plot.
-#'   
 #' @examples
 #' 
 #' \dontrun{
 #' roc = extract(happy_compare, table = 'pr_curve.all')
-#' plot(roc, type = 'SNP', filter = 'ALL')  
+#' hc_plot_roc(roc, type = 'SNP', filter = 'ALL')  
 #' }
 #' @export
-plot <- function(happy_roc, ...) {
-  UseMethod("plot", happy_roc)
-}
-#' @export
-plot.happy_roc <- function(happy_roc, filter = "PASS", type, subtype = "*", subset = "*", 
+hc_plot_roc <- function(happy_roc, filter = "PASS", type, subtype = "*", subset = "*", 
   legend_position = "bottom", ...) {
   
   # validate
-  if (class(happy_roc)[1] != "happy_roc") {
+  if ("happy_roc" %in% class(happy_roc)) {
     stop("Must provide a happy_roc object")
   }
   if (missing(type)) {
@@ -136,12 +125,12 @@ plot.happy_roc <- function(happy_roc, filter = "PASS", type, subtype = "*", subs
     group_by(Filter) %>% filter(QQ == min(QQ)) %>% ungroup() %>% mutate(Filter = "SEL"))
   
   # axis limits
-  xlim <- c(max(0, data %>% filter(Filter == "SEL") %>% select(METRIC.Recall) %>% 
-    min(na.rm = TRUE) - 0.01), min(1, data %>% filter(Filter == "SEL") %>% select(METRIC.Recall) %>% 
-    max(na.rm = TRUE) + 0.01))
-  ylim <- c(max(0, data %>% filter(Filter == "SEL") %>% select(METRIC.Precision) %>% 
-    min(na.rm = TRUE) - 0.01), min(1, data %>% filter(Filter == "SEL") %>% select(METRIC.Precision) %>% 
-    max(na.rm = TRUE) + 0.01))
+  sel <- subset(data, Filter == "SEL")
+  margin <- .01
+  xlim <- c(max(0, min(sel$METRIC.Recall, na.rm = TRUE) - margin),
+            min(1, max(sel$METRIC.Recall, na.rm = TRUE) + margin))
+  ylim <- c(max(0, min(sel$METRIC.Precision, na.rm = TRUE) - margin),
+            min(1, max(sel$METRIC.Precision, na.rm = TRUE) + margin))
   
   # title
   title <- paste(filter, type, "- Subset:", subset)
@@ -165,21 +154,15 @@ plot.happy_roc <- function(happy_roc, filter = "PASS", type, subtype = "*", subs
 #' @param happy_hdi A `data.frame` obtained with `estimate_hdi()`.
 #' @param title Title. Default: `NULL`.
 #'   
-#' @return A `ggplot2` plot.
-#'   
 #' @examples
 #' 
 #' \dontrun{
 #' hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
 #'                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
-#' plot(happy_hdi = hdi %>% filter(Subset == '*'))  
+#' hc_plot_hdi(happy_hdi = hdi %>% filter(Subset == '*'))  
 #' }
 #' @export
-plot <- function(happy_hdi, ...) {
-  UseMethod("plot", happy_hdi)
-}
-#' @export
-plot.data.frame <- function(happy_hdi, title = NULL) {
+hc_plot_hdi <- function(happy_hdi, title = NULL) {
   
   # validate input
   if (length(unique(happy_hdi$Subset)) > 1) {
@@ -254,12 +237,11 @@ plot.data.frame <- function(happy_hdi, title = NULL) {
   names(colors) <- happy_hdi$replicate_id
   colors[names(colors) == ".aggregate"] <- "red"
   
-  title <- title
   s <- happy_hdi[happy_hdi$replicate_id != ".aggregate", ]$successes
   t <- happy_hdi[happy_hdi$replicate_id != ".aggregate", ]$totals
-  subtitle <- paste0("successes: ", paste(s, collapse = ", "), "\n", "totals: ", 
-    paste(t, collapse = ", "), "\n", "sigma: ", round(unique(happy_hdi$sigma), 
-      4))
+  subtitle <- paste0("successes: ", paste(s, collapse = ", "), "\n", 
+                     "totals: ", paste(t, collapse = ", "), "\n", 
+                     "sigma: ", round(unique(happy_hdi$sigma), 4))
   
   ggplot() + geom_line(data = line_data[line_data$group != ".aggregate", ], aes(x = x, 
     y = density, group = group, color = group), lwd = 0.5, lty = 2) + geom_line(data = line_data[line_data$group == 
@@ -315,17 +297,25 @@ plot.data.frame <- function(happy_hdi, title = NULL) {
     d
   }) %>% bind_rows()
   
-  title <- title
-  subtitle <- happy_hdi %>% filter(replicate_id != ".aggregate") %>% group_by(Group.Id) %>% 
-    summarise(n = n(), s = paste(successes, collapse = ","), t = paste(totals, 
-      collapse = ",")) %>% mutate(subtitle = sprintf("%s - n: %d; s: %s; t: %s", 
-    Group.Id, n, s, t)) %>% select(subtitle) %>% unlist() %>% paste(., collapse = "\n")
+  subtitle <- happy_hdi %>% 
+    filter(replicate_id != ".aggregate") %>% 
+    group_by(Group.Id) %>% 
+    summarise(n = n(), 
+              s = paste(successes, collapse = ","), 
+              t = paste(totals, collapse = ",")) %>% 
+    mutate(subtitle = sprintf("%s - n: %d; s: %s; t: %s", Group.Id, n, s, t)) %>% 
+    select(subtitle) %>% unlist() %>% paste(., collapse = "\n")
   
-  ggplot() + geom_line(data = line_data, aes(x = x, y = density, group = group, 
-    color = group), lwd = 1, lty = 1) + geom_segment(data = segment_data, aes(x = x, 
-    y = y, xend = xend, yend = yend, color = group), lwd = 1) + geom_point(data = point_data_estimated, 
-    aes(x = x, y = y, color = group)) + geom_point(data = point_data_observed, 
-    pch = 4, aes(x = x, y = y, color = group)) + ylim(NA, upper_ylim) + xlab("p") + 
-    ggtitle(label = title, subtitle = subtitle) + theme(legend.position = "bottom")
+  ggplot() + 
+    geom_line(data = line_data, 
+              aes(x = x, y = density, group = group, color = group), lwd = 1, lty = 1) + 
+    geom_segment(data = segment_data, 
+                 aes(x = x, y = y, xend = xend, yend = yend, color = group), lwd = 1) + 
+    geom_point(data = point_data_estimated, aes(x = x, y = y, color = group)) + 
+    geom_point(data = point_data_observed, pch = 4, aes(x = x, y = y, color = group)) + 
+    ylim(NA, upper_ylim) + 
+    xlab("p") + 
+    ggtitle(label = title, subtitle = subtitle) + 
+    theme(legend.position = "bottom")
   
 }
