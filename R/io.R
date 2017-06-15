@@ -44,9 +44,7 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
   # load happy results
   happy_results <- lapply(seq_along(ids), function(i) {
     message(sprintf("Processing %s", ids[i]))
-    
-    happy_prefix <- samplesheet %>% slice(i) %>% select(happy_prefix) %>% unlist() %>% 
-      as.character()
+    happy_prefix <- as.character(samplesheet$happy_prefix[i])
     happyR::read_happy(happy_prefix = happy_prefix, lazy = lazy)
   })
   names(happy_results) <- ids
@@ -63,7 +61,7 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
 
 #' Manually create happy_compare objects
 #' 
-#' Create a happy_compare object from its individual components.
+#' Create a `happy_compare` list from existing objects for each of its items.
 #' 
 #' @param samplesheet A happyCompare samplesheet (`data.frame`). Required fields:
 #'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
@@ -83,8 +81,11 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
 #' @examples
 #' 
 #' \dontrun{
+#' samplesheet = read.csv(file = "/path/to/samplesheet.csv")
+#' happy_results = happyR::c(happy_result_A, happy_result_B)
+#' ids = c("A", "B")
 #' happy_compare = read_samplesheet_(samplesheet = samplesheet, 
-#' happy_results = happy_results, ids = ids)
+#'                   happy_results = happy_results, ids = ids)
 #' }
 #' 
 #' @export

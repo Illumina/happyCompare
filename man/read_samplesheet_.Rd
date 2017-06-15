@@ -26,13 +26,16 @@ object that contains individual \code{happy_result} objects as defined in
 }
 }
 \description{
-Create a happy_compare object from its individual components.
+Create a \code{happy_compare} list from existing objects for each of its items.
 }
 \examples{
 
 \dontrun{
+samplesheet = read.csv(file = "/path/to/samplesheet.csv")
+happy_results = happyR::c(happy_result_A, happy_result_B)
+ids = c("A", "B")
 happy_compare = read_samplesheet_(samplesheet = samplesheet, 
-happy_results = happy_results, ids = ids)
+                  happy_results = happy_results, ids = ids)
 }
 
 }
