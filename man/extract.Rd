@@ -20,15 +20,15 @@ A \code{data.frame} with combined information from the selected
 \code{happy_result} and its \code{samplesheet}.
 }
 \description{
-Extract tables from a \code{happy_compare object} and combine into a single
+Extract tables from a \code{happy_compare} object and combine into a single
 \code{data.frame}. Appends samplesheet metadata to the original happy
 results.
 }
 \examples{
 
 \dontrun{
-summary = extract(happy_compare, table = "summary")
-roc = extract(happy_compare, table = "pr_curve.all")
+summary = extract(happy_compare, table = 'summary')
+roc = extract(happy_compare, table = 'pr_curve.all')
 }
 
 }

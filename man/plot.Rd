@@ -41,13 +41,13 @@ a given subset from a \code{data.frame}.
 \examples{
 
 \dontrun{
-roc = extract(happy_compare, table = "pr_curve.all")
-plot(roc, type = "SNP", filter = "ALL")  
+roc = extract(happy_compare, table = 'pr_curve.all')
+plot(roc, type = 'SNP', filter = 'ALL')  
 }
 
 \dontrun{
-hdi = estimate_hdi(happy_extended, successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
-                   group_cols = c("Group.Id", "Subset", "Type", "Subtype"))
-plot(happy_hdi = hdi \%>\% filter(Subset == "*"))  
+hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+                   group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
+plot(happy_hdi = hdi \%>\% filter(Subset == '*'))  
 }
 }

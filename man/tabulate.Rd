@@ -33,9 +33,9 @@ Display hap.py summary results into tabular format using \code{knitr}.
 \examples{
 
 \dontrun{
-cols = c("Group.Id", "Replicate.Id", "METRIC.Recall", "METRIC.Precision")
-colnames = c("Group.Id", "Sample", "Recall", "Precision")
+cols = c('Group.Id', 'Replicate.Id', 'METRIC.Recall', 'METRIC.Precision')
+colnames = c('Group.Id', 'Sample', 'Recall', 'Precision')
 t = tabulate(happy_summary = happy_summary, cols = cols, colnames = colnames, 
-             filter = "PASS", vartype = "SNP", aggregate = FALSE)
+             filter = 'PASS', vartype = 'SNP', aggregate = FALSE)
 }
 }

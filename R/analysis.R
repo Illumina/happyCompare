@@ -4,18 +4,18 @@
 #' Extract tables from a happy_compare object
 #' 
 #' Extract tables from a `happy_compare` object and combine into a single
-#' \code{data.frame}. Appends samplesheet metadata to the original happy
+#' `data.frame`. Appends samplesheet metadata to the original happy
 #' results.
 #' 
-#' @param happy_compare A \code{happy_compare} object.
-#' @param table Table of data to extract from each \code{happy_result} object.
-#'   Must be one of: \code{summary}, \code{extended}, \code{pr_curve.all},
-#'   \code{pr_curve.SNP},  \code{pr_curve.SNP_PASS}, \code{pr_curve.SNP_SEL},
-#'   \code{pr_curve.INDEL},  \code{pr_curve.INDEL_PASS},
-#'   \code{pr_curve.INDEL_SEL}.
+#' @param happy_compare A `happy_compare` object.
+#' @param table Table of data to extract from each `happy_result` object.
+#'   Must be one of: `summary`, `extended`, `pr_curve.all`,
+#'   `pr_curve.SNP`,  `pr_curve.SNP_PASS`, `pr_curve.SNP_SEL`,
+#'   `pr_curve.INDEL`,  `pr_curve.INDEL_PASS`,
+#'   `pr_curve.INDEL_SEL`.
 #'   
-#' @return A \code{data.frame} with combined information from the selected
-#'   \code{happy_result} and its \code{samplesheet}.
+#' @return A `data.frame` with combined information from the selected
+#'   `happy_result` and its `samplesheet`.
 #'   
 #' @examples
 #' 
@@ -53,12 +53,13 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
 }
 
 
-#' Estimate HDIs using Beta-Binomial inference
+#' Estimate high density intervals from performance counts
 #' 
-#' Estimate HDIs and success rates from hap.py counts using a Beta-Binomial 
-#' model and empirical Bayes
+#' Estimate high density intervals and success rates from hap.py counts using a
+#' Binomial model and empirical Bayes. See package docs for details on method
+#' implementation.
 #' 
-#' @param happy_extended A \code{happy_extended} object.
+#' @param happy_extended A `happy_extended` object.
 #' @param successes_col Name of the column that contains success counts. 
 #' @param totals_col Name of the column that contains total counts.
 #' @param group_cols Vector of columns to group counts by. Observations 
@@ -70,7 +71,7 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
 #' @param aggregate_only Estimate HDIs for aggregate replicate only 
 #' (speeds up execution). Default: TRUE.
 #'   
-#' @return A \code{data.frame} with performance counts, model hyperparameters, 
+#' @return A `data.frame` with performance counts, model hyperparameters, 
 #' success rate and HDI estimates.
 #'   
 #' @examples

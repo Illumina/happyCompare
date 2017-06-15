@@ -3,19 +3,19 @@
 
 #' Tabulate hap.py summary results
 #' 
-#' Display hap.py summary results into tabular format using \code{knitr}.
+#' Display hap.py summary results into tabular format using `knitr`.
 #' 
-#' @param happy_summary A \code{happy_summary} object.
-#' @param type Variant type. One of: \code{SNP}, \code{INDEL}.
-#' @param filter Variant filter. One of: \code{PASS}, \code{ALL}.
+#' @param happy_summary A `happy_summary` object.
+#' @param type Variant type. One of: `SNP`, `INDEL`.
+#' @param filter Variant filter. One of: `PASS`, `ALL`.
 #' @param cols Columns to keep.
 #' @param colnames Column names to use in the output table. Defaults to
-#'   \code{cols}.
+#'   `cols`.
 #' @param significant_digits Number of significant digits in performance
-#'   metrics. Default: \code{4}.
-#' @param aggregate Summarise performance across groups. Default: \code{FALSE}.
+#'   metrics. Default: `4`.
+#' @param aggregate Summarise performance across groups. Default: `FALSE`.
 #'   
-#' @return A \code{data.frame} object with the selected hap.py performance
+#' @return A `data.frame` object with the selected hap.py performance
 #'   metrics.
 #'   
 #' @examples
@@ -84,15 +84,15 @@ tabulate.happy_summary <- function(happy_summary, type = c("SNP", "INDEL"), filt
 #' 
 #' Plot precision vs recall ROC curves from the selected filters.
 #' 
-#' @param happy_roc A \code{happy_roc} object.
-#' @param filter Variant filter. Default: \code{PASS}.
-#' @param type Variant type. One of: \code{SNP}, \code{INDEL}.
-#' @param subtype Variant subtype. Default: \code{*}.
-#' @param subset Variant subset. Default: \code{*}.
-#' @param legend_position A character string to pass to \code{ggplot} to specify
-#'   the legend position. Default: \code{bottom}.
+#' @param happy_roc A `happy_roc` object.
+#' @param filter Variant filter. Default: `PASS`.
+#' @param type Variant type. One of: `SNP`, `INDEL`.
+#' @param subtype Variant subtype. Default: `*`.
+#' @param subset Variant subset. Default: `*`.
+#' @param legend_position A character string to pass to `ggplot` to specify
+#'   the legend position. Default: `bottom`.
 #'   
-#' @return A \code{ggplot2} plot.
+#' @return A `ggplot2` plot.
 #'   
 #' @examples
 #' 
@@ -160,12 +160,12 @@ plot.happy_roc <- function(happy_roc, filter = "PASS", type, subtype = "*", subs
 #' Plot HDI
 #' 
 #' Plot distribution of success rates and HDI estimates for 
-#' a given subset from a \code{data.frame}.
+#' a given subset from a `data.frame`.
 #' 
-#' @param happy_hdi A \code{data.frame} obtained with \code{estimate_hdi()}.
-#' @param title Title. Default: \code{NULL}.
+#' @param happy_hdi A `data.frame` obtained with `estimate_hdi()`.
+#' @param title Title. Default: `NULL`.
 #'   
-#' @return A \code{ggplot2} plot.
+#' @return A `ggplot2` plot.
 #'   
 #' @examples
 #' 

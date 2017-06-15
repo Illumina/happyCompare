@@ -3,21 +3,21 @@
 
 #' Load data from happyCompare samplesheets
 #' 
-#' Load hap.py results into a \code{happy_compare} object as specified in
-#' the \code{happyCompare} samplesheet provided. Depends on \code{happyR}.
+#' Load hap.py results into a `happy_compare` object as specified in
+#' the `happyCompare` samplesheet provided. Depends on `happyR`.
 #' 
 #' @param samplesheet_path Path to a happyCompare samplesheet. Required fields:
-#'   \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-#'   \code{happy_prefix}.
-#' @param lazy Do not load larger hap.py results until needed. Default: \code{TRUE}.
+#'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
+#'   `happy_prefix`.
+#' @param lazy Do not load larger hap.py results until needed. Default: `TRUE`.
 #'   
-#' @return A \code{happy_compare} object, with the following fields: 
+#' @return A `happy_compare` object, with the following fields: 
 #' \itemize{ 
-#'   \item{\code{samplesheet}: the original samplesheet, stored as a
-#'         \code{data.frame}}. 
-#'   \item{\code{happy_results}: a \code{happy_results_list}
-#'         object that contains individual \code{happy_result} objects as defined in
-#'         \code{happyR}}. 
+#'   \item{`samplesheet`: the original samplesheet, stored as a
+#'         `data.frame`}. 
+#'   \item{`happy_results`: a `happy_results_list`
+#'         object that contains individual `happy_result` objects as defined in
+#'         `happyR`}. 
 #' }
 #'   
 #' @examples
@@ -25,8 +25,6 @@
 #' \dontrun{
 #' happy_compare = read_samplesheet(samplesheet_path = 'happyCompare_samplesheet.csv')
 #' }
-#' 
-#' @author Mar Gonzalez-Porta
 #' 
 #' @export
 read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
@@ -67,19 +65,19 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
 #' 
 #' Create a happy_compare object from its individual components.
 #' 
-#' @param samplesheet A happyCompare samplesheet (\code{data.frame}). Required fields:
-#'   \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-#'   \code{happy_prefix}.
-#' @param happy_results A \code{happy_results_list} object obtained with \code{happyR}.
-#' @param ids A \code{vector} of unique ids to map samplesheet entries with happy results. 
+#' @param samplesheet A happyCompare samplesheet (`data.frame`). Required fields:
+#'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
+#'   `happy_prefix`.
+#' @param happy_results A `happy_results_list` object obtained with `happyR`.
+#' @param ids A `vector` of unique ids to map samplesheet entries with happy results. 
 #'   
-#' @return A \code{happy_compare} object, with the following fields: 
+#' @return A `happy_compare` object, with the following fields: 
 #' \itemize{ 
-#'   \item{\code{samplesheet}: the original samplesheet, stored as a
-#'         \code{data.frame}}. 
-#'   \item{\code{happy_results}: a \code{happy_results_list}
-#'         object that contains individual \code{happy_result} objects as defined in
-#'         \code{happyR}}. 
+#'   \item{`samplesheet`: the original samplesheet, stored as a
+#'         `data.frame`}. 
+#'   \item{`happy_results`: a `happy_results_list`
+#'         object that contains individual `happy_result` objects as defined in
+#'         `happyR`}. 
 #' }
 #'   
 #' @examples
