@@ -107,21 +107,25 @@ estimate_hdi <- function(happy_extended, successes_col, totals_col, group_cols, 
   }
   
   # exclude records where totals == 0
-  n_exclude <- sum(happy_extended[, totals_col] == 0)
+  # TODO: test me
+  nonzero <- happy_extended[totals_col] > 0
+  n_exclude <- sum(!nonzero)
   if (n_exclude > 0) {
     warning(sprintf("Excluding %d records where \"%s\" == 0", n_exclude, totals_col))
-    happy_extended <- happy_extended %>% filter_(.dots = lazyeval::interp(~.$totals_col > 
-      0, .values = list(totals_col = totals_col)))
+    happy_extended <- happy_extended[nonzero,]
   }
   
-  # add hdi estimates
-  do_dots <- lazyeval::interp(~.estimate_hdi(successes = .$successes_col, totals = .$totals_col, 
-    significance = significance, sample_size = sample_size, max_alpha1 = max_alpha1, 
-    aggregate_only = aggregate_only), .values = list(successes_col = successes_col, 
-    totals_col = totals_col))
+  # add hdi estimates: call .estimate_hdi() for each user-defined group in happy_extended
+  do_dots <- lazyeval::interp(
+    ~.estimate_hdi(successes = .$successes_col, totals = .$totals_col, 
+                   significance = significance, sample_size = sample_size, 
+                   max_alpha1 = max_alpha1, aggregate_only = aggregate_only), 
+    .values = list(successes_col = successes_col, totals_col = totals_col)
+  )
   
-  estimates <- happy_extended %>% ungroup() %>% group_by_(.dots = lapply(group_cols, 
-    as.symbol)) %>% do_(.dots = do_dots) %>% ungroup()
+  estimates <- happy_extended %>% ungroup() %>% 
+    group_by_(.dots = lapply(group_cols, as.symbol)) %>% 
+    do_(.dots = do_dots) %>% ungroup()
   
   class(estimates) <- c("happy_hdi", class(estimates))
   
