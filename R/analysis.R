@@ -30,8 +30,8 @@ extract <- function(happy_compare, ...) {
 }
 #' @export
 extract.happy_compare <- function(happy_compare, table = c("summary", "extended", 
-  "pr_curve.all", "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL", "pr_curve.INDEL", 
-  "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
+  "pr_curve.all", "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL",
+  "pr_curve.INDEL", "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
   
   # validate input
   if (!"happy_compare" %in% class(happy_compare)) {
@@ -41,46 +41,12 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
   table <- match.arg(table)
   
   # extract results into a data.frame
+  # TODO: test me
   ids <- happy_compare$samplesheet$.Id
-  
-  if (table %in% c("summary", "extended")) {
-    item_list <- lapply(ids, function(id) {
-      if (!table %in% names(happy_compare$happy_results[[id]])) {
-        stop(sprintf("Could not find %s for happy_results_list with id %s", 
-          table, id))
-      }
-      table_out <- merge(happy_compare$samplesheet %>% filter(.Id == id), happy_compare$happy_results[[id]][[table]] %>% 
-        data.frame() %>% mutate(.Id = id), by = ".Id")
-      table_out
-    })
-    df <- dplyr::bind_rows(item_list)
-  }
-  
-  if (grepl("pr_curve", table)) {
-    item_list <- lapply(ids, function(id) {
-      table_split <- unlist(strsplit(table, "\\."))
-      if (!table_split[1] %in% names(happy_compare$happy_results[[id]])) {
-        stop(sprintf("Could not find %s for happy_results_list with id %s", 
-          table_split[1], id))
-      }
-      table_out <- merge(happy_compare$samplesheet %>% filter(.Id == id), 
-                         happy_compare$happy_results[[id]][[table_split[1]]][[table_split[2]]] %>% 
-        data.frame() %>% mutate(.Id = id), by = ".Id")
-      table_out
-    })
-    df <- dplyr::bind_rows(item_list)
-  }
-  
-  # set class
-  if (table == "summary") {
-    class(df) <- c("happy_summary", class(df))
-  }
-  if (table == "extended") {
-    class(df) <- c("happy_extended", class(df))
-  }
-  if (grepl("pr_curve", table)) {
-    class(df) <- c("happy_roc", class(df))
-  }
+  samplesheet <- happy_compare$samplesheet %>% filter(.Id %in% ids)
+  happy_results <- happyR::extract(happy_compare$happy_results, table)
+  df <- merge(samplesheet, happy_results, by = ".Id")
+  class(df) <- c(class(happy_results), class(df))
   
   return(df)
   
