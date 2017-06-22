@@ -11,11 +11,13 @@ test_that("tabulate.happy_summary works", {
   
   t <- tabulate(happy_summary = s, cols = cols, colnames = colnames, filter = "PASS", 
     vartype = "SNP", aggregate = FALSE)
-  expect_true("data.frame" %in% class(t))
+  expect_is(t, "tibble")
+  # TODO: add test for dim
   
   t <- tabulate(happy_summary = s, cols = cols, colnames = colnames, filter = "PASS", 
     vartype = "SNP", aggregate = TRUE)
-  expect_true("data.frame" %in% class(t))
+  expect_is(t, "tibble")
+  # TODO: add test for dim
 })
 
 test_that("plot.happy_roc works", {
@@ -31,7 +33,7 @@ test_that("plot.happy_roc works", {
   p6 <- plot(roc, type = "INDEL", filter = "SEL")
   
   OUTFILE <- "test_plot.happy_roc.pdf"
-  invisible(suppressWarnings(file.remove(OUTFILE)))
+  invisible(file.remove(OUTFILE))
   
   ggplot2::theme_set(theme_bw())
   pdf(file = OUTFILE, width = 12, height = 4)
@@ -40,6 +42,7 @@ test_that("plot.happy_roc works", {
   dev.off()
   
   expect_true(file.exists(OUTFILE))
+  expect_true(file.info(OUTFILE)$size > 0)
 })
 
 test_that("plot.happy_hdi works", {

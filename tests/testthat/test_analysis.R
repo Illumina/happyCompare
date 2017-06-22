@@ -1,9 +1,12 @@
 context("analysis.R")
 
+samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.csv", package = "happyCompare")
+happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
+
 test_that("extract.happy_compare works", {
-  e <- extract(happy_compare, table = "summary")
-  expect_true("happy_summary" %in% class(e))
-  expect_true(all(c(".Id", "Group.Id", "Sample.Id", "Replicate.Id") %in% names(e)))
+  s <- extract(happy_compare, table = "summary")
+  expect_true("happy_summary" %in% class(s))
+  expect_true(all(c(".Id", "Group.Id", "Sample.Id", "Replicate.Id") %in% names(s)))
   
   e <- extract(happy_compare, table = "extended")
   expect_true("happy_extended" %in% class(e))
@@ -11,8 +14,7 @@ test_that("extract.happy_compare works", {
 })
 
 test_that("estimate_hdi works", {
-  # NOTE: functional testing only, accuracy tests performed separately with
-  # simulated data
+  # NOTE: functional testing only, accuracy tests performed separately with simulated data
   
   d <- happy_extended
   successes_col <- "TRUTH.TP"

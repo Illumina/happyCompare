@@ -8,7 +8,7 @@ test_that("read_samplesheet loads data with no errors and returns the expected h
   
   expect_error(happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE), NA)
   
-  expect_true("happy_compare" %in% class(happy_compare))
+  expect_is(happy_compare, "happy_compare")
   expect_true(all(names(happy_compare) %in% c("samplesheet", "happy_results")))
   
   s <- happy_compare$samplesheet
@@ -17,24 +17,24 @@ test_that("read_samplesheet loads data with no errors and returns the expected h
   expect_equal(dim(s)[2], 5)
   
   r <- happy_compare$happy_results
-  expect_true("happy_result_list" %in% class(r))
+  expect_is(r, "happy_result_list")
   expect_equal(length(r), 4)
   
-  expect_true("happy_result" %in% class(r[[1]]))
+  expect_is(r[[1]], "happy_result")
   expect_true(all(names(r[[1]]) %in% c("summary", "extended", "pr_curve")))
   
   s <- r[[1]]$summary
-  expect_true(tibble::is.tibble(s))
+  expect_is(s, "tibble")
   expect_equal(dim(s)[1], 4)
   expect_equal(dim(s)[2], 17)
   
   e <- r[[1]]$extended
-  expect_true(tibble::is.tibble(e))
+  expect_is(e, "tibble")
   expect_equal(dim(e)[1], 176)
   expect_equal(dim(e)[2], 65)
   
   p <- r[[1]]$pr_curve
-  expect_true("environment" %in% class(p))
+  expect_is(p, "environment")
   expect_true(all(names(p) %in% c("INDEL_SEL", "INDEL_PASS", "INDEL", "SNP_SEL", "SNP_PASS", "SNP", "all")))
   expect_true(tibble::is.tibble(p$SNP_PASS))
   expect_equal(dim(p$SNP_PASS)[1], 1442)
