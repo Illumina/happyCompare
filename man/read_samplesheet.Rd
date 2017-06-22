@@ -18,7 +18,7 @@ A \code{happy_compare} object, with the following fields:
 \itemize{
 \item{\code{samplesheet}: the original samplesheet, stored as a
 \code{data.frame}}.
-\item{\code{happy_results}: a \code{happy_results_list}
+\item{\code{happy_results}: a \code{happy_result_list}
 object that contains individual \code{happy_result} objects as defined in
 \code{happyR}}.
 }

@@ -15,7 +15,7 @@
 #' \itemize{ 
 #'   \item{`samplesheet`: the original samplesheet, stored as a
 #'         `data.frame`}. 
-#'   \item{`happy_results`: a `happy_results_list`
+#'   \item{`happy_results`: a `happy_result_list`
 #'         object that contains individual `happy_result` objects as defined in
 #'         `happyR`}. 
 #' }
@@ -30,12 +30,13 @@
 read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
   
   # check input
+  message("Reading happyCompare samplesheet")
   if (!file.exists(samplesheet_path)) {
     stop("Cannot find samplesheet")
   }
   
   # prepare samplesheet
-  samplesheet <- read.csv(samplesheet_path)
+  samplesheet <- readr::read_csv(samplesheet_path)
   
   # prepare ids
   ids <- samplesheet %>% mutate(.Id = paste(Group.Id, Sample.Id, Replicate.Id, 
@@ -48,7 +49,7 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
     happyR::read_happy(happy_prefix = happy_prefix, lazy = lazy)
   })
   names(happy_results) <- ids
-  happy_results <- structure(happy_results, class = "happy_results_list")
+  happy_results <- structure(happy_results, class = "happy_result_list")
   
   # create happy_compare
   happy_compare <- read_samplesheet_(samplesheet = samplesheet, happy_results = happy_results, 
@@ -63,17 +64,16 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
 #' 
 #' Create a `happy_compare` list from existing objects for each of its items.
 #' 
-#' @param samplesheet A happyCompare samplesheet (`data.frame`). Required fields:
-#'   `Group.Id`, `Sample.Id`, `Replicate.Id`,
-#'   `happy_prefix`.
-#' @param happy_results A `happy_results_list` object obtained with `happyR`.
+#' @param samplesheet A happyCompare samplesheet (`tibble`). Required fields:
+#'   `Group.Id`, `Sample.Id`, `Replicate.Id`, `happy_prefix`.
+#' @param happy_results A `happy_result_list` object obtained with `happyR`.
 #' @param ids A `vector` of unique ids to map samplesheet entries with happy results. 
 #'   
 #' @return A `happy_compare` object, with the following fields: 
 #' \itemize{ 
 #'   \item{`samplesheet`: the original samplesheet, stored as a
-#'         `data.frame`}. 
-#'   \item{`happy_results`: a `happy_results_list`
+#'         `tibble`}. 
+#'   \item{`happy_results`: a `happy_result_list`
 #'         object that contains individual `happy_result` objects as defined in
 #'         `happyR`}. 
 #' }
@@ -92,8 +92,16 @@ read_samplesheet <- function(samplesheet_path, lazy = TRUE) {
 read_samplesheet_ <- function(samplesheet, happy_results, ids) {
   
   # validate input
-  if (!"happy_results_list" %in% class(happy_results)) {
-    stop("happy_results must be a happy_results_list object")
+  if (! tibble::is.tibble(samplesheet)) {
+    stop("samplesheet must be a tibble")
+  }
+  
+  if (! "happy_result_list" %in% class(happy_results)) {
+    stop("happy_results must be a happy_result_list object")
+  }
+  
+  if (! "character" %in% class(ids)) {
+    stop("ids must be a vector of characters")
   }
   
   if (length(ids) != dim(samplesheet)[1] && length(ids) != length(happy_results)) {

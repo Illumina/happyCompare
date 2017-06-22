@@ -7,11 +7,10 @@
 read_samplesheet_(samplesheet, happy_results, ids)
 }
 \arguments{
-\item{samplesheet}{A happyCompare samplesheet (\code{data.frame}). Required fields:
-\code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-\code{happy_prefix}.}
+\item{samplesheet}{A happyCompare samplesheet (\code{tibble}). Required fields:
+\code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id}, \code{happy_prefix}.}
 
-\item{happy_results}{A \code{happy_results_list} object obtained with \code{happyR}.}
+\item{happy_results}{A \code{happy_result_list} object obtained with \code{happyR}.}
 
 \item{ids}{A \code{vector} of unique ids to map samplesheet entries with happy results.}
 }
@@ -19,8 +18,8 @@ read_samplesheet_(samplesheet, happy_results, ids)
 A \code{happy_compare} object, with the following fields:
 \itemize{
 \item{\code{samplesheet}: the original samplesheet, stored as a
-\code{data.frame}}.
-\item{\code{happy_results}: a \code{happy_results_list}
+\code{tibble}}.
+\item{\code{happy_results}: a \code{happy_result_list}
 object that contains individual \code{happy_result} objects as defined in
 \code{happyR}}.
 }
