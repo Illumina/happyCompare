@@ -4,12 +4,11 @@
 \alias{estimate_hdi}
 \title{Estimate high density intervals from performance counts}
 \usage{
-estimate_hdi(happy_extended, successes_col, totals_col, group_cols,
-  aggregate_only = TRUE, significance = 0.05, sample_size = 1e+05,
-  max_alpha1 = 1000)
+estimate_hdi(df, successes_col, totals_col, group_cols, aggregate_only = TRUE,
+  significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000)
 }
 \arguments{
-\item{happy_extended}{A \code{happy_extended} object.}
+\item{df}{A \code{data.frame}.}
 
 \item{successes_col}{Name of the column that contains success counts.}
 
@@ -40,7 +39,7 @@ implementation.
 \examples{
 
 \dontrun{
-hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+hdi = estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 }
 

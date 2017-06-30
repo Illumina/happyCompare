@@ -7,25 +7,23 @@
 read_samplesheet(samplesheet_path, lazy = TRUE)
 }
 \arguments{
-\item{samplesheet_path}{Path to a happyCompare samplesheet. Required fields:
-\code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id},
-\code{happy_prefix}.}
+\item{samplesheet_path}{Path to a \code{happyCompare} samplesheet. Required fields:
+\code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id}, \code{happy_prefix}.}
 
 \item{lazy}{Do not load larger hap.py results until needed. Default: \code{TRUE}.}
 }
 \value{
 A \code{happy_compare} object, with the following fields:
 \itemize{
-\item{\code{samplesheet}: the original samplesheet, stored as a
-\code{data.frame}}.
+\item{\code{samplesheet}: the original samplesheet, stored as a \code{data.frame}}.
 \item{\code{happy_results}: a \code{happy_result_list}
 object that contains individual \code{happy_result} objects as defined in
 \code{happyR}}.
+\item{\code{ids}: a vector of unique identifiers for each result.}
 }
 }
 \description{
-Load hap.py results into a \code{happy_compare} object as specified in
-the \code{happyCompare} samplesheet provided. Depends on \code{happyR}.
+Load hap.py results into a \code{happy_compare} object using \code{happyR}.
 }
 \examples{
 

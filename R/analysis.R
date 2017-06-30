@@ -1,4 +1,4 @@
-## extract methods
+## downstream analysis of hap.py results
 
 
 #' Extract tables from a happy_compare object
@@ -9,10 +9,9 @@
 #' 
 #' @param happy_compare A `happy_compare` object.
 #' @param table Table of data to extract from each `happy_result` object.
-#'   Must be one of: `summary`, `extended`, `pr_curve.all`,
-#'   `pr_curve.SNP`,  `pr_curve.SNP_PASS`, `pr_curve.SNP_SEL`,
-#'   `pr_curve.INDEL`,  `pr_curve.INDEL_PASS`,
-#'   `pr_curve.INDEL_SEL`.
+#'   Must be one of: `summary`, `extended`, `pr.all`,
+#'   `pr.snp.all`, `pr.snp.pass`, `pr.snp.sel`,
+#'   `pr.indel.all`, `pr.indel.pass`, `pr.indel.sel`.
 #'   
 #' @return A `data.frame` with combined information from the selected
 #'   `happy_result` and its `samplesheet`.
@@ -20,18 +19,15 @@
 #' @examples
 #' 
 #' \dontrun{
-#' summary = extract(happy_compare, table = 'summary')
-#' roc = extract(happy_compare, table = 'pr_curve.all')
+#' summary = extract_metrics(happy_compare, table = 'summary')
+#' roc = extract_metrics(happy_compare, table = 'pr.snp.pass')
 #' }
 #' 
 #' @export
-extract <- function(happy_compare, table) {
-  UseMethod("extract", happy_compare)
-}
-#' @export
-extract.happy_compare <- function(happy_compare, table = c("summary", "extended", 
-  "pr_curve.all", "pr_curve.SNP", "pr_curve.SNP_PASS", "pr_curve.SNP_SEL",
-  "pr_curve.INDEL", "pr_curve.INDEL_PASS", "pr_curve.INDEL_SEL")) {
+extract_metrics <- function(happy_compare, table = c("summary", "extended", 
+                                                     "pr.all", 
+                                                     "pr.snp.all", "pr.snp.pass", "pr.snp.sel",
+                                                     "pr.indel.all", "pr.indel.pass", "pr.indel.sel")) {
   
   # validate input
   if (!"happy_compare" %in% class(happy_compare)) {
@@ -40,13 +36,10 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
   
   table <- match.arg(table)
   
-  # extract results into a data.frame
-  # TODO: test me
-  ids <- happy_compare$samplesheet$.Id
-  samplesheet <- happy_compare$samplesheet %>% filter(.Id %in% ids)
-  happy_results <- happyR::extract(happy_compare$happy_results, table)
-  df <- merge(samplesheet, happy_results, by = ".Id")
-  class(df) <- c(class(happy_results), class(df))
+  samplesheet <- happy_compare$samplesheet
+  happy_results <- happyR::extract_results(happy_compare$happy_results, table)
+  df <- dplyr::inner_join(samplesheet, happy_results, by = c("happy_prefix" = "from"))
+  class(df) <- c(unique(c(class(happy_results), class(df))))
   
   return(df)
   
@@ -59,7 +52,7 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
 #' Binomial model and empirical Bayes. See package docs for details on method
 #' implementation.
 #' 
-#' @param happy_extended A `happy_extended` object.
+#' @param df A `data.frame`.
 #' @param successes_col Name of the column that contains success counts. 
 #' @param totals_col Name of the column that contains total counts.
 #' @param group_cols Vector of columns to group counts by. Observations 
@@ -77,45 +70,40 @@ extract.happy_compare <- function(happy_compare, table = c("summary", "extended"
 #' @examples
 #' 
 #' \dontrun{
-#' hdi = estimate_hdi(happy_extended, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+#' hdi = estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
 #'                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 #' }
 #' 
 #' @export
-estimate_hdi <- function(happy_extended) {
-  UseMethod("estimate_hdi", happy_extended)
-}
-#' @export
-estimate_hdi <- function(happy_extended, successes_col, totals_col, group_cols, aggregate_only = TRUE, 
-  significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000) {
+estimate_hdi <- function(df, successes_col, totals_col, group_cols, aggregate_only = TRUE, 
+                         significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000) {
   
   # validate input
-  if ("happy_extended" %in% class(happy_extended)) {
-    stop("Must provide a happy_extended object")
+  if (!"data.frame" %in% class(df)) {
+    stop("Must provide a data.frame object")
   }
-  if (dim(happy_extended)[1] == 0) {
+  if (dim(df)[1] == 0) {
     stop("Input data.frame is empty")
   }
-  if (!successes_col %in% colnames(happy_extended)) {
+  if (!successes_col %in% colnames(df)) {
     stop(sprintf("Could not find column \"%s\" in input data.frame", successes_col))
   }
-  if (!totals_col %in% colnames(happy_extended)) {
+  if (!totals_col %in% colnames(df)) {
     stop(sprintf("Could not find column \"%s\" in input data.frame", totals_col))
   }
-  if (!all(group_cols %in% colnames(happy_extended))) {
+  if (!all(group_cols %in% colnames(df))) {
     stop("Could not find all specified group columns in input data.frame")
   }
   
   # exclude records where totals == 0
-  # TODO: test me
-  nonzero <- happy_extended[totals_col] > 0
+  nonzero <- df[totals_col] > 0
   n_exclude <- sum(!nonzero)
   if (n_exclude > 0) {
     warning(sprintf("Excluding %d records where \"%s\" == 0", n_exclude, totals_col))
-    happy_extended <- happy_extended[nonzero,]
+    df <- df[nonzero,]
   }
   
-  # add hdi estimates: call .estimate_hdi() for each user-defined group in happy_extended
+  # add hdi estimates: call .estimate_hdi() for each user-defined group in df
   do_dots <- lazyeval::interp(
     ~.estimate_hdi(successes = .$successes_col, totals = .$totals_col, 
                    significance = significance, sample_size = sample_size, 
@@ -123,7 +111,7 @@ estimate_hdi <- function(happy_extended, successes_col, totals_col, group_cols, 
     .values = list(successes_col = successes_col, totals_col = totals_col)
   )
   
-  estimates <- happy_extended %>% ungroup() %>% 
+  estimates <- df %>% ungroup() %>% 
     group_by_(.dots = lapply(group_cols, as.symbol)) %>% 
     do_(.dots = do_dots) %>% ungroup()
   

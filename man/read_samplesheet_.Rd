@@ -2,39 +2,33 @@
 % Please edit documentation in R/io.R
 \name{read_samplesheet_}
 \alias{read_samplesheet_}
-\title{Manually create happy_compare objects}
+\title{Load data from happyCompare samplesheets}
 \usage{
-read_samplesheet_(samplesheet, happy_results, ids)
+read_samplesheet_(samplesheet, lazy = TRUE)
 }
 \arguments{
-\item{samplesheet}{A happyCompare samplesheet (\code{tibble}). Required fields:
+\item{samplesheet}{A \code{happyCompare} samplesheet (\code{data.frame}). Required fields:
 \code{Group.Id}, \code{Sample.Id}, \code{Replicate.Id}, \code{happy_prefix}.}
 
-\item{happy_results}{A \code{happy_result_list} object obtained with \code{happyR}.}
-
-\item{ids}{A \code{vector} of unique ids to map samplesheet entries with happy results.}
+\item{lazy}{Do not load larger hap.py results until needed. Default: \code{TRUE}.}
 }
 \value{
 A \code{happy_compare} object, with the following fields:
 \itemize{
-\item{\code{samplesheet}: the original samplesheet, stored as a
-\code{tibble}}.
+\item{\code{samplesheet}: the original samplesheet, stored as a \code{data.frame}}.
 \item{\code{happy_results}: a \code{happy_result_list}
 object that contains individual \code{happy_result} objects as defined in
 \code{happyR}}.
+\item{\code{ids}: a vector of unique identifiers for each result.}
 }
 }
 \description{
-Create a \code{happy_compare} list from existing objects for each of its items.
+Load hap.py results into a \code{happy_compare} object using \code{happyR}.
 }
 \examples{
 
 \dontrun{
-samplesheet = read.csv(file = "/path/to/samplesheet.csv")
-happy_results = happyR::c(happy_result_A, happy_result_B)
-ids = c("A", "B")
-happy_compare = read_samplesheet_(samplesheet = samplesheet, 
-                  happy_results = happy_results, ids = ids)
+happy_compare = read_samplesheet(samplesheet_path = 'happyCompare_samplesheet.csv')
 }
 
 }

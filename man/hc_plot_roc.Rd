@@ -4,30 +4,27 @@
 \alias{hc_plot_roc}
 \title{Plot a ROC curve for precision vs recall}
 \usage{
-hc_plot_roc(happy_roc, filter = "PASS", type, subtype = "*", subset = "*",
-  legend_position = "bottom")
+hc_plot_roc(happy_roc, type, filter, subtype = "*", subset = "*")
 }
 \arguments{
 \item{happy_roc}{A \code{happy_roc} object.}
 
-\item{filter}{Variant filter. Default: \code{PASS}.}
+\item{type}{Variant type.}
 
-\item{type}{Variant type. One of: \code{SNP}, \code{INDEL}.}
+\item{filter}{Variant filter.}
 
 \item{subtype}{Variant subtype. Default: \code{*}.}
 
 \item{subset}{Variant subset. Default: \code{*}.}
-
-\item{legend_position}{A character string to pass to \code{ggplot} to specify
-the legend position. Default: \code{bottom}.}
 }
 \description{
-Plot precision vs recall ROC curves from the selected filters.
+Plot precision vs recall ROC curves from the selected filters. If \code{pr.all} is
+provided, overlay pass points to \code{ALL} curve.
 }
 \examples{
 
 \dontrun{
-roc = extract(happy_compare, table = 'pr_curve.all')
-hc_plot_roc(roc, type = 'SNP', filter = 'ALL')  
+roc <- extract_metrics(happy_compare, table = "pr.all")
+hc_plot_roc(roc, type = "INDEL", filter = "PASS")
 }
 }
