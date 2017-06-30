@@ -1,0 +1,50 @@
+---
+title: "Calibrating HDIs with simulated data"
+author: "Mar Gonzalez-Porta"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calibrating HDIs with simulated data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.width = 6)
+
+library("happyCompare")
+library("dplyr")
+library("ggplot2")
+theme_set(theme_bw())
+```
+
+```{r message=FALSE}
+samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.vignettes.csv", package = "happyCompare")
+happy_compare <- read_samplesheet(samplesheet_path)
+```
+
+```{r}
+class(happy_compare)
+sapply(happy_compare, class)
+```
+
+```{r message=FALSE}
+stratified_counts <- extract_metrics(happy_compare, table = "extended") %>% 
+  filter(Subtype == "*", Filter == "PASS", Subset.Level == 0, !grepl(pattern = "TS*", Subset)) %>% 
+  estimate_hdi(successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
+               group_cols = c("Group.Id", "Subset", "Type"), aggregate_only = FALSE)
+
+```
+
+```{r}
+stratified_counts %>% 
+  mutate(Subset = factor(Subset, levels = rev(unique(Subset)))) %>% 
+  filter(replicate_id == ".aggregate") %>% 
+  ggplot(aes(x = estimated_p, y = Subset, group = Subset)) +
+    geom_point(aes(color = Group.Id), size = 2) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper, color = Group.Id), height = 0.4) +
+    facet_grid(. ~ Type) +
+    theme(legend.position = "bottom") +
+    ggtitle("Recall estimates across L0 subsets") +
+    ylab("")
+```
