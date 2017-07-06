@@ -10,13 +10,13 @@ vignette: >
 ---
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.width = 6)
+knitr::opts_chunk$set(cache = FALSE, fig.width = 6)
 library("tidyverse")
 library("ggplot2")
 theme_set(theme_bw())
 ```
 
-One way to evaluate the accuracy of our higher density intervals (HDIs) is to rely on simulated data. Under that scenario, we know what the true success rate is, and we can measure how often that value is captured by our HDI estimates. However, we do not want to rely on a simulation approach that is based solely on the model that we have used for estimation, since it might not be fully representative of real data. 
+One way to evaluate the accuracy of our highest density intervals (HDIs) is to rely on simulated data. Under that scenario, we know what the true success rate is, and we can measure how often that value is captured by our HDI estimates. However, we do not want to rely on a simulation approach that is based solely on the model that we have used for estimation, since it might not be fully representative of real data. 
 
 ## Simulation strategy
 Let us take recall measurements across $r$ replicates as an example. For a subset with $n$ total variants we can classify each variant into one of these 3 groups: 
