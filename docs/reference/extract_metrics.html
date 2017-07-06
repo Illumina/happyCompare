@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load data from happyCompare samplesheets — read_samplesheet • happyCompare</title>
+<title>Extract tables from a happy_compare object — extract_metrics • happyCompare</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -93,45 +93,46 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load data from happyCompare samplesheets</h1>
+    <h1>Extract tables from a happy_compare object</h1>
     </div>
 
     
-    <p>Load hap.py results into a <code>happy_compare</code> object using <code>happyR</code>.</p>
+    <p>Extract tables from a <code>happy_compare</code> object and combine into a single
+<code>data.frame</code>. Appends samplesheet metadata to the original happy
+results.</p>
     
 
-    <pre class="usage"><span class='fu'>read_samplesheet</span>(<span class='no'>samplesheet_path</span>, <span class='kw'>lazy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_metrics</span>(<span class='no'>happy_compare</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"summary"</span>, <span class='st'>"extended"</span>, <span class='st'>"pr.all"</span>,
+  <span class='st'>"pr.snp.all"</span>, <span class='st'>"pr.snp.pass"</span>, <span class='st'>"pr.snp.sel"</span>, <span class='st'>"pr.indel.all"</span>, <span class='st'>"pr.indel.pass"</span>,
+  <span class='st'>"pr.indel.sel"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>samplesheet_path</th>
-      <td><p>Path to a <code>happyCompare</code> samplesheet. Required fields:
-<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>, <code>happy_prefix</code>.</p></td>
+      <th>happy_compare</th>
+      <td><p>A <code>happy_compare</code> object.</p></td>
     </tr>
     <tr>
-      <th>lazy</th>
-      <td><p>Do not load larger hap.py results until needed. Default: <code>TRUE</code>.</p></td>
+      <th>table</th>
+      <td><p>Table of data to extract from each <code>happy_result</code> object.
+Must be one of: <code>summary</code>, <code>extended</code>, <code>pr.all</code>,
+<code>pr.snp.all</code>, <code>pr.snp.pass</code>, <code>pr.snp.sel</code>,
+<code>pr.indel.all</code>, <code>pr.indel.pass</code>, <code>pr.indel.sel</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>happy_compare</code> object, with the following fields:</p><ul>
-<li><p><code>samplesheet</code>: the original samplesheet, stored as a <code>data.frame</code>.</p></li>
-<li><p><code>happy_results</code>: a <code>happy_result_list</code>
-object that contains individual <code>happy_result</code> objects as defined in
-<code>happyR</code>.</p></li>
-<li><p><code>ids</code>: a vector of unique identifiers for each result.</p></li>
-</ul>
-
+    <p>A <code>data.frame</code> with combined information from the selected
+<code>happy_result</code> and its <code>samplesheet</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
-<span class='no'>happy_compare</span> <span class='kw'>=</span> <span class='fu'>read_samplesheet</span>(<span class='kw'>samplesheet_path</span> <span class='kw'>=</span> <span class='st'>'happyCompare_samplesheet.csv'</span>)
+<span class='no'>summary</span> <span class='kw'>=</span> <span class='fu'>extract_metrics</span>(<span class='no'>happy_compare</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>'summary'</span>)
+<span class='no'>roc</span> <span class='kw'>=</span> <span class='fu'>extract_metrics</span>(<span class='no'>happy_compare</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>'pr.snp.pass'</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
