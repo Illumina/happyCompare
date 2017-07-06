@@ -1,5 +1,5 @@
 ---
-title: "Calibrating HDIs with simulated data"
+title: "Analysing stratified counts"
 author: "Mar Gonzalez-Porta"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,36 +8,76 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
+
 ```{r include=FALSE}
-knitr::opts_chunk$set(fig.width = 6)
+knitr::opts_chunk$set(fig.width = 6, cache = FALSE)
 
 library("happyCompare")
-library("dplyr")
+library("tidyverse")
 library("ggplot2")
 theme_set(theme_bw())
 ```
+
+## Set up
+
+We will use a set of [publicly available](https://basespace.illumina.com/datacentral) NovaSeq builds 
+
+In the present vignette we will be comparing stratified recall between a set of PCR-Free vs. Nano builds from NA12878. Starting from publicly available VCFs in [BaseSpace Data Central](https://basespace.illumina.com/datacentral), we can obtain stratified counts with hap.py as follows:
+
+```
+hap.py ${TRUTH_VCF} ${QUERY_VCF} -o ${OUTPUT_PREFIX} -f ${CONFIDENT_REGIONS} \
+    --threads 40 --write-counts --stratification filtered_beds/stratification_config.txt --reference ${REF} \
+    --roc QUAL --roc-filter LowQual --no-json
+```
+
+Then load the output to R using `happyCompare`:
 
 ```{r message=FALSE}
 samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.vignettes.csv", package = "happyCompare")
 happy_compare <- read_samplesheet(samplesheet_path)
 ```
 
+We will eventually end up with a `happy_compare` object (a list), with 3 elements: 
 ```{r}
 class(happy_compare)
 sapply(happy_compare, class)
 ```
 
-```{r message=FALSE}
-stratified_counts <- extract_metrics(happy_compare, table = "extended") %>% 
-  filter(Subtype == "*", Filter == "PASS", Subset.Level == 0, !grepl(pattern = "TS*", Subset)) %>% 
-  estimate_hdi(successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
-               group_cols = c("Group.Id", "Subset", "Type"), aggregate_only = FALSE)
-
-```
+If we furhter inspect the contents of `happy_results`, we can see that each of its elements matches the data structure described in `happyR`, e.g.:
 
 ```{r}
-stratified_counts %>% 
+names(happy_compare$happy_results[[1]])
+```
+
+
+## Extracting data from `happy_compare` objects
+
+Once we have a `happy_compare` object we can rely on the `extract_metrics` function to access our metrics of interest. Since hap.py saves stratified counts under `*extended.csv` files, we can use the following:
+
+```{r }
+stratified_counts <- extract_metrics(happy_compare, table = "extended") %>% 
+  filter(Subtype == "*", Filter == "PASS", Subset.Level == 0, !grepl(pattern = "TS*", Subset)) 
+```
+
+This will conveniently merge hap.py results with samplesheet metadata, making downstream analysis easier:
+```{r}
+stratified_counts
+```
+
+## Downstream analysis of stratified counts
+
+Finally, we can estimate highest density intervals to account for uncertainty in the stratified counts:
+
+```{r message=FALSE}
+hdi <- stratified_counts %>% 
+  estimate_hdi(successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
+               group_cols = c("Group.Id", "Subset", "Type"), aggregate_only = FALSE)
+```
+
+And visualise the results using `ggplot2`:
+
+```{r}
+hdi %>% 
   mutate(Subset = factor(Subset, levels = rev(unique(Subset)))) %>% 
   filter(replicate_id == ".aggregate") %>% 
   ggplot(aes(x = estimated_p, y = Subset, group = Subset)) +
