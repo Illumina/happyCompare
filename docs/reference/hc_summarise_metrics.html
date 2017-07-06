@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load data from happyCompare samplesheets — read_samplesheet • happyCompare</title>
+<title>Summarise metrics — hc_summarise_metrics • happyCompare</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -93,45 +93,49 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load data from happyCompare samplesheets</h1>
+    <h1>Summarise metrics</h1>
     </div>
 
     
-    <p>Load hap.py results into a <code>happy_compare</code> object using <code>happyR</code>.</p>
+    <p>Calculate mean and sd for specified metrics and return formatted results.</p>
     
 
-    <pre class="usage"><span class='fu'>read_samplesheet</span>(<span class='no'>samplesheet_path</span>, <span class='kw'>lazy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>hc_summarise_metrics</span>(<span class='no'>df</span>, <span class='kw'>group_cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Group.Id"</span>, <span class='st'>"Type"</span>, <span class='st'>"Filter"</span>),
+  <span class='kw'>metric_cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"METRIC.F1_Score"</span>, <span class='st'>"METRIC.Recall"</span>, <span class='st'>"METRIC.Precision"</span>,
+  <span class='st'>"METRIC.Frac_NA"</span>), <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>samplesheet_path</th>
-      <td><p>Path to a <code>happyCompare</code> samplesheet. Required fields:
-<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>, <code>happy_prefix</code>.</p></td>
+      <th>df</th>
+      <td><p>A <code>data.frame</code> object.</p></td>
     </tr>
     <tr>
-      <th>lazy</th>
-      <td><p>Do not load larger hap.py results until needed. Default: <code>TRUE</code>.</p></td>
+      <th>group_cols</th>
+      <td><p>Vector of columns to group counts by. Observations
+within the same group will be treated as replicates.</p></td>
+    </tr>
+    <tr>
+      <th>metric_cols</th>
+      <td><p>Vector of metric columns for which to calculate summary stats.</p></td>
+    </tr>
+    <tr>
+      <th>digits</th>
+      <td><p>Number of decimal places. Default: <code>4</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>happy_compare</code> object, with the following fields:</p><ul>
-<li><p><code>samplesheet</code>: the original samplesheet, stored as a <code>data.frame</code>.</p></li>
-<li><p><code>happy_results</code>: a <code>happy_result_list</code>
-object that contains individual <code>happy_result</code> objects as defined in
-<code>happyR</code>.</p></li>
-<li><p><code>ids</code>: a vector of unique identifiers for each result.</p></li>
-</ul>
-
+    <p>A formatted <code>data.frame</code> object.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
-<span class='no'>happy_compare</span> <span class='kw'>=</span> <span class='fu'>read_samplesheet</span>(<span class='kw'>samplesheet_path</span> <span class='kw'>=</span> <span class='st'>'happyCompare_samplesheet.csv'</span>)
+<span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='extract_metrics.html'>extract_metrics</a></span>(<span class='no'>happy_compare</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='st'>"summary"</span>)
+<span class='fu'>hc_summarise_metrics</span>(<span class='no'>df</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>

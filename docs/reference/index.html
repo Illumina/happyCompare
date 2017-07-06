@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,7 +52,31 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="..//index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/simulations.html">Calibrating HDIs with simulated data</a>
+    </li>
+    <li>
+      <a href="../articles/stratified_counts.html">Analysing stratified counts</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
@@ -70,7 +95,7 @@
     <div class="page-header">
       <h1>
         Reference
-        <small>version&nbsp;0.1.0</small>
+        <small>version&nbsp;1.0.0</small>
       </h1>
     </div>
 
@@ -92,39 +117,45 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="extract.html">extract</a></code> </p>
+            <p><code><a href="estimate_hdi.html">estimate_hdi</a></code> </p>
           </td>
-          <td><p>Extract tables from a happyCompare_list object</p></td>
+          <td><p>Estimate high density intervals from performance counts</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="happyCompare_list.html">happyCompare_list</a></code> </p>
+            <p><code><a href="extract_metrics.html">extract_metrics</a></code> </p>
           </td>
-          <td><p>happyCompare_list</p></td>
+          <td><p>Extract tables from a happy_compare object</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="plot.html">plot</a></code> </p>
+            <p><code><a href="hc_plot_hdi.html">hc_plot_hdi</a></code> </p>
+          </td>
+          <td><p>Plot HDI</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="hc_plot_roc.html">hc_plot_roc</a></code> </p>
           </td>
           <td><p>Plot a ROC curve for precision vs recall</p></td>
         </tr><tr>
           <!--  -->
           <td>
+            <p><code><a href="hc_summarise_metrics.html">hc_summarise_metrics</a></code> </p>
+          </td>
+          <td><p>Summarise metrics</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="read_samplesheet_.html">read_samplesheet_</a></code> </p>
           </td>
-          <td><p>Manually create happyCompare_list objects</p></td>
+          <td><p>Load data from happyCompare samplesheets</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="read_samplesheet.html">read_samplesheet</a></code> </p>
           </td>
           <td><p>Load data from happyCompare samplesheets</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tabulate.html">tabulate</a></code> </p>
-          </td>
-          <td><p>Tabulate hap.py summary results</p></td>
         </tr>
       </tbody>
       </table>

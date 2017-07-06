@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load data from happyCompare samplesheets — read_samplesheet • happyCompare</title>
+<title>Plot HDI — hc_plot_hdi • happyCompare</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -93,45 +93,37 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load data from happyCompare samplesheets</h1>
+    <h1>Plot HDI</h1>
     </div>
 
     
-    <p>Load hap.py results into a <code>happy_compare</code> object using <code>happyR</code>.</p>
+    <p>Plot distribution of success rates and HDI estimates for
+a given subset from a <code>data.frame</code>.</p>
     
 
-    <pre class="usage"><span class='fu'>read_samplesheet</span>(<span class='no'>samplesheet_path</span>, <span class='kw'>lazy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>hc_plot_hdi</span>(<span class='no'>happy_hdi</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>samplesheet_path</th>
-      <td><p>Path to a <code>happyCompare</code> samplesheet. Required fields:
-<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>, <code>happy_prefix</code>.</p></td>
+      <th>happy_hdi</th>
+      <td><p>A <code>data.frame</code> obtained with <code><a href='estimate_hdi.html'>estimate_hdi()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>lazy</th>
-      <td><p>Do not load larger hap.py results until needed. Default: <code>TRUE</code>.</p></td>
+      <th>title</th>
+      <td><p>Title. Default: <code>NULL</code>.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A <code>happy_compare</code> object, with the following fields:</p><ul>
-<li><p><code>samplesheet</code>: the original samplesheet, stored as a <code>data.frame</code>.</p></li>
-<li><p><code>happy_results</code>: a <code>happy_result_list</code>
-object that contains individual <code>happy_result</code> objects as defined in
-<code>happyR</code>.</p></li>
-<li><p><code>ids</code>: a vector of unique identifiers for each result.</p></li>
-</ul>
-
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
-<span class='no'>happy_compare</span> <span class='kw'>=</span> <span class='fu'>read_samplesheet</span>(<span class='kw'>samplesheet_path</span> <span class='kw'>=</span> <span class='st'>'happyCompare_samplesheet.csv'</span>)
+  <span class='no'>e</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='estimate_hdi.html'>estimate_hdi</a></span>(<span class='kw'>df</span> <span class='kw'>=</span> <span class='no'>d</span>, <span class='kw'>successes_col</span> <span class='kw'>=</span> <span class='no'>successes_col</span>, <span class='kw'>totals_col</span> <span class='kw'>=</span> <span class='no'>totals_col</span>,
+  <span class='kw'>group_cols</span> <span class='kw'>=</span> <span class='no'>group_cols</span>, <span class='kw'>aggregate_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+  <span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='no'>e</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Subset</span> <span class='kw'>==</span> <span class='st'>"high.at"</span>)
+  <span class='fu'>hc_plot_hdi</span>(<span class='no'>h</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"PCR-Free vs Nano high.at"</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
@@ -139,9 +131,7 @@ object that contains individual <code>happy_result</code> objects as defined in
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 
