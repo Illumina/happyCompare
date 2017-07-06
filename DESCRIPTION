@@ -1,0 +1,18 @@
+Package: happyCompare
+Type: Package
+Title: Reporting toolbox for hap.py output
+Version: 1.0.0
+Authors@R: as.person(c(
+    "Mar Gonzalez-Porta <mgonzalez@illumina.com> [aut, cre]", 
+    "Ben Moore <bmoore@illumina.com> [aut]"
+  ))
+Description: Tools for aggregation and reporting of variant calling performance outputs from hap.py.
+License: BSD
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1
+Imports: stats, utils, dplyr, ggplot2, happyR, lazyeval, HDInterval, readr, 
+   tibble, stringr, tidyr, tidyverse
+Suggests: testthat, knitr, rmarkdown
+VignetteBuilder: knitr
