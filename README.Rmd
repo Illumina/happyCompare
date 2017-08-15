@@ -8,7 +8,9 @@ knitr::opts_chunk$set(cache = FALSE, fig.path = "examples/README-")
 
 # happyCompare
 
-A reporting toolbox for [hap.py](https://github.com/Illumina/hap.py) output.
+happyCompary offers a set of functions to facilitate downstream analysis of variant calling performance outputs from [hap.py](https://github.com/Illumina/hap.py).
+It builds on top of [happyR](https://github.com/Illumina/happyR) to support annotation of hap.py results (e.g. grouping) through metadata samplesheets, and provides methods for quick retrieval, statistical analysis and easy reporting of performance metrics.
+
 
 ## Install
 
@@ -95,5 +97,9 @@ hdi %>%
     xlim(0.7, 1)
 ```
 
+## System requirements
 
+```{r}
+devtools::session_info()
+```
 

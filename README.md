@@ -2,7 +2,7 @@
 happyCompare
 ============
 
-A reporting toolbox for [hap.py](https://github.com/Illumina/hap.py) output.
+happyCompary offers a set of functions to facilitate downstream analysis of variant calling performance outputs from [hap.py](https://github.com/Illumina/hap.py). It builds on top of [happyR](https://github.com/Illumina/happyR) to support annotation of hap.py results (e.g. grouping) through metadata samplesheets, and provides methods for quick retrieval, statistical analysis and easy reporting of performance metrics.
 
 Install
 -------
@@ -18,6 +18,8 @@ Usage
 
 ``` r
 library("happyCompare")
+## Warning: Installed Rcpp (0.12.12) different from Rcpp used to build dplyr (0.12.11).
+## Please reinstall dplyr to avoid random crashes or undefined behavior.
 
 # loading demo data from a happyCompare samplesheet creates a happy_compare object...
 samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.readme.csv", package = "happyCompare")
@@ -105,3 +107,93 @@ hdi %>%
 ```
 
 ![](examples/README-unnamed-chunk-6-1.png)
+
+System requirements
+-------------------
+
+``` r
+devtools::session_info()
+```
+
+    ## Session info -------------------------------------------------------------
+
+    ##  setting  value                       
+    ##  version  R version 3.3.3 (2017-03-06)
+    ##  system   x86_64, linux-gnu           
+    ##  ui       X11                         
+    ##  language (EN)                        
+    ##  collate  en_US.UTF-8                 
+    ##  tz       <NA>                        
+    ##  date     2017-08-15
+
+    ## Packages -----------------------------------------------------------------
+
+    ##  package      * version    date       source                       
+    ##  assertthat     0.2.0      2017-04-11 CRAN (R 3.3.3)               
+    ##  backports      1.1.0      2017-05-22 CRAN (R 3.3.3)               
+    ##  base         * 3.3.3      2017-03-08 local                        
+    ##  bindr          0.1        2016-11-13 cran (@0.1)                  
+    ##  bindrcpp     * 0.2        2017-06-17 cran (@0.2)                  
+    ##  broom          0.4.2      2017-02-13 CRAN (R 3.3.3)               
+    ##  cellranger     1.1.0      2016-07-27 CRAN (R 3.3.3)               
+    ##  colorspace     1.3-2      2016-12-14 CRAN (R 3.3.3)               
+    ##  datasets     * 3.3.3      2017-03-08 local                        
+    ##  devtools       1.13.1     2017-05-13 CRAN (R 3.3.3)               
+    ##  digest         0.6.12     2017-01-27 CRAN (R 3.3.3)               
+    ##  dplyr        * 0.7.0      2017-06-09 cran (@0.7.0)                
+    ##  evaluate       0.10.1     2017-06-24 cran (@0.10.1)               
+    ##  forcats        0.2.0      2017-01-23 CRAN (R 3.3.3)               
+    ##  foreign        0.8-67     2016-09-13 CRAN (R 3.3.3)               
+    ##  ggplot2      * 2.2.1      2016-12-30 CRAN (R 3.3.3)               
+    ##  glue           1.1.1      2017-06-21 cran (@1.1.1)                
+    ##  graphics     * 3.3.3      2017-03-08 local                        
+    ##  grDevices    * 3.3.3      2017-03-08 local                        
+    ##  grid           3.3.3      2017-03-08 local                        
+    ##  gtable         0.2.0      2016-02-26 CRAN (R 3.3.3)               
+    ##  happyCompare * 1.0.0      2017-07-06 local                        
+    ##  happyR         0.1.0      2017-08-15 local (@5b26996)             
+    ##  haven          1.0.0      2016-09-23 CRAN (R 3.3.3)               
+    ##  HDInterval     0.1.3      2016-05-13 CRAN (R 3.3.3)               
+    ##  highr          0.6        2016-05-09 CRAN (R 3.3.3)               
+    ##  hms            0.3        2016-11-22 CRAN (R 3.3.3)               
+    ##  htmltools      0.3.6      2017-04-28 CRAN (R 3.3.3)               
+    ##  httr           1.2.1      2016-07-03 CRAN (R 3.3.3)               
+    ##  jsonlite       1.5        2017-06-01 CRAN (R 3.3.3)               
+    ##  knitr          1.16       2017-05-18 CRAN (R 3.3.3)               
+    ##  labeling       0.3        2014-08-23 CRAN (R 3.3.3)               
+    ##  lattice        0.20-34    2016-09-06 CRAN (R 3.3.3)               
+    ##  lazyeval       0.2.0      2016-06-12 CRAN (R 3.3.3)               
+    ##  lubridate      1.6.0      2016-09-13 CRAN (R 3.3.3)               
+    ##  magrittr       1.5        2014-11-22 CRAN (R 3.3.3)               
+    ##  memoise        1.1.0      2017-04-21 CRAN (R 3.3.3)               
+    ##  methods      * 3.3.3      2017-03-08 local                        
+    ##  mnormt         1.5-5      2016-10-15 CRAN (R 3.3.3)               
+    ##  modelr         0.1.0      2016-08-31 CRAN (R 3.3.3)               
+    ##  munsell        0.4.3      2016-02-13 CRAN (R 3.3.3)               
+    ##  nlme           3.1-131    2017-02-06 CRAN (R 3.3.3)               
+    ##  parallel       3.3.3      2017-03-08 local                        
+    ##  pkgconfig      2.0.1      2017-03-21 cran (@2.0.1)                
+    ##  plyr           1.8.4      2016-06-08 CRAN (R 3.3.3)               
+    ##  psych          1.7.5      2017-05-03 CRAN (R 3.3.3)               
+    ##  purrr        * 0.2.2.2    2017-05-11 CRAN (R 3.3.3)               
+    ##  R6             2.2.2      2017-06-17 cran (@2.2.2)                
+    ##  Rcpp           0.12.12    2017-07-15 cran (@0.12.12)              
+    ##  readr        * 1.1.1      2017-05-16 CRAN (R 3.3.3)               
+    ##  readxl         1.0.0      2017-04-18 CRAN (R 3.3.3)               
+    ##  reshape2       1.4.2      2016-10-22 CRAN (R 3.3.3)               
+    ##  rlang          0.1.2.9000 2017-08-15 Github (hadley/rlang@0e62148)
+    ##  rmarkdown      1.6        2017-06-15 cran (@1.6)                  
+    ##  rprojroot      1.2        2017-01-16 CRAN (R 3.3.3)               
+    ##  rvest          0.3.2      2016-06-17 CRAN (R 3.3.3)               
+    ##  scales         0.4.1      2016-11-09 CRAN (R 3.3.3)               
+    ##  stats        * 3.3.3      2017-03-08 local                        
+    ##  stringi        1.1.5      2017-04-07 CRAN (R 3.3.3)               
+    ##  stringr        1.2.0      2017-02-18 CRAN (R 3.3.3)               
+    ##  tibble       * 1.3.3      2017-05-28 CRAN (R 3.3.3)               
+    ##  tidyr        * 0.6.3      2017-05-15 CRAN (R 3.3.3)               
+    ##  tidyverse    * 1.1.1      2017-01-27 CRAN (R 3.3.3)               
+    ##  tools          3.3.3      2017-03-08 local                        
+    ##  utils        * 3.3.3      2017-03-08 local                        
+    ##  withr          1.0.2      2016-06-20 CRAN (R 3.3.3)               
+    ##  xml2           1.1.1      2017-01-24 CRAN (R 3.3.3)               
+    ##  yaml           2.1.14     2016-11-12 CRAN (R 3.3.3)
