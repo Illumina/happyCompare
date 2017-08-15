@@ -20,8 +20,6 @@ theme_set(theme_bw())
 
 ## Set up
 
-We will use a set of [publicly available](https://basespace.illumina.com/datacentral) NovaSeq builds 
-
 In the present vignette we will be comparing stratified recall between a set of PCR-Free vs. Nano builds from NA12878. Starting from publicly available VCFs in [BaseSpace Data Central](https://basespace.illumina.com/datacentral), we can obtain stratified counts with hap.py as follows:
 
 ```
@@ -43,7 +41,7 @@ class(happy_compare)
 sapply(happy_compare, class)
 ```
 
-If we furhter inspect the contents of `happy_results`, we can see that each of its elements matches the data structure described in `happyR`, e.g.:
+If we furhter inspect the contents of `happy_results`, we can see that each of its elements matches the data structures described in `happyR`, e.g.:
 
 ```{r}
 names(happy_compare$happy_results[[1]])

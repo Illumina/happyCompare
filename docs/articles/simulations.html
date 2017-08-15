@@ -68,7 +68,7 @@
       <h1>Calibrating HDIs with simulated data</h1>
                         <h4 class="author">Mar Gonzalez-Porta</h4>
             
-            <h4 class="date">2017-07-06</h4>
+            <h4 class="date">2017-08-15</h4>
           </div>
 
     
@@ -88,7 +88,7 @@
 <p><span class="math inline">\(q = (n*q_1*x_1 + n*q_2*x_2 + n*q_3*x_3) / n\)</span></p>
 <p>where <span class="math inline">\(n\)</span>: total number of variants in the subset; <span class="math inline">\(q_1\)</span>: probability of having variants in group 1; <span class="math inline">\(x_1\)</span>: recall in group 1 (will always be 1); <span class="math inline">\(q_2\)</span>: probability of having variants in group 2; <span class="math inline">\(x_2\)</span>: recall in group 2 (variable); <span class="math inline">\(q_3\)</span>: probability of having variants in group 3; <span class="math inline">\(x_3\)</span>: recall in group 3 (will always be 0).</p>
 <p>From these parameters, we can simulate true positive counts in one sample by drawing from a multinomial distribution that attributes each of the <span class="math inline">\(n\)</span> variants into one of the groups using the defined probabilities <span class="math inline">\(\{q_1, q_2, q_3\}\)</span>. We can next simulate replicates from this sample by performing random binomial draws from each group with recalls <span class="math inline">\(\{x_1, x_2, x_3\}\)</span>.</p>
-<p>Note that the number of true positives for groups 1 and 3 will be fixed across replicates by definition, but we can still take advantage of variants in the group 2 to simulate replicate variability. As a result of this variability, our observed recall will differ slightly from the theoretical expectation <span class="math inline">\(q\)</span>.</p>
+<p>Note that the number of true positives for groups 1 and 3 will be fixed across replicates by definition, but we can still take advantage of variants in group 2 to simulate replicate variability. As a result of this variability, our observed recall will differ slightly from the theoretical expectation <span class="math inline">\(q\)</span>.</p>
 </div>
 <div id="generating-the-simulated-dataset" class="section level2">
 <h2 class="hasAnchor">

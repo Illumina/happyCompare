@@ -39,7 +39,7 @@ $x_3$: recall in group 3 (will always be 0).
 
 From these parameters, we can simulate true positive counts in one sample by drawing from a multinomial distribution that attributes each of the $n$ variants into one of the groups using the defined probabilities $\{q_1, q_2, q_3\}$. We can next simulate replicates from this sample by performing random binomial draws from each group with recalls $\{x_1, x_2, x_3\}$. 
 
-Note that the number of true positives for groups 1 and 3 will be fixed across replicates by definition, but we can still take advantage of variants in the group 2 to simulate replicate variability. As a result of this variability, our observed recall will differ slightly from the theoretical expectation $q$.
+Note that the number of true positives for groups 1 and 3 will be fixed across replicates by definition, but we can still take advantage of variants in group 2 to simulate replicate variability. As a result of this variability, our observed recall will differ slightly from the theoretical expectation $q$.
 
 
 ## Generating the simulated dataset
