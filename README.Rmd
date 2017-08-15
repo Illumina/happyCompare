@@ -99,6 +99,13 @@ hdi %>%
 
 ## System requirements
 
+### Hardware, OS and R
+
+Development and testing for `happyCompare` have been done using R 3.3.3 on a Centos 6.9 machine, with 2 processor cores and 8GB of RAM. Alternative systems are also supported as documented in the official [R installation guide](https://cran.r-project.org/doc/manuals/r-release/R-admin.html).
+
+
+### R session info
+
 ```{r}
 devtools::session_info()
 ```
