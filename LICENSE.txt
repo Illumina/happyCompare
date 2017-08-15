@@ -5,7 +5,7 @@ The full text can be found here:
 https://github.com/Illumina/licenses/blob/master/Simplified-BSD-License.txt
 
 -------------------------------------------------------------------------------
-Copyright (c) 2010-2015 Illumina, Inc.
+Copyright (c) 2010-2017 Illumina, Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
