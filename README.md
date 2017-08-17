@@ -2,6 +2,8 @@
 happyCompare
 ============
 
+[![Build Status](https://travis-ci.org/Illumina/happyCompare.svg?branch=master)](https://travis-ci.org/Illumina/happyCompare) [![Coverage Status](https://codecov.io/github/Illumina/happyCompare/coverage.svg?branch=master)](https://codecov.io/github/Illumina/happyCompare?branch=master)
+
 happyCompary offers a set of functions to facilitate downstream analysis of variant calling performance outputs from [hap.py](https://github.com/Illumina/hap.py). It builds on top of [happyR](https://github.com/Illumina/happyR) to support annotation of hap.py results (e.g. grouping) through metadata samplesheets, and provides methods for quick retrieval, statistical analysis and easy reporting of performance metrics.
 
 Install
@@ -130,7 +132,7 @@ devtools::session_info()
     ##  language (EN)                        
     ##  collate  en_US.UTF-8                 
     ##  tz       <NA>                        
-    ##  date     2017-08-15
+    ##  date     2017-08-17
 
     ## Packages -----------------------------------------------------------------
 
@@ -156,7 +158,7 @@ devtools::session_info()
     ##  grDevices    * 3.3.3      2017-03-08 local                        
     ##  grid           3.3.3      2017-03-08 local                        
     ##  gtable         0.2.0      2016-02-26 CRAN (R 3.3.3)               
-    ##  happyCompare * 1.0.0      2017-07-06 local                        
+    ##  happyCompare * 1.0.0      2017-08-16 local                        
     ##  happyR         0.1.0      2017-08-15 local (@5b26996)             
     ##  haven          1.0.0      2016-09-23 CRAN (R 3.3.3)               
     ##  HDInterval     0.1.3      2016-05-13 CRAN (R 3.3.3)               
