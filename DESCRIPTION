@@ -14,5 +14,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Imports: stats, utils, dplyr, ggplot2, happyR, lazyeval, HDInterval, readr, 
    tibble, stringr, tidyr, tidyverse
+Remotes: Illumina/happyR
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
