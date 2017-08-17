@@ -2,7 +2,7 @@
 happyCompare
 ============
 
-[![Build Status](https://travis-ci.org/Illumina/happyCompare.svg?branch=master)](https://travis-ci.org/Illumina/happyCompare) [![Coverage Status](https://codecov.io/github/Illumina/happyCompare/coverage.svg?branch=master)](https://codecov.io/github/Illumina/happyCompare?branch=master)
+[![Build Status](https://travis-ci.org/Illumina/happyCompare.svg?branch=master)](https://travis-ci.org/Illumina/happyCompare) [![Coverage Status](https://codecov.io/github/Illumina/happyCompare/coverage.svg?branch=master)](https://codecov.io/github/Illumina/happyCompare)
 
 happyCompary offers a set of functions to facilitate downstream analysis of variant calling performance outputs from [hap.py](https://github.com/Illumina/hap.py). It builds on top of [happyR](https://github.com/Illumina/happyR) to support annotation of hap.py results (e.g. grouping) through metadata samplesheets, and provides methods for quick retrieval, statistical analysis and easy reporting of performance metrics.
 
@@ -20,8 +20,6 @@ Usage
 
 ``` r
 library("happyCompare")
-## Warning: Installed Rcpp (0.12.12) different from Rcpp used to build dplyr (0.12.11).
-## Please reinstall dplyr to avoid random crashes or undefined behavior.
 
 # loading demo data from a happyCompare samplesheet creates a happy_compare object...
 samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.readme.csv", package = "happyCompare")

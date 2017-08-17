@@ -9,7 +9,7 @@ knitr::opts_chunk$set(cache = FALSE, fig.path = "examples/README-")
 # happyCompare
 
 [![Build Status](https://travis-ci.org/Illumina/happyCompare.svg?branch=master)](https://travis-ci.org/Illumina/happyCompare)
-[![Coverage Status](https://codecov.io/github/Illumina/happyCompare/coverage.svg?branch=master)](https://codecov.io/github/Illumina/happyCompare?branch=master)
+[![Coverage Status](https://codecov.io/github/Illumina/happyCompare/coverage.svg?branch=master)](https://codecov.io/github/Illumina/happyCompare)
 
 happyCompary offers a set of functions to facilitate downstream analysis of variant calling performance outputs from [hap.py](https://github.com/Illumina/hap.py).
 It builds on top of [happyR](https://github.com/Illumina/happyR) to support annotation of hap.py results (e.g. grouping) through metadata samplesheets, and provides methods for quick retrieval, statistical analysis and easy reporting of performance metrics.
@@ -26,7 +26,7 @@ devtools::install_local("path/to/happyCompare-master/")
 
 ## Usage
 
-```{r message=FALSE, collapse=TRUE}
+```{r message=FALSE, collapse=TRUE, warning=FALSE}
 library("happyCompare")
 
 # loading demo data from a happyCompare samplesheet creates a happy_compare object...
