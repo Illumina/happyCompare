@@ -59,7 +59,7 @@ Note that for the purpose of the script $x_2$ has been renamed to $x$ since it's
 
 Let's first import the simulated dataset:
 ```{r eval=TRUE}
-sim_data <- readr::read_csv(file = "~/workspace/git/happyTestData/simulations/r5.params_1.csv")
+sim_data <- readr::read_csv(file = "https://raw.githubusercontent.com/Illumina/happyCompare/master/data-raw/simulations/r5.params_1.csv")
 ```
 
 And inspect the distribution of observed recall (gray) in the context of our expectations about theoretical recall (black):
