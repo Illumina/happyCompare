@@ -30,9 +30,16 @@ hap.py ${TRUTH_VCF} ${QUERY_VCF} -o ${OUTPUT_PREFIX} -f ${CONFIDENT_REGIONS} \
 
 Then load the output to R using `happyCompare`:
 
-```{r message=FALSE}
+```{r eval=FALSE}
+# do not run
 samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.vignettes.csv", package = "happyCompare")
 happy_compare <- read_samplesheet(samplesheet_path)
+```
+
+```{r message=FALSE}
+# load from RData object
+download.file("https://raw.githubusercontent.com/Illumina/happyCompare/master/data-raw/stratified_counts/happy_compare.Rds", "happy_compare.Rds", method = "curl")
+happy_compare <- readRDS("happy_compare.Rds")
 ```
 
 We will eventually end up with a `happy_compare` object (a list), with 3 elements: 
