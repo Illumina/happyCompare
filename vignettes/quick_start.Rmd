@@ -1,0 +1,108 @@
+---
+title: "Quick start guide"
+author: "Mar Gonzalez-Porta"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick start guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.width = 6, fig.height = 5, cache = FALSE)
+
+library("happyCompare")
+library("tidyverse")
+library("ggplot2")
+theme_set(theme_bw())
+```
+
+## Usage
+
+Loading demo data from a `happyCompare` samplesheet creates a `happy_compare` object:
+```{r eval=FALSE}
+samplesheet_path <- "vignettes/pcrfree_vs_nano.subset.csv"
+happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
+```
+
+```{r include=FALSE}
+happy_compare <- readRDS("pcrfree_vs_nano.subset.Rds")
+```
+
+That contains the following fields:
+
+- `samplesheet`: the original samplesheet
+- `happy_results`: a list of `happy_result` objects as defined in `happyR`
+- `build_metrics`: a list of `data.frames` with custom metrics
+- `ids`: a vector of build ids
+
+```{r collapse=TRUE}
+sapply(happy_compare, class)
+```
+
+hap.py results and samplesheet metadata can be accessed with `extract_metrics()`, leaving them ready for downstream analysis:
+```{r collapse=TRUE}
+e <- extract_metrics(happy_compare, table = "summary")
+class(e)
+```
+
+## Example visualisations
+
+### Summary of performance metrics
+
+```{r collapse=TRUE}
+# extract performance metrics and tabulate mean plus/minus SD per group and variant type
+extract_metrics(happy_compare, table = "summary") %>% 
+  filter(Filter == "PASS") %>% 
+  hc_summarise_metrics(df = ., group_cols = c("Group.Id", "Type")) %>% 
+  knitr::kable()
+```
+
+### Precision-recall curves
+
+```{r message=FALSE, fig.width=5}
+# extract ROC metrics and plot a precision-recall curves, e.g. for PASS INDEL
+extract_metrics(happy_compare, table = "pr.indel.pass") %>% 
+  hc_plot_roc(happy_roc = ., type = "INDEL", filter = "PASS")
+```
+
+### Custom metrics
+
+```{r}
+# link build metrics to hap.py results
+summary <- extract_metrics(happy_compare, table = "summary")
+build_metrics <- extract_metrics(happy_compare, table = "build.metrics")
+merged_df <- summary %>% 
+  inner_join(build_metrics)
+merged_df %>%
+  filter(Type == "INDEL", Filter == "PASS") %>% 
+  ggplot(aes(x = mean_coverage, y = METRIC.Precision, group = Group.Id)) +
+  geom_point(aes(color = Group.Id)) +
+  ylab("INDEL_precision")
+```
+
+### Stratified counts
+
+```{r fig.height=3}
+# extract stratified counts and visualise highest density intervals for recall in level 0 subsets
+hdi <- extract_metrics(happy_compare, table = "extended") %>% 
+  filter(Subtype == "*", Filter == "PASS", Subset.Level == 0, 
+         Subset %in% c("high.at", "high.gc")) %>% 
+  estimate_hdi(successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
+               group_cols = c("Group.Id", "Subset", "Type"), aggregate_only = FALSE)
+
+hdi %>% 
+  mutate(Subset = factor(Subset, levels = rev(unique(Subset)))) %>% 
+  filter(replicate_id == ".aggregate") %>% 
+  ggplot(aes(x = estimated_p, y = Subset, group = Subset)) +
+    geom_point(aes(color = Group.Id), size = 2) +
+    geom_errorbarh(aes(xmin = lower, xmax = upper, color = Group.Id), height = 0.4) +
+    facet_grid(. ~ Type) +
+    scale_colour_manual(values = c("#E69F00", "#56B4E9")) +
+    theme(legend.position = "bottom") +
+    ggtitle("Recall estimates across L0 subsets") +
+    xlab("Recall") +
+    ylab("") +
+    xlim(0.7, 1)
+```

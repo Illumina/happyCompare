@@ -1,5 +1,0 @@
-Group.Id,Sample.Id,Replicate.Id,happy_prefix
-PCR-Free,NA12878,NA12878-I30,../data/pcrfree_vs_nano/filtered_happy/NA12878-I30_S1
-PCR-Free,NA12878,NA12878-I33,../data/pcrfree_vs_nano/filtered_happy/NA12878-I33_S1
-Nano,NA12878,NA12878-R1,../data/pcrfree_vs_nano/filtered_happy/NA12878-R1_S1
-Nano,NA12878,NA12878-R2,../data/pcrfree_vs_nano/filtered_happy/NA12878-R2_S1

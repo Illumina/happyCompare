@@ -6,7 +6,7 @@
 \usage{
 extract_metrics(happy_compare, table = c("summary", "extended", "pr.all",
   "pr.snp.all", "pr.snp.pass", "pr.snp.sel", "pr.indel.all", "pr.indel.pass",
-  "pr.indel.sel"))
+  "pr.indel.sel", "build.metrics"))
 }
 \arguments{
 \item{happy_compare}{A \code{happy_compare} object.}
@@ -14,7 +14,7 @@ extract_metrics(happy_compare, table = c("summary", "extended", "pr.all",
 \item{table}{Table of data to extract from each \code{happy_result} object.
 Must be one of: \code{summary}, \code{extended}, \code{pr.all},
 \code{pr.snp.all}, \code{pr.snp.pass}, \code{pr.snp.sel},
-\code{pr.indel.all}, \code{pr.indel.pass}, \code{pr.indel.sel}.}
+\code{pr.indel.all}, \code{pr.indel.pass}, \code{pr.indel.sel}, \code{build_metrics}.}
 }
 \value{
 A \code{data.frame} with combined information from the selected
@@ -28,8 +28,9 @@ results.
 \examples{
 
 \dontrun{
-summary = extract_metrics(happy_compare, table = 'summary')
-roc = extract_metrics(happy_compare, table = 'pr.snp.pass')
+summary <- extract_metrics(happy_compare, table = 'summary')
+roc <- extract_metrics(happy_compare, table = 'pr.snp.pass')
+build_metrics <- extract_metrics(happy_compare, table = 'build.metrics')
 }
 
 }

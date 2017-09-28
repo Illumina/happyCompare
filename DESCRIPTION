@@ -1,7 +1,7 @@
 Package: happyCompare
 Type: Package
 Title: Reporting toolbox for hap.py output
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: as.person(c(
     "Mar Gonzalez-Porta <mgonzalez@illumina.com> [aut, cre]", 
     "Ben Moore <bmoore@illumina.com> [aut]"
@@ -12,7 +12,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
-Imports: stats, utils, dplyr, ggplot2, happyR, lazyeval, HDInterval, readr, 
+Imports: happyR (== 1.0.0), stats, utils, dplyr, ggplot2, lazyeval, HDInterval, readr, 
    tibble, stringr, tidyr, tidyverse, gridExtra
 Remotes: Illumina/happyR
 Suggests: testthat, knitr, rmarkdown

@@ -1,0 +1,5 @@
+Group.Id,Sample.Id,Replicate.Id,happy_prefix,build_metrics
+PCR-Free,NA12878,NA12878-I30,../data/pcrfree_vs_nano/filtered_happy/NA12878-I30_S1,../data/pcrfree_vs_nano/build_metrics/NA12878-I30_S1.summary.csv
+PCR-Free,NA12878,NA12878-I33,../data/pcrfree_vs_nano/filtered_happy/NA12878-I33_S1,../data/pcrfree_vs_nano/build_metrics/NA12878-I33_S1.summary.csv
+Nano,NA12878,NA12878-R1,../data/pcrfree_vs_nano/filtered_happy/NA12878-R1_S1,../data/pcrfree_vs_nano/build_metrics/NA12878-R1_S1.summary.csv
+Nano,NA12878,NA12878-R2,../data/pcrfree_vs_nano/filtered_happy/NA12878-R2_S1,../data/pcrfree_vs_nano/build_metrics/NA12878-R2_S1.summary.csv

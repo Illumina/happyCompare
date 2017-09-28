@@ -11,7 +11,7 @@
 #' @param table Table of data to extract from each `happy_result` object.
 #'   Must be one of: `summary`, `extended`, `pr.all`,
 #'   `pr.snp.all`, `pr.snp.pass`, `pr.snp.sel`,
-#'   `pr.indel.all`, `pr.indel.pass`, `pr.indel.sel`.
+#'   `pr.indel.all`, `pr.indel.pass`, `pr.indel.sel`, `build_metrics`.
 #'   
 #' @return A `data.frame` with combined information from the selected
 #'   `happy_result` and its `samplesheet`.
@@ -19,15 +19,17 @@
 #' @examples
 #' 
 #' \dontrun{
-#' summary = extract_metrics(happy_compare, table = 'summary')
-#' roc = extract_metrics(happy_compare, table = 'pr.snp.pass')
+#' summary <- extract_metrics(happy_compare, table = 'summary')
+#' roc <- extract_metrics(happy_compare, table = 'pr.snp.pass')
+#' build_metrics <- extract_metrics(happy_compare, table = 'build.metrics')
 #' }
 #' 
 #' @export
 extract_metrics <- function(happy_compare, table = c("summary", "extended", 
                                                      "pr.all", 
                                                      "pr.snp.all", "pr.snp.pass", "pr.snp.sel",
-                                                     "pr.indel.all", "pr.indel.pass", "pr.indel.sel")) {
+                                                     "pr.indel.all", "pr.indel.pass", "pr.indel.sel",
+                                                     "build.metrics")) {
   
   # validate input
   if (!"happy_compare" %in% class(happy_compare)) {
@@ -35,24 +37,35 @@ extract_metrics <- function(happy_compare, table = c("summary", "extended",
   }
   
   table <- match.arg(table)
+  if (table == "build.metrics" && !"build_metrics" %in% names(happy_compare)) {
+    stop("No build metrics found in the provided happy_compare object, won't extract")
+  }
   
+  # extract
   samplesheet <- happy_compare$samplesheet
-  happy_results <- happyR::extract_results(happy_compare$happy_results, table)
-  df <- dplyr::inner_join(samplesheet, happy_results, by = c("happy_prefix" = "from"))
-  class(df) <- c(unique(c(class(happy_results), class(df))))
+  if (table != "build.metrics") {
+    happy_results <- happyR::extract_results(happy_compare$happy_results, table)
+    df <- dplyr::inner_join(samplesheet, happy_results, by = c("happy_prefix" = "from"))
+    class(df) <- c(unique(c(class(happy_results), class(df))))
+  } else {
+    df <- dplyr::inner_join(samplesheet, c(happy_compare$build_metrics) %>% dplyr::bind_rows(), 
+                            by = c("happy_prefix" = "from"))
+    class(df) <- c(unique(c("build_metrics", class(df))))
+  }
   
   return(df)
   
 }
 
 
-#' Estimate high density intervals from performance counts
+#' Estimate highest density intervals (HDIs) from performance counts
 #' 
-#' Estimate high density intervals and success rates from hap.py counts using a
+#' Estimate highest density intervals and success rates from hap.py counts using a
 #' Binomial model and empirical Bayes. See package docs for details on method
 #' implementation.
 #' 
-#' @param df A `data.frame`.
+#' @param df A `data.frame`. Required columns: `Replicate.Id`, `Subset`, columns specified 
+#' in `group_cols` argument.
 #' @param successes_col Name of the column that contains success counts. 
 #' @param totals_col Name of the column that contains total counts.
 #' @param group_cols Vector of columns to group counts by. Observations 
@@ -70,7 +83,7 @@ extract_metrics <- function(happy_compare, table = c("summary", "extended",
 #' @examples
 #' 
 #' \dontrun{
-#' hdi = estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+#' hdi <- estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
 #'                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 #' }
 #' 
@@ -91,8 +104,16 @@ estimate_hdi <- function(df, successes_col, totals_col, group_cols, aggregate_on
   if (!totals_col %in% colnames(df)) {
     stop(sprintf("Could not find column \"%s\" in input data.frame", totals_col))
   }
-  if (!all(group_cols %in% colnames(df))) {
-    stop("Could not find all specified group columns in input data.frame")
+  required_cols <- c("Replicate.Id", "Subset", group_cols)
+  if (!all(required_cols %in% colnames(df))) {
+    stop(sprintf("Missing one or more required columns from input data.frame: %s", paste(required_cols, collapse = ", ")))
+  }
+  
+  # check that all replicates have the same subsets
+  n_subsets_expected <- length(unique(df$Subset)) * length(unique(df$Replicate.Id))
+  n_subsets_seen <- dim(unique(df[,c("Replicate.Id", "Subset")]))[1]
+  if (n_subsets_seen != n_subsets_expected) {
+    warning("Subsets in input.data frame are not consistent across replicates")
   }
   
   # exclude records where totals == 0
@@ -272,3 +293,98 @@ estimate_hdi <- function(df, successes_col, totals_col, group_cols, aggregate_on
   return(r)
   
 }
+
+
+#' Compare subset-specific Beta distributions across two groups
+#' 
+#' For each subset, calculate the difference in Beta distributions across two groups, and label it as significant if 
+#' we can confidently claim that the HDI of the difference is other than zero. Do not attempt tests
+#' in subsets for which we do not have a good estimate of the success rate to start with (HDI range = 1).
+#' 
+#' @param happy_hdi A `happy_hdi` object obtained with `estimate_hdi()`.
+#' @param sample_size Number of observations to draw from the Beta posterior 
+#' to estimate HDIs for the difference in Beta distributions. Default: 1e5.
+#' @param significance Significance levels for HDIs of the difference. Default: 0.05 (= 95\% HDIs).
+#'   
+#' @return A `data.frame` with estimated differences across groups, HDIs for the difference 
+#' and significance labels.
+#'   
+#' @examples
+#' 
+#' \dontrun{
+#' hdi <- estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+#'                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
+#' hdi_diff <- compare_hdi(happy_hdi = hdi)                 
+#' }
+#' 
+#' @export
+compare_hdi <- function(happy_hdi, sample_size = 1e+05, significance = 0.05) {
+  
+  # validate input
+  if (!"happy_hdi" %in% class(happy_hdi)) {
+    stop("Must provide a happy_hdi object - see happyCompare::estimate_hdi")
+  }
+  if (length(unique(happy_hdi$Group.Id)) != 2) {
+    stop("Will only perform compare HDIs across two groups")
+  }
+  
+  # reformat input data
+  df <- happy_hdi %>% 
+    filter(replicate_id == ".aggregate") %>% 
+    mutate(Subset = paste(Type, Subset, sep=":")) %>% 
+    select(Group.Id, Subset, alpha1, beta1, hdi_range) %>% 
+    tidyr::gather(variable, value, -(Group.Id:Subset)) %>% 
+    tidyr::unite(.variable, variable, Group.Id, sep = ".") %>% 
+    tidyr::spread(.variable, value)
+  
+  # calculate difference
+  hdi_diff <- df %>% 
+    group_by(Subset) %>%
+    do(.compare_hdi(alpha_a = .[[2]], beta_a = .[[4]],
+                 alpha_b = .[[3]], beta_b = .[[5]],
+                 sample_size = sample_size, significance = significance)) %>% 
+    arrange(-significant, -estimated_diff) %>% 
+    separate(Subset, into = c("Type", "Subset"), sep = ":")
+
+  return(hdi_diff)
+  
+}
+
+
+.compare_hdi <- function(alpha_a, beta_a, alpha_b, beta_b, range_a = NA, range_b = NA,
+                         sample_size = 1e5, significance = 0.05) {
+  
+  if (!is.na(range_a) && !is.na(range_b) && (range_a == 1 || range_b == 1)) {
+    # cannot make an assessment
+    df <- data.frame(
+      estimated_diff = NA,
+      lower = NA,
+      upper = NA,
+      significant = NA
+    )
+    
+  } else {
+    # evaluate difference in beta distributions
+    sample_a <- stats::rbeta(sample_size, alpha_a, beta_a)
+    sample_b <- stats::rbeta(sample_size, alpha_b, beta_b)
+    diff <- sample_a - sample_b
+    hdi <-HDInterval::hdi(diff, credMass = 1 - significance)
+    
+    df <- data.frame(
+      estimated_diff = mean(diff),
+      lower = hdi["lower"],
+      upper = hdi["upper"],
+      significant = ifelse(hdi["lower"] <= 0 && hdi["upper"] >= 0, FALSE, TRUE)
+    )
+  }
+
+  rownames(df) = NULL
+
+  # warn about skipped records
+  if (any(is.na(df$significant))) {
+    warning(sprintf("Skipped %d record(s) with HDI range == 1", length(df$significant)))
+  }
+  
+  return(df)
+}
+

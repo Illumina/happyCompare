@@ -1,0 +1,22 @@
+---
+title: "Extracting metrics"
+author: "Mar Gonzalez-Porta"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extracting metrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.width = 6, fig.height = 5, cache = FALSE)
+
+library("happyCompare")
+library("tidyverse")
+library("ggplot2")
+theme_set(theme_bw())
+```
+
+
+

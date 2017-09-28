@@ -1,6 +1,7 @@
 context("reporting.R")
 
-samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.tests.csv", package = "happyCompare")
+samplesheet_path <- system.file("tests/data/pcrfree_vs_nano/pcrfree_vs_nano.tests.csv", 
+                                package = "happyCompare")
 happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
 
 test_that("hc_summarise_metrics works", {
@@ -40,7 +41,7 @@ test_that("hc_plot_hdi works", {
                   Subset.Level == 0, !grepl(pattern = "TS*", Subset))
   expect_is(d, "data.frame")
   expect_equal(dim(d)[1], 20)
-  expect_equal(dim(d)[2], 69)
+  expect_equal(dim(d)[2], 70)
   
   successes_col <- "TRUTH.TP"
   totals_col <- "TRUTH.TOTAL"

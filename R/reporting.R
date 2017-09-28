@@ -75,6 +75,8 @@ hc_summarise_metrics <- function(df, group_cols = c("Group.Id", "Type", "Filter"
 #' @param filter Variant filter.
 #' @param subtype Variant subtype. Default: `*`.
 #' @param subset Variant subset. Default: `*`.
+#' @param xlim Vector with x axis limits, e.g. c(0, 1). Default: auto-adjust.
+#' @param ylim Vector with y axis limits, e.g. c(0, 1). Default: auto-adjust.
 #'   
 #' @examples
 #' 
@@ -83,7 +85,7 @@ hc_summarise_metrics <- function(df, group_cols = c("Group.Id", "Type", "Filter"
 #' hc_plot_roc(roc, type = "INDEL", filter = "PASS")
 #' }
 #' @export
-hc_plot_roc <- function(happy_roc, type, filter, subtype = "*", subset = "*") {
+hc_plot_roc <- function(happy_roc, type, filter, subtype = "*", subset = "*", xlim = NA, ylim = NA) {
   
   # validate
   if (!"happy_roc" %in% class(happy_roc)) {
@@ -117,10 +119,16 @@ hc_plot_roc <- function(happy_roc, type, filter, subtype = "*", subset = "*") {
   # axis limits
   sel <- subset(data, Filter == "SEL")
   margin <- 0.05
-  xlim <- c(max(0, min(sel$METRIC.Recall, na.rm = TRUE) - margin),
-            min(1, max(sel$METRIC.Recall, na.rm = TRUE) + margin))
-  ylim <- c(max(0, min(sel$METRIC.Precision, na.rm = TRUE) - margin),
-            min(1, max(sel$METRIC.Precision, na.rm = TRUE) + margin))
+  if (all(is.na(xlim))) {
+    xlim <- c(max(0, min(sel$METRIC.Recall, na.rm = TRUE) - margin),
+              min(1, max(sel$METRIC.Recall, na.rm = TRUE) + margin))
+    
+  }
+  if (all(is.na(ylim))) {
+    ylim <- c(max(0, min(sel$METRIC.Precision, na.rm = TRUE) - margin),
+              min(1, max(sel$METRIC.Precision, na.rm = TRUE) + margin))
+    
+  }
   
   # plot
   ggplot(data, aes(x = METRIC.Recall, y = METRIC.Precision, color = Group.Id)) + 
@@ -146,7 +154,7 @@ hc_plot_roc <- function(happy_roc, type, filter, subtype = "*", subset = "*") {
 #' 
 #' \dontrun{
 #'   e <- estimate_hdi(df = d, successes_col = successes_col, totals_col = totals_col, 
-#'   group_cols = group_cols, aggregate_only = FALSE, sample_size = 1000)
+#'                     group_cols = group_cols, aggregate_only = FALSE, sample_size = 1000)
 #'   h <- e %>% dplyr::filter(Subset == "high.at")
 #'   hc_plot_hdi(h, title = "PCR-Free vs Nano high.at")
 #' }
@@ -161,6 +169,7 @@ hc_plot_hdi <- function(happy_hdi, title = NULL) {
   
   # plot
   n_groups <- length(unique(happy_hdi$Group.Id))
+  message(sprintf("Plotting HDIs across %d group(s)", n_groups))
   if (n_groups == 1) {
     .plot_hdi_one_group(happy_hdi, title)
   } else {

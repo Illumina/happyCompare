@@ -68,6 +68,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/extracting_metrics.html">Extracting metrics</a>
+    </li>
+    <li>
+      <a href="../articles/quick_start.html">Quick start guide</a>
+    </li>
+    <li>
       <a href="../articles/simulations.html">Calibrating HDIs with simulated data</a>
     </li>
     <li>
@@ -94,7 +100,7 @@
     </div>
 
     
-    <p>Load hap.py results into a <code>happy_compare</code> object using <code>happyR</code>.</p>
+    <p>Load hap.py results, build metrics and custom metadata into a <code>happy_compare</code> object using <code>happyR</code>.</p>
     
 
     <pre class="usage"><span class='fu'>read_samplesheet_</span>(<span class='no'>samplesheet</span>, <span class='kw'>lazy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -105,7 +111,8 @@
     <tr>
       <th>samplesheet</th>
       <td><p>A <code>happyCompare</code> samplesheet (<code>data.frame</code>). Required fields:
-<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>, <code>happy_prefix</code>.</p></td>
+<code>Group.Id</code>, <code>Sample.Id</code>, <code>Replicate.Id</code>, <code>happy_prefix</code>. Optional fields: <code>build_metrics</code>. Also supports
+additional metadata fields supplied as extra columns.</p></td>
     </tr>
     <tr>
       <th>lazy</th>
@@ -120,6 +127,8 @@
 <li><p><code>happy_results</code>: a <code>happy_result_list</code>
 object that contains individual <code>happy_result</code> objects as defined in
 <code>happyR</code>.</p></li>
+<li><p><code>build_metrics</code>: a <code>build_metrics_list</code> that contains a list of <code>data.frames</code> created from the csv
+files provided under the <code>build_metrics</code> column of the samplesheet.</p></li>
 <li><p><code>ids</code>: a vector of unique identifiers for each result.</p></li>
 </ul>
 
@@ -128,7 +137,7 @@ object that contains individual <code>happy_result</code> objects as defined in
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
-<span class='no'>happy_compare</span> <span class='kw'>=</span> <span class='fu'><a href='read_samplesheet.html'>read_samplesheet</a></span>(<span class='kw'>samplesheet_path</span> <span class='kw'>=</span> <span class='st'>'happyCompare_samplesheet.csv'</span>)
+<span class='no'>happy_compare</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_samplesheet.html'>read_samplesheet</a></span>(<span class='kw'>samplesheet_path</span> <span class='kw'>=</span> <span class='st'>'happyCompare_samplesheet.csv'</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>

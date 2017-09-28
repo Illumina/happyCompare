@@ -2,13 +2,14 @@
 % Please edit documentation in R/analysis.R
 \name{estimate_hdi}
 \alias{estimate_hdi}
-\title{Estimate high density intervals from performance counts}
+\title{Estimate highest density intervals (HDIs) from performance counts}
 \usage{
 estimate_hdi(df, successes_col, totals_col, group_cols, aggregate_only = TRUE,
   significance = 0.05, sample_size = 1e+05, max_alpha1 = 1000)
 }
 \arguments{
-\item{df}{A \code{data.frame}.}
+\item{df}{A \code{data.frame}. Required columns: \code{Replicate.Id}, \code{Subset}, columns specified
+in \code{group_cols} argument.}
 
 \item{successes_col}{Name of the column that contains success counts.}
 
@@ -32,14 +33,14 @@ A \code{data.frame} with performance counts, model hyperparameters,
 success rate and HDI estimates.
 }
 \description{
-Estimate high density intervals and success rates from hap.py counts using a
+Estimate highest density intervals and success rates from hap.py counts using a
 Binomial model and empirical Bayes. See package docs for details on method
 implementation.
 }
 \examples{
 
 \dontrun{
-hdi = estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
+hdi <- estimate_hdi(df, successes_col = 'TRUTH.TP', totals_col = 'TRUTH.TOTAL', 
                    group_cols = c('Group.Id', 'Subset', 'Type', 'Subtype'))
 }
 

@@ -68,6 +68,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/extracting_metrics.html">Extracting metrics</a>
+    </li>
+    <li>
+      <a href="../articles/quick_start.html">Quick start guide</a>
+    </li>
+    <li>
       <a href="../articles/simulations.html">Calibrating HDIs with simulated data</a>
     </li>
     <li>
@@ -118,7 +124,7 @@ a given subset from a <code>data.frame</code>.</p>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
   <span class='no'>e</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='estimate_hdi.html'>estimate_hdi</a></span>(<span class='kw'>df</span> <span class='kw'>=</span> <span class='no'>d</span>, <span class='kw'>successes_col</span> <span class='kw'>=</span> <span class='no'>successes_col</span>, <span class='kw'>totals_col</span> <span class='kw'>=</span> <span class='no'>totals_col</span>,
-  <span class='kw'>group_cols</span> <span class='kw'>=</span> <span class='no'>group_cols</span>, <span class='kw'>aggregate_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+                    <span class='kw'>group_cols</span> <span class='kw'>=</span> <span class='no'>group_cols</span>, <span class='kw'>aggregate_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
   <span class='no'>h</span> <span class='kw'>&lt;-</span> <span class='no'>e</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Subset</span> <span class='kw'>==</span> <span class='st'>"high.at"</span>)
   <span class='fu'>hc_plot_hdi</span>(<span class='no'>h</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"PCR-Free vs Nano high.at"</span>)
 <span class='co'># }</span><div class='input'>

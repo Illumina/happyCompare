@@ -16,7 +16,7 @@ node('uk_centos6_cluster') {
     }
 
     stage('Build') {
-        sh "R CMD build ."
+        sh "R CMD build --no-build-vignettes ."
     }
 
     stage('Test') {

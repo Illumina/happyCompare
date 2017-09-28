@@ -28,7 +28,7 @@ Load hap.py results into a \code{happy_compare} object using \code{happyR}.
 \examples{
 
 \dontrun{
-happy_compare = read_samplesheet(samplesheet_path = 'happyCompare_samplesheet.csv')
+happy_compare <- read_samplesheet(samplesheet_path = 'happyCompare_samplesheet.csv')
 }
 
 }

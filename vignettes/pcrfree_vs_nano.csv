@@ -1,0 +1,15 @@
+Group.Id,Sample.Id,Replicate.Id,happy_prefix,build_metrics
+PCR-Free,NA12878,NA12878-I30_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I30_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I30_S1.summary.csv
+PCR-Free,NA12878,NA12878-I33_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I33_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I33_S1.summary.csv
+PCR-Free,NA12878,NA12878-I47_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I47_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I47_S1.summary.csv
+PCR-Free,NA12878,NA12878-I67_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I67_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I67_S1.summary.csv
+PCR-Free,NA12878,NA12878-I82_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I82_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I82_S1.summary.csv
+PCR-Free,NA12878,NA12878-I85_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-I85_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-I85_S1.summary.csv
+Nano,NA12878,NA12878-R1_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R1_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R1_S1.summary.csv
+Nano,NA12878,NA12878-R2_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R2_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R2_S1.summary.csv
+Nano,NA12878,NA12878-R3_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R3_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R3_S1.summary.csv
+Nano,NA12878,NA12878-R4_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R4_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R4_S1.summary.csv
+Nano,NA12878,NA12878-R5_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R5_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R5_S1.summary.csv
+Nano,NA12878,NA12878-R6_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R6_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R6_S1.summary.csv
+Nano,NA12878,NA12878-R7_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R7_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R7_S1.summary.csv
+Nano,NA12878,NA12878-R8_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/original_happy/NA12878-R8_S1,~/workspace/dev/happyTestData/pcrfree_vs_nano/build_metrics/NA12878-R8_S1.summary.csv

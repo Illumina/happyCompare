@@ -4,6 +4,11 @@ output: github_document
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(cache = FALSE, fig.path = "examples/README-")
+
+library("happyCompare")
+library("tidyverse")
+library("ggplot2")
+theme_set(theme_bw())
 ```
 
 # happyCompare
@@ -17,99 +22,15 @@ It builds on top of [happyR](https://github.com/Illumina/happyR) to support anno
 
 ## Install
 
-
-Download [zip](https://git.illumina.com/Bioinformatics/happyCompare/archive/master.zip), extract and run:
-
 ```{r install, eval=FALSE}
-devtools::install_local("path/to/happyCompare-master/")
+devtools::install_github("Illumina/happyCompare")
 ```
 
 ## Usage
 
-```{r message=FALSE, collapse=TRUE, warning=FALSE}
-library("happyCompare")
+Read the [Quick start guide](https://illumina.github.io/happyCompare/articles/quick_start.html) for summarised instructions on how to load data from `happyCompare` samplesheets, access metrics and visualise results.
 
-# loading demo data from a happyCompare samplesheet creates a happy_compare object...
-samplesheet_path <- system.file("extdata/samplesheets", "pcrfree_vs_nano.readme.csv", package = "happyCompare")
-happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
-class(happy_compare)
-
-# ... that contains the following fields:
-# - samplesheet: the original samplesheet
-# - happy_results: a list of happy_result objects as defined in happyR
-# - ids: a vector of build ids
-sapply(happy_compare, class)
-
-# hap.py results and samplesheet metadata can be accessed with extract_metrics(),
-# leaving them ready for downstream analysis
-e <- extract_metrics(happy_compare, table = "summary")
-class(e)
-```
-
-## Example visualisations
-
-```{r include=FALSE}
-library("tidyverse")
-library("ggplot2")
-theme_set(theme_bw())
-```
-
-### Summary of performance metrics
-
-```{r}
-# we can easily extract performance metrics and tabulate mean plus/minus SD 
-# per group and variant type
-extract_metrics(happy_compare, table = "summary") %>% 
-  filter(Filter == "PASS") %>% 
-  hc_summarise_metrics(df = ., group_cols = c("Group.Id", "Type")) %>% 
-  knitr::kable()
-```
-
-### Precision-recall curves
-
-```{r message=FALSE, fig.width=5}
-# similarly, we can extract roc metrics and plot a precision-recall curve for PASS INDEL
-extract_metrics(happy_compare, table = "pr.all") %>% 
-  hc_plot_roc(happy_roc = ., type = "INDEL", filter = "PASS")
-```
-
-### Stratified counts
-
-```{r fig.height=3}
-# finally, we can extract stratified counts and estimate highest density intervals 
-# for recall in level 0 subsets...
-hdi <- extract_metrics(happy_compare, table = "extended") %>% 
-  filter(Subtype == "*", Filter == "PASS", Subset.Level == 0, 
-         Subset %in% c("high.at", "high.gc")) %>% 
-  estimate_hdi(successes_col = "TRUTH.TP", totals_col = "TRUTH.TOTAL", 
-               group_cols = c("Group.Id", "Subset", "Type"), aggregate_only = FALSE)
-
-# ... and generate custom plots with ggplot2
-hdi %>% 
-  mutate(Subset = factor(Subset, levels = rev(unique(Subset)))) %>% 
-  filter(replicate_id == ".aggregate") %>% 
-  ggplot(aes(x = estimated_p, y = Subset, group = Subset)) +
-    geom_point(aes(color = Group.Id), size = 2) +
-    geom_errorbarh(aes(xmin = lower, xmax = upper, color = Group.Id), height = 0.4) +
-    facet_grid(. ~ Type) +
-    scale_colour_manual(values = c("#E69F00", "#56B4E9")) +
-    theme(legend.position = "bottom") +
-    ggtitle("Recall estimates across L0 subsets") +
-    xlab("Recall") +
-    ylab("") +
-    xlim(0.7, 1)
-```
 
 ## System requirements
 
-### Hardware, OS and R
-
 Development and testing for `happyCompare` have been done using R 3.3.3 on a Centos 6.9 machine, with 2 processor cores and 8GB of RAM. Alternative systems are also supported as documented in the official [R installation guide](https://cran.r-project.org/doc/manuals/r-release/R-admin.html).
-
-
-### R session info
-
-```{r}
-devtools::session_info()
-```
-

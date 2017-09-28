@@ -4,7 +4,8 @@
 \alias{hc_plot_roc}
 \title{Plot a ROC curve for precision vs recall}
 \usage{
-hc_plot_roc(happy_roc, type, filter, subtype = "*", subset = "*")
+hc_plot_roc(happy_roc, type, filter, subtype = "*", subset = "*",
+  xlim = NA, ylim = NA)
 }
 \arguments{
 \item{happy_roc}{A \code{happy_roc} object.}
@@ -16,6 +17,10 @@ hc_plot_roc(happy_roc, type, filter, subtype = "*", subset = "*")
 \item{subtype}{Variant subtype. Default: \code{*}.}
 
 \item{subset}{Variant subset. Default: \code{*}.}
+
+\item{xlim}{Vector with x axis limits, e.g. c(0, 1). Default: auto-adjust.}
+
+\item{ylim}{Vector with y axis limits, e.g. c(0, 1). Default: auto-adjust.}
 }
 \description{
 Plot precision vs recall ROC curves from the selected filters. If \code{pr.all} is

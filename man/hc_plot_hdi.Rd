@@ -19,7 +19,7 @@ a given subset from a \code{data.frame}.
 
 \dontrun{
   e <- estimate_hdi(df = d, successes_col = successes_col, totals_col = totals_col, 
-  group_cols = group_cols, aggregate_only = FALSE, sample_size = 1000)
+                    group_cols = group_cols, aggregate_only = FALSE, sample_size = 1000)
   h <- e \%>\% dplyr::filter(Subset == "high.at")
   hc_plot_hdi(h, title = "PCR-Free vs Nano high.at")
 }

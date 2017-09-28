@@ -6,3 +6,5 @@
 ^README\.md$
 ^docs$
 ^Jenkinsfile$
+^examples$
+^LICENSE.txt$

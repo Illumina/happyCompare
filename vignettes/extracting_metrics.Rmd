@@ -1,0 +1,103 @@
+---
+title: "Extracting metrics"
+author: "Mar Gonzalez-Porta"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extracting metrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.width = 6, fig.height = 5, cache = FALSE, collapse = TRUE)
+
+library("happyCompare")
+library("tidyverse")
+library("ggplot2")
+theme_set(theme_bw())
+```
+
+
+In this vignette we will illustrate how to access hap.py results once we have created a `happy_compare` object. Also, we will cover how to complement them with custom metrics, just by adding an additional `build_metrics` column to our samplesheet. 
+
+## Set up
+
+Let's load our NovaSeq dataset with PCR-Free vs. Nano builds for NA12878, using a samplesheet that includes custom metrics (see `vignettes/pcrfree_vs_nano.csv`):
+
+```{r eval=FALSE}
+# do not run
+samplesheet_path <- "vignettes/pcrfree_vs_nano.csv"
+happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
+```
+
+
+```{r message=FALSE}
+# given the size of the dataset, load from Rds object instead
+happy_compare <- readRDS("pcrfree_vs_nano.Rds")
+```
+
+We can have a look at the contents of the resulting `happy_compare` object to identify which elements are available for querying:
+```{r}
+names(happy_compare)
+```
+
+
+## Accessing hap.py results
+
+Since our demo dataset includes results from two different library preparation workflows, we can evaluate if there are any differences in variant calling performance across groups. 
+For that, we will need to access hap.py results. In particular, we are interested in ROC metrics, as ROC curves offer a convenient way of visualising accuracy across multiple classification methods (in our case True Positive vs. False Positive calls in PCR-Free vs. Nano builds).
+
+Let's extract ROC metrics for PASS SNVs and INDELs in our `happy_compare` dataset:
+```{r}
+roc_snvs <- extract_metrics(happy_compare, table = "pr.snp.pass")
+roc_indels <- extract_metrics(happy_compare, table = "pr.indel.pass")
+```
+
+Then visualise them with the pre-defined function `hc_plot_roc()`:
+
+```{r fig.width=7, eval=TRUE, warning=FALSE, message=FALSE}
+p1 <- hc_plot_roc(happy_roc = roc_snvs, type = "SNP", filter = "PASS")
+p2 <- hc_plot_roc(happy_roc = roc_indels, type = "INDEL", filter = "PASS")
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+From the difference in scales between the two plots, we can see that performance is higher for SNPs compared to INDELs, regardless of prep method. In addition, the differences between PCR-Free and Nano are most accentuated in INDELs, with a wider spread in precision across Nano builds.
+
+## Linking hap.py results with custom metrics
+
+Often we have additional information about our samples besides the results generated with hap.py, e.g. metadata, BAM/VCF metrics, etc. It is easy to add these custom metrics to our `happy_compare` object, we just need to provide a `build_metrics` column to our samplesheet that points to relevant csv files (see e.g. `vignettes/pcrfree_vs_nano.csv`). Here we will refer to custom metrics as build metrics, since they are typically metrics calculated on the outputs of the analysis pipeline (BAMs, VCFs), i.e. after "building" the alignments.
+
+For example, the build metrics csv for our first sample contains the following:
+```{r}
+happy_compare$build_metrics[[1]] %>% 
+  t() %>% 
+  head(n = 15)
+```
+
+A more convenient way to access build metrics is to use the `extract_metrics()` function, as we did for hap.py results. This adds a unique identifier to each sample in our dataset, making it easier to combine data downstream. As an example, let's explore further the spread in INDEL precision identified in the ROC curves above:
+
+```{r fig.width=6, fig.height=6}
+# link build metrics to hap.py results
+summary <- extract_metrics(happy_compare, table = "summary")
+build_metrics <- extract_metrics(happy_compare, table = "build.metrics")
+merged_df <- summary %>% 
+  # focus on PASS INDEL for now
+  filter(Type == "INDEL", Filter == "PASS") %>% 
+  # focus on precision
+  select(happy_prefix, METRIC.Precision) %>% 
+  inner_join(build_metrics)
+```
+
+Since we have access to BAM metrics, we can investigate if there is any coverage bias in our dataset:
+
+```{r}
+merged_df %>%
+  ggplot(aes(x = mean_coverage, y = METRIC.Precision, group = Group.Id)) +
+  geom_point(aes(color = Group.Id)) +
+  geom_smooth(method = "lm", aes(color = Group.Id, fill = Group.Id), 
+              formula = y ~ poly(x, 2), lwd = 0.25) +
+  ylab("INDEL_precision")
+```
+
+As expected, increasing coverage leads to higher INDEL precision. Importantly, precision gains from increased coverage are not equivalent across prep methods: whilst we have reached saturation levels for PCR-Free, we can mitigate the gaps in precision in Nano by sequencing at higher depth.

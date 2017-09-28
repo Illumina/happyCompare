@@ -68,6 +68,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/extracting_metrics.html">Extracting metrics</a>
+    </li>
+    <li>
+      <a href="../articles/quick_start.html">Quick start guide</a>
+    </li>
+    <li>
       <a href="../articles/simulations.html">Calibrating HDIs with simulated data</a>
     </li>
     <li>
@@ -98,7 +104,8 @@
 provided, overlay pass points to <code>ALL</code> curve.</p>
     
 
-    <pre class="usage"><span class='fu'>hc_plot_roc</span>(<span class='no'>happy_roc</span>, <span class='no'>type</span>, <span class='no'>filter</span>, <span class='kw'>subtype</span> <span class='kw'>=</span> <span class='st'>"*"</span>, <span class='kw'>subset</span> <span class='kw'>=</span> <span class='st'>"*"</span>)</pre>
+    <pre class="usage"><span class='fu'>hc_plot_roc</span>(<span class='no'>happy_roc</span>, <span class='no'>type</span>, <span class='no'>filter</span>, <span class='kw'>subtype</span> <span class='kw'>=</span> <span class='st'>"*"</span>, <span class='kw'>subset</span> <span class='kw'>=</span> <span class='st'>"*"</span>,
+  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -122,6 +129,14 @@ provided, overlay pass points to <code>ALL</code> curve.</p>
     <tr>
       <th>subset</th>
       <td><p>Variant subset. Default: <code>*</code>.</p></td>
+    </tr>
+    <tr>
+      <th>xlim</th>
+      <td><p>Vector with x axis limits, e.g. c(0, 1). Default: auto-adjust.</p></td>
+    </tr>
+    <tr>
+      <th>ylim</th>
+      <td><p>Vector with y axis limits, e.g. c(0, 1). Default: auto-adjust.</p></td>
     </tr>
     </table>
     
