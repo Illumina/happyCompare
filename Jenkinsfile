@@ -21,10 +21,10 @@ node('uk_centos6_cluster') {
 
     stage('Test') {
         // Full test + check
-        // sh "R CMD check --no-examples happyCompare_*.tar.gz"
+        sh "R CMD check --no-examples happyCompare_*.tar.gz"
         
         // Test only
-        sh "R -e 'devtools::test()'"
+        // sh "R -e 'devtools::test()'"
     }
     
     stage('Test coverage') {
