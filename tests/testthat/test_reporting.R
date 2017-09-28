@@ -1,7 +1,6 @@
 context("reporting.R")
 
-samplesheet_path <- system.file("tests/data/pcrfree_vs_nano/pcrfree_vs_nano.tests.csv", 
-                                package = "happyCompare")
+samplesheet_path <- "pcrfree_vs_nano.tests.csv"
 happy_compare <- read_samplesheet(samplesheet_path, lazy = TRUE)
 
 test_that("hc_summarise_metrics works", {

@@ -2,8 +2,7 @@
 
 context("io.R")
 
-samplesheet_path <- system.file("tests/data/pcrfree_vs_nano/pcrfree_vs_nano.tests.csv", 
-                                package = "happyCompare")
+samplesheet_path <- "pcrfree_vs_nano.tests.csv"
 
 test_that("read_samplesheet loads data with no errors and returns the expected happy_compare object", {
   
